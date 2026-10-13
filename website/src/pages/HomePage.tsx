@@ -239,8 +239,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 tracking-wider shadow-xs">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 tracking-wider shadow-xs">
               Making A Difference
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-white mt-3 tracking-tight">
