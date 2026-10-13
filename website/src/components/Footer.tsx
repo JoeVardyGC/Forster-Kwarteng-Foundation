@@ -19,23 +19,27 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
   };
 
   return (
-    <footer className="bg-[#00003b] text-white pt-16 pb-8 border-t border-blue-900/60 relative overflow-hidden">
-      {/* Decorative Brand Background Glow */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-700/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute bottom-10 left-10 w-72 h-72 bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
+    <footer className="bg-gradient-to-b from-[#00003b] via-[#000033] to-[#000026] text-white pt-16 pb-8 border-t border-blue-900/60 relative overflow-hidden">
+      {/* Decorative Brand Ambient Glowing Orbs */}
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Top Newsletter / Trust Strip */}
-        <div className="bg-gradient-to-r from-[#000080] to-[#0a0a85] rounded-2xl p-6 sm:p-8 mb-14 shadow-xl border border-blue-700/40 flex flex-col lg:flex-row items-center justify-between gap-6">
-          <div className="max-w-xl text-center lg:text-left">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-400/20 text-amber-300 border border-amber-400/30 mb-2">
+        {/* 1. Frosted Glass Newsletter & Trust Capsule */}
+        <div className="relative bg-white/[0.06] backdrop-blur-xl rounded-3xl p-8 sm:p-10 mb-16 border border-white/15 shadow-2xl overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
+          {/* Internal Ambient Light Highlights */}
+          <div className="absolute -top-24 -left-24 w-80 h-80 bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="max-w-xl text-center lg:text-left relative z-10">
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-amber-400/15 text-amber-300 border border-amber-400/30 mb-3 backdrop-blur-md shadow-xs">
               <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
               100% Transparent Non-Profit Governance
             </span>
-            <h3 className="text-xl sm:text-2xl font-bold font-['Outfit'] text-white">
+            <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-white tracking-tight">
               Stay Connected with Our Field Outreaches
             </h3>
-            <p className="text-sm text-blue-100 mt-1">
+            <p className="text-sm text-blue-100/80 mt-2 leading-relaxed">
               Receive quarterly impact bulletins, scholarship updates, and field reports directly from Accra, Ghana.
             </p>
           </div>
@@ -45,35 +49,37 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
               e.preventDefault();
               alert('Thank you for subscribing to the Forster Kwarteng Foundation newsletter!');
             }}
-            className="w-full lg:w-auto flex flex-col sm:flex-row gap-2 max-w-md"
+            className="w-full lg:w-auto flex flex-col sm:flex-row gap-3 max-w-md relative z-10"
           >
             <input
               type="email"
               placeholder="Enter your email address"
               required
-              className="px-4 py-3 rounded-xl bg-blue-950/80 border border-blue-600/60 text-white placeholder-blue-300 text-sm focus:outline-none focus:border-amber-400 flex-1 min-w-[240px]"
+              className="px-5 py-3.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white placeholder-blue-200/60 text-sm focus:outline-none focus:border-amber-400 focus:bg-white/15 transition-all shadow-inner flex-1 min-w-[240px]"
             />
             <button
               type="submit"
-              className="px-6 py-3 rounded-xl bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-sm transition-all shadow-md cursor-pointer whitespace-nowrap"
+              className="px-7 py-3.5 rounded-full bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-extrabold text-sm transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-[1.02] cursor-pointer whitespace-nowrap"
             >
               Subscribe
             </button>
           </form>
         </div>
 
-        {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 pb-12 border-b border-blue-900/60">
-          {/* Column 1 & 2: Brand Profile */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <img
-                src="/assets/foster logo main transparent.png"
-                alt="Forster Kwarteng Foundation"
-                className="h-14 w-auto object-contain bg-white/10 p-1.5 rounded-xl backdrop-blur-sm"
-              />
+        {/* 2. Main Footer Architectural Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-14 border-b border-white/10">
+          {/* Column 1: Brand Identity & Mission (4 Columns) */}
+          <div className="lg:col-span-4 space-y-5">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-white p-1.5 shadow-md flex items-center justify-center shrink-0">
+                <img
+                  src="/assets/fkf-emblem-mark.png"
+                  alt="Forster Kwarteng Foundation"
+                  className="w-full h-full object-contain"
+                />
+              </div>
               <div>
-                <h4 className="font-bold text-base font-['Outfit'] tracking-tight text-white uppercase">
+                <h4 className="font-extrabold text-base font-['Outfit'] tracking-tight text-white uppercase leading-tight">
                   Forster Kwarteng Foundation
                 </h4>
                 <p className="text-xs text-amber-400 font-semibold tracking-wide">
@@ -82,156 +88,143 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
               </div>
             </div>
 
-            <p className="text-sm text-blue-200 leading-relaxed max-w-md">
+            <p className="text-sm text-blue-100/80 leading-relaxed max-w-sm">
               {FOUNDATION_INFO.brandStatement}
             </p>
 
-            <div className="pt-2">
+            <div className="pt-1 flex flex-wrap items-center gap-3">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-blue-200/90 backdrop-blur-xs">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Reg: {FOUNDATION_INFO.registrationNo}</span>
+              </div>
               <button
                 onClick={onOpenDonateModal}
-                className="inline-flex items-center gap-2 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs px-4 py-2 rounded-full transition-all shadow cursor-pointer"
+                className="inline-flex items-center gap-2 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs px-4 py-2 rounded-full transition-all shadow-md cursor-pointer hover:scale-105"
               >
                 <Heart className="w-3.5 h-3.5 fill-[#000080]" />
-                <span>Support Our Programs</span>
+                <span>Support Programs</span>
               </button>
             </div>
           </div>
 
-          {/* Column 3: Quick Navigation */}
-          <div>
-            <h5 className="text-sm font-bold font-['Outfit'] text-amber-400 uppercase tracking-wider mb-4">
+          {/* Column 2: Navigation Links (2 Columns) */}
+          <div className="lg:col-span-2">
+            <h5 className="text-xs font-bold font-['Outfit'] text-amber-400 uppercase tracking-widest mb-4">
               Explore
             </h5>
-            <ul className="space-y-2 text-sm text-blue-200">
-              <li>
-                <button
-                  onClick={() => handleNav('home')}
-                  className="hover:text-amber-300 transition-colors text-left"
-                >
-                  Home
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('about')}
-                  className="hover:text-amber-300 transition-colors text-left"
-                >
-                  About Us & Vision
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('programs')}
-                  className="hover:text-amber-300 transition-colors text-left"
-                >
-                  Our 4 Core Pillars
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('impact')}
-                  className="hover:text-amber-300 transition-colors text-left"
-                >
-                  Impact & Real Stories
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('transparency')}
-                  className="hover:text-amber-300 transition-colors text-left"
-                >
-                  Financial Transparency
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('get-involved')}
-                  className="hover:text-amber-300 transition-colors text-left"
-                >
-                  Volunteer & Partner
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => handleNav('contact')}
-                  className="hover:text-amber-300 transition-colors text-left"
-                >
-                  Contact & Hotlines
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 4: 7 Core Values */}
-          <div>
-            <h5 className="text-sm font-bold font-['Outfit'] text-amber-400 uppercase tracking-wider mb-4">
-              Our 7 Values
-            </h5>
-            <ul className="space-y-1.5 text-xs text-blue-200">
-              {CORE_VALUES.map((val) => (
-                <li key={val.id} className="flex items-center gap-2">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                  <span>{val.name}</span>
+            <ul className="space-y-2.5 text-sm text-blue-100/80">
+              {[
+                { label: 'Home', page: 'home' },
+                { label: 'About Us & Vision', page: 'about' },
+                { label: 'Our 4 Core Pillars', page: 'programs' },
+                { label: 'Impact & Real Stories', page: 'impact' },
+                { label: 'Financial Transparency', page: 'transparency' },
+                { label: 'Volunteer & Partner', page: 'get-involved' },
+                { label: 'Contact & Hotlines', page: 'contact' },
+              ].map((link, idx) => (
+                <li key={idx}>
+                  <button
+                    onClick={() => handleNav(link.page as PageId)}
+                    className="hover:text-amber-300 hover:translate-x-1 transition-all text-left block cursor-pointer"
+                  >
+                    {link.label}
+                  </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Column 5: Official Contact & Headquarters */}
-          <div>
-            <h5 className="text-sm font-bold font-['Outfit'] text-amber-400 uppercase tracking-wider mb-4">
+          {/* Column 3: 7 Guiding Values (3 Columns) */}
+          <div className="lg:col-span-3">
+            <h5 className="text-xs font-bold font-['Outfit'] text-amber-400 uppercase tracking-widest mb-4">
+              Our 7 Core Values
+            </h5>
+            <div className="space-y-2.5">
+              {CORE_VALUES.map((val) => (
+                <div key={val.id} className="flex items-center gap-2 text-xs text-blue-100/85">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
+                  <span className="font-bold text-white">{val.name}</span>
+                  <span className="text-blue-300/70 text-[11px]">— {val.tagline}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Column 4: Physical Headquarters & Reach (3 Columns) */}
+          <div className="lg:col-span-3">
+            <h5 className="text-xs font-bold font-['Outfit'] text-amber-400 uppercase tracking-widest mb-4">
               Headquarters
             </h5>
-            <div className="space-y-3 text-xs text-blue-200">
-              <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>{FOUNDATION_INFO.hqLocation}</span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <Phone className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+            <div className="space-y-4 text-xs text-blue-100/90">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 text-amber-400">
+                  <MapPin className="w-4 h-4" />
+                </div>
                 <div>
-                  <a
-                    href="tel:+233546732812"
-                    className="block hover:text-amber-300 transition-colors"
-                  >
-                    +233 546732812
-                  </a>
-                  <a
-                    href="tel:+233556727083"
-                    className="block hover:text-amber-300 transition-colors"
-                  >
-                    +233 556727083
-                  </a>
+                  <span className="block font-bold text-white mb-0.5">Physical Secretariat</span>
+                  <span className="text-blue-200/80 leading-relaxed block">{FOUNDATION_INFO.address}</span>
                 </div>
               </div>
-              <div className="flex items-start gap-2.5">
-                <Mail className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <a
-                  href={`mailto:${FOUNDATION_INFO.email}`}
-                  className="hover:text-amber-300 transition-colors break-all"
-                >
-                  {FOUNDATION_INFO.email}
-                </a>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 text-amber-400">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <span className="block font-bold text-white mb-0.5">Direct Hotlines</span>
+                  <div className="space-y-0.5">
+                    <a
+                      href="tel:+233546732812"
+                      className="block text-blue-200/80 hover:text-amber-300 transition-colors"
+                    >
+                      +233 546732812
+                    </a>
+                    <a
+                      href="tel:+233556727083"
+                      className="block text-blue-200/80 hover:text-amber-300 transition-colors"
+                    >
+                      +233 556727083
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 text-amber-400">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <span className="block font-bold text-white mb-0.5">Official Correspondence</span>
+                  <a
+                    href={`mailto:${FOUNDATION_INFO.email}`}
+                    className="text-blue-200/80 hover:text-amber-300 transition-colors block truncate"
+                    title={FOUNDATION_INFO.email}
+                  >
+                    {FOUNDATION_INFO.email}
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar with Stepped Colors */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-300">
+        {/* 3. Sub-Footer Bottom Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-200/70">
           <p>
             © {new Date().getFullYear()} {FOUNDATION_INFO.name}. All rights reserved.
           </p>
 
           <div className="flex items-center gap-6">
-            <span>Accra, Ghana</span>
-            <span>•</span>
+            <span className="text-amber-300/80 font-medium hidden sm:inline-block">
+              Accra, Ghana
+            </span>
+            <span className="hidden sm:inline-block">•</span>
             <button
               onClick={scrollToTop}
-              className="flex items-center gap-1 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer group font-semibold"
             >
               <span>Back to Top</span>
-              <ArrowUp className="w-3.5 h-3.5" />
+              <ArrowUp className="w-3.5 h-3.5 group-hover:-translate-y-0.5 transition-transform" />
             </button>
           </div>
         </div>
