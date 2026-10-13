@@ -2,6 +2,7 @@ export type PageId =
   | 'home' 
   | 'about' 
   | 'programs' 
+  | 'program-article'
   | 'impact' 
   | 'transparency' 
   | 'donate' 
@@ -66,4 +67,77 @@ export interface FoundationProgram {
   image: string;
   linkText?: string;
 }
+
+export interface ProgramPhase {
+  phase: string;
+  title: string;
+  description: string;
+}
+
+export interface ProgramImpactStat {
+  value: string;
+  label: string;
+  description: string;
+}
+
+export interface ProgramBeneficiaryQuote {
+  quote: string;
+  author: string;
+  role: string;
+  location?: string;
+  image: string;
+  outcome: string;
+}
+
+export interface ProgramGalleryItem {
+  url: string;
+  caption: string;
+  credit?: string;
+}
+
+export interface ProgramVideoInfo {
+  title: string;
+  duration: string;
+  thumbnail: string;
+  videoUrl?: string;
+  description: string;
+}
+
+export interface ProgramDonationTier {
+  amountGHS: number;
+  amountUSD: number;
+  label: string;
+  impact: string;
+  popular?: boolean;
+}
+
+export interface ProgramArticle {
+  id: string;
+  title: string;
+  category: string;
+  readTime: string;
+  publishedDate: string;
+  location: string;
+  summary: string;
+  coverImage: string;
+  coverImageCaption: string;
+  impactStats: ProgramImpactStat[];
+  challenge: {
+    headline: string;
+    body: string[];
+    statHighlight?: { number: string; text: string };
+  };
+  intervention: {
+    title: string;
+    description: string;
+    phases: ProgramPhase[];
+  };
+  beneficiaryQuote: ProgramBeneficiaryQuote;
+  video: ProgramVideoInfo;
+  gallery: ProgramGalleryItem[];
+  sdgBadges: { number: string; title: string; color: string }[];
+  donationTiers: ProgramDonationTier[];
+  relatedProgramIds: string[];
+}
+
 

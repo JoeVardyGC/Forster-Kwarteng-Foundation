@@ -91,7 +91,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2">
             {navLinks.map((link) => {
-              const isActive = currentPage === link.id;
+              const isActive =
+                currentPage === link.id ||
+                (link.id === 'programs' && currentPage === 'program-article');
               return (
                 <button
                   key={link.id}
@@ -168,7 +170,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Nav list */}
             <div className="flex-1 py-4 space-y-1">
               {navLinks.map((link) => {
-                const isActive = currentPage === link.id;
+                const isActive =
+                  currentPage === link.id ||
+                  (link.id === 'programs' && currentPage === 'program-article');
                 return (
                   <button
                     key={link.id}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { PageId } from '../types';
-import { PROGRAM_PILLARS } from '../data/foundationData';
+import { PROGRAM_PILLARS, OUR_PROGRAMS } from '../data/foundationData';
 import {
   GraduationCap,
   Compass,
@@ -10,15 +10,18 @@ import {
   Heart,
   Target,
   ArrowRight,
+  ChevronRight,
 } from 'lucide-react';
 
 interface ProgramsPageProps {
   onNavigate: (page: PageId) => void;
+  onSelectProgram?: (programId: string) => void;
   onOpenDonateModal: () => void;
 }
 
 export const ProgramsPage: React.FC<ProgramsPageProps> = ({
   onNavigate,
+  onSelectProgram,
   onOpenDonateModal,
 }) => {
   const [activeTab, setActiveTab] = useState<string>(PROGRAM_PILLARS[0].id);
@@ -235,6 +238,68 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
           </div>
         </div>
       </section>
+
+      {/* 5. OUR CORE PROGRAMS & FIELD ARTICLES */}
+      <section className="py-20 bg-white border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2 font-semibold">
+              FIELD INTERVENTIONS & IMPACT STORIES
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
+              Our Core Programs in Detail
+            </h2>
+            <div className="w-12 h-1 bg-[#000080] mx-auto rounded-full mt-3 mb-4"></div>
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+              Explore in-depth field case studies, verified impact statistics, and frontline documentaries from our active community programs.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {OUR_PROGRAMS.map((prog) => (
+              <div
+                key={prog.id}
+                className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group"
+              >
+                <div
+                  onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                  className="relative h-48 sm:h-52 overflow-hidden bg-slate-100 cursor-pointer"
+                >
+                  <img
+                    src={prog.image}
+                    alt={prog.title}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                </div>
+
+                <div className="p-6 flex flex-col justify-between flex-1">
+                  <div>
+                    <h3
+                      onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                      className="text-lg sm:text-xl font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2.5 cursor-pointer"
+                    >
+                      {prog.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
+                      {prog.description}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer self-start"
+                  >
+                    <span>Read More</span>
+                    <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
+

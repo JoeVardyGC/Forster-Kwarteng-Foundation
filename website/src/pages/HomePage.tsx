@@ -74,12 +74,14 @@ export const HERO_SLIDES = [
 
 interface HomePageProps {
   onNavigate: (page: PageId) => void;
+  onSelectProgram?: (programId: string) => void;
   currency: Currency;
   onOpenDonateModal: () => void;
 }
 
 export const HomePage: React.FC<HomePageProps> = ({
   onNavigate,
+  onSelectProgram,
   currency,
   onOpenDonateModal,
 }) => {
@@ -277,7 +279,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                 className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group"
               >
                 {/* Image Banner */}
-                <div className="relative h-48 sm:h-52 overflow-hidden bg-slate-100">
+                <div
+                  onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                  className="relative h-48 sm:h-52 overflow-hidden bg-slate-100 cursor-pointer"
+                >
                   <img
                     src={prog.image}
                     alt={prog.title}
@@ -289,7 +294,10 @@ export const HomePage: React.FC<HomePageProps> = ({
                 {/* Card Content */}
                 <div className="p-6 flex flex-col justify-between flex-1">
                   <div>
-                    <h3 className="text-lg sm:text-xl font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2.5">
+                    <h3
+                      onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                      className="text-lg sm:text-xl font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2.5 cursor-pointer"
+                    >
                       {prog.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
@@ -297,12 +305,12 @@ export const HomePage: React.FC<HomePageProps> = ({
                     </p>
                   </div>
 
-                  {/* Learn More Action */}
+                  {/* Read More Action */}
                   <button
-                    onClick={() => onNavigate('programs')}
+                    onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
                     className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer self-start"
                   >
-                    <span>Learn more</span>
+                    <span>Read More</span>
                     <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
                   </button>
                 </div>
