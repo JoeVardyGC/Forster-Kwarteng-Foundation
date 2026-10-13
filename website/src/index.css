@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Outfit', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Official Forster Kwarteng Foundation Palette */
+  --color-fkf-navy: #000080;
+  --color-fkf-navy-dark: #000052;
+  --color-fkf-navy-deep: #00003b;
+  --color-fkf-cobalt: #0a0a85;
+  --color-fkf-royal: #39399d;
+  --color-fkf-periwinkle: #9696cb;
+  --color-fkf-gold: #f5bd02;
+  --color-fkf-gold-hover: #e0ac00;
+  --color-fkf-gold-light: #fef08a;
+  --color-fkf-canvas: #f8fafc;
+  --color-fkf-slate-900: #0f172a;
+  --color-fkf-slate-800: #1e293b;
+  --color-fkf-slate-600: #475569;
+  --color-fkf-slate-400: #94a3b8;
+  --color-fkf-slate-100: #f1f5f9;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-subtle: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-shimmer: shimmer 2.5s infinite;
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.92;
+      transform: scale(1.02);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    font-family: var(--font-sans);
+    color: #0f172a;
+    background-color: #ffffff;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+/* Stepped Letterhead Bar Utility */
+.fkf-step-bar {
+  background: linear-gradient(
+    90deg,
+    #9696cb 0%,
+    #9696cb 25%,
+    #39399d 25%,
+    #39399d 50%,
+    #0a0a85 50%,
+    #0a0a85 75%,
+    #000080 75%,
+    #000080 100%
+  );
+}
+
+.fkf-step-bar-reverse {
+  background: linear-gradient(
+    90deg,
+    #000080 0%,
+    #000080 25%,
+    #0a0a85 25%,
+    #0a0a85 50%,
+    #39399d 50%,
+    #39399d 75%,
+    #9696cb 75%,
+    #9696cb 100%
+  );
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #9696cb;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #39399d;
+}
