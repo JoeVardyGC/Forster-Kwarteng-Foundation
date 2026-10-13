@@ -305,15 +305,6 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
                       <span>Read More</span>
                       <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
                     </button>
-
-                    <button
-                      onClick={onOpenDonateModal}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-100/80 hover:bg-amber-200/90 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-amber-300/60 transition-all cursor-pointer shadow-2xs hover:scale-105"
-                      title="Support this initiative"
-                    >
-                      <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                      <span>Donate</span>
-                    </button>
                   </div>
                 </div>
               </div>
