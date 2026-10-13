@@ -246,14 +246,14 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
         <div className="absolute bottom-12 right-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2 font-semibold">
-              FIELD INTERVENTIONS & IMPACT STORIES
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold bg-blue-50/80 backdrop-blur-md border border-blue-200/60 text-[#000080] tracking-wider shadow-2xs">
+              Field Interventions & Stories
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 mt-3 tracking-tight">
               Our Core Programs in Detail
             </h2>
-            <div className="w-12 h-1 bg-[#000080] mx-auto rounded-full mt-3 mb-4"></div>
+            <div className="h-1 w-16 bg-[#000080] rounded-full mx-auto my-3" />
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
               Explore in-depth field case studies, verified impact statistics, and frontline documentaries from our active community programs.
             </p>
