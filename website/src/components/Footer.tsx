@@ -70,22 +70,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-14 border-b border-white/10">
           {/* Column 1: Brand Identity & Mission (4 Columns) */}
           <div className="lg:col-span-4 space-y-5">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-white p-1.5 shadow-md flex items-center justify-center shrink-0">
-                <img
-                  src="/assets/fkf-emblem-mark.png"
-                  alt="Forster Kwarteng Foundation"
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <div>
-                <h4 className="font-extrabold text-base font-['Outfit'] tracking-tight text-white uppercase leading-tight">
-                  Forster Kwarteng Foundation
-                </h4>
-                <p className="text-xs text-amber-400 font-semibold tracking-wide">
-                  Empowering Lives, Building Futures
-                </p>
-              </div>
+            <div>
+              <img
+                src="/assets/foster logo main white gold.png"
+                alt="Forster Kwarteng Foundation — Empowering Lives, Building Futures"
+                className="h-14 sm:h-16 w-auto object-contain -ml-1"
+              />
             </div>
 
             <p className="text-sm text-blue-100/80 leading-relaxed max-w-sm">

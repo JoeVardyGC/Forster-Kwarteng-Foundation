@@ -78,19 +78,11 @@ export const DonationModal: React.FC<DonationModalProps> = ({
         {/* Modal Header */}
         <div className="bg-[#000080] text-white px-6 py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#F5BD02] flex items-center justify-center text-[#000080]">
-              <Heart className="w-5 h-5 fill-[#000080]" />
-            </div>
-            <div>
-              <h3 className="font-bold text-lg font-['Outfit'] text-white">
-                {isCompleted ? 'Donation Confirmed!' : 'Support Forster Kwarteng Foundation'}
-              </h3>
-              <p className="text-xs text-blue-200">
-                {isCompleted
-                  ? 'Your generosity is empowering lives today in Ghana'
-                  : 'Empowering Lives, Building Futures'}
-              </p>
-            </div>
+            <img
+              src="/assets/foster logo main white gold.png"
+              alt="Forster Kwarteng Foundation"
+              className="h-10 sm:h-12 w-auto object-contain"
+            />
           </div>
 
           <button
