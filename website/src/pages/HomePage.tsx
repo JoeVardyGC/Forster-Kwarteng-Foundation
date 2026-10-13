@@ -241,14 +241,14 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 uppercase tracking-widest shadow-xs">
               <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              Verified Frontline Reach
+              Making A Difference
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-white mt-3 tracking-tight">
-              Measurable Grassroots Impact
+              Our Impact
             </h2>
             <div className="h-1 w-16 bg-[#F5BD02] rounded-full mx-auto my-3" />
             <p className="text-blue-100/90 text-sm sm:text-base leading-relaxed">
-              Every figure below represents real lives empowered, educations secured, and families supported in Ghanaian communities.
+              Together, we're making a difference in communities across the region.
             </p>
           </div>
 
