@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       {/* Top Utility Bar */}
-      <div className="bg-[#000052] text-white text-xs py-2 px-4 border-b border-blue-900/60 hidden md:block">
+      <div className="bg-[#000052]/95 backdrop-blur-md text-white text-xs py-2 px-4 border-b border-blue-900/40 hidden md:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-6">
             <span className="flex items-center gap-1.5 text-blue-200">
@@ -59,19 +59,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <div>
-            <span className="text-amber-300 font-medium tracking-wide text-xs sm:text-sm">
+            <span className="text-amber-300/95 font-semibold tracking-wide text-xs">
               Empowering Lives, Building Futures
             </span>
           </div>
         </div>
       </div>
 
-      {/* Main Sticky Navbar */}
+      {/* Main Sticky Navbar (Frosted Glass UI inspired by Save The Coin) */}
       <header
         className={`sticky top-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-sm py-2'
-            : 'bg-white py-3'
+            ? 'bg-white/85 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,128,0.06)] border-b border-slate-200/80 py-2.5'
+            : 'bg-white/80 backdrop-blur-lg border-b border-slate-200/60 shadow-[0_4px_20px_rgba(0,0,0,0.02)] py-3'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
@@ -88,8 +88,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             />
           </button>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2">
+          {/* Desktop Navigation Links (Frosted Glass Capsule Track) */}
+          <nav className="hidden lg:flex items-center p-1 rounded-full bg-slate-100/75 backdrop-blur-md border border-slate-200/70 shadow-2xs">
             {navLinks.map((link) => {
               const isActive =
                 currentPage === link.id ||
@@ -98,26 +98,23 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={link.id}
                   onClick={() => handleLinkClick(link.id)}
-                  className={`px-3.5 py-2 text-sm font-semibold rounded-xl transition-all duration-150 cursor-pointer relative ${
+                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
                     isActive
-                      ? 'text-[#000080] bg-blue-50/90 shadow-2xs font-bold'
-                      : 'text-slate-600 hover:text-[#000080] hover:bg-slate-100/70'
+                      ? 'bg-white text-[#000080] shadow-sm border border-slate-200/80 font-black scale-[1.02]'
+                      : 'text-slate-600 hover:text-[#000080] hover:bg-white/50'
                   }`}
                 >
                   {link.label}
-                  {isActive && (
-                    <span className="absolute bottom-1 left-3.5 right-3.5 h-0.5 bg-[#000080] rounded-full"></span>
-                  )}
                 </button>
               );
             })}
           </nav>
 
-          {/* Desktop Right Actions */}
+          {/* Desktop Right Actions (Glassy Pill Button) */}
           <div className="hidden md:flex items-center gap-3">
             <button
               onClick={onOpenDonateModal}
-              className="flex items-center gap-2 bg-gradient-to-r from-[#F5BD02] to-[#e5ae00] hover:from-[#e5ae00] hover:to-[#d49e00] text-[#000080] font-black text-sm px-6 py-2.5 rounded-full shadow-md shadow-amber-500/20 hover:shadow-lg hover:shadow-amber-500/30 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+              className="flex items-center gap-2 bg-gradient-to-r from-[#F5BD02] to-[#e5ae00] hover:from-[#e5ae00] hover:to-[#d49e00] text-[#000080] font-black text-sm px-6 py-2.5 rounded-full shadow-md shadow-amber-500/25 border border-amber-300/70 hover:shadow-xl hover:shadow-amber-500/35 transition-all duration-300 hover:scale-105 active:scale-100 cursor-pointer"
             >
               <Heart className="w-4 h-4 fill-[#000080]" />
               <span>Donate Now</span>
