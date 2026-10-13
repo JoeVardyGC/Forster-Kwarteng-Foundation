@@ -353,61 +353,118 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 4. VISION & MISSION SPOTLIGHT (Glassmorphic Cards) */}
-      <section className="relative py-16 lg:py-24 bg-gradient-to-b from-slate-50 via-blue-50/20 to-slate-50 border-b border-slate-200 overflow-hidden">
-        {/* Subtle Ambient Orbs */}
-        <div className="absolute top-10 right-10 w-80 h-80 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 left-10 w-80 h-80 bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
+      {/* 4. VISION & MISSION SPOTLIGHT (Architectural Glass Dual Showcase) */}
+      <section className="relative py-20 lg:py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-200 overflow-hidden">
+        {/* Soft Ambient Glow Orbs */}
+        <div className="absolute top-10 right-10 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-100/80 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-amber-200 shadow-2xs">
-              Our Organizational Compass
+          {/* Section Header styled cleanly like Stats and Programs headers */}
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold bg-blue-50/80 backdrop-blur-md border border-blue-200/60 text-[#000080] tracking-wider shadow-2xs">
+              Organizational Compass
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-[#000080] mt-3 tracking-tight">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 mt-3 tracking-tight">
               Why the Forster Kwarteng Foundation Exists
             </h2>
-            <p className="text-slate-600 text-sm sm:text-base mt-3">
+            <div className="h-1 w-16 bg-[#000080] rounded-full mx-auto my-3" />
+            <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
               Grounded in the belief that lasting social change begins with education, mentorship, and sustainable grassroots empowerment.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            {/* Vision Card */}
-            <div className="bg-gradient-to-br from-blue-900/5 via-white/85 to-blue-50/70 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-blue-200/80 shadow-sm hover:shadow-xl hover:border-[#000080]/40 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-[#000080] text-amber-400 flex items-center justify-center shadow-md border border-white/20">
-                  <Sparkles className="w-7 h-7" />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+            {/* 1. Vision Card (The Horizon - Royal Navy Frosted Glass) */}
+            <div className="relative bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white p-8 sm:p-10 lg:p-12 rounded-3xl border border-white/20 shadow-xl overflow-hidden flex flex-col justify-between group hover:shadow-2xl hover:border-white/35 transition-all duration-500">
+              {/* Corner Ambient Glow */}
+              <div className="absolute -top-16 -right-16 w-60 h-60 bg-white/10 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
+
+              <div className="relative z-10">
+                {/* Meta Header */}
+                <div className="flex items-center justify-between pb-6 border-b border-white/15">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-amber-300 tracking-wider">
+                    <Compass className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Our Vision</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-blue-200/60 tracking-widest uppercase">
+                    01 / The Horizon
+                  </span>
                 </div>
-                <span className="text-xs font-bold text-[#000080] uppercase tracking-wider block">
-                  Our Vision
-                </span>
-                <blockquote className="text-xl sm:text-2xl font-bold font-['Outfit'] text-[#000080] leading-snug">
+
+                {/* Main Quote Statement */}
+                <blockquote className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-white leading-snug my-6">
                   "{FOUNDATION_INFO.vision}"
                 </blockquote>
+
+                <p className="text-xs sm:text-sm text-blue-100/85 leading-relaxed">
+                  We envision a resilient Ghana where poverty and lack of resources never limit human potential, and where young people possess the skills and agency to lead.
+                </p>
               </div>
-              <div className="pt-6 mt-6 border-t border-blue-100/80 text-xs text-slate-600 flex items-center justify-between">
-                <span>Building sustainable agency across Ghana</span>
-                <ArrowRight className="w-4 h-4 text-[#000080] group-hover:translate-x-1 transition-transform" />
+
+              {/* Bottom Assurance */}
+              <div className="relative z-10 pt-6 mt-8 border-t border-white/15 flex items-center justify-between text-xs text-blue-200">
+                <span className="flex items-center gap-2 font-medium">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Building sustainable community agency across Ghana
+                </span>
+                <span className="text-amber-300 font-bold hidden sm:inline-block">Long-Term Impact</span>
               </div>
             </div>
 
-            {/* Mission Card */}
-            <div className="bg-gradient-to-br from-amber-500/5 via-white/85 to-amber-50/70 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-amber-200/80 shadow-sm hover:shadow-xl hover:border-amber-400/50 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-[#F5BD02] text-[#000080] flex items-center justify-center shadow-md border border-amber-300/40">
-                  <Heart className="w-7 h-7 fill-[#000080]" />
+            {/* 2. Mission Card (The Action Engine - Luminous Frosted Glass) */}
+            <div className="relative bg-white/90 backdrop-blur-xl text-slate-900 p-8 sm:p-10 lg:p-12 rounded-3xl border border-slate-200/90 shadow-xl overflow-hidden flex flex-col justify-between group hover:border-[#000080]/30 hover:shadow-2xl transition-all duration-500">
+              {/* Corner Ambient Glow */}
+              <div className="absolute -top-16 -right-16 w-60 h-60 bg-amber-200/35 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
+
+              <div className="relative z-10">
+                {/* Meta Header */}
+                <div className="flex items-center justify-between pb-6 border-b border-slate-100">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/90 backdrop-blur-md border border-amber-200/70 text-xs font-bold text-amber-800 tracking-wider">
+                    <HeartHandshake className="w-3.5 h-3.5 text-amber-600" />
+                    <span>Our Mission</span>
+                  </div>
+                  <span className="text-xs font-mono font-bold text-slate-400 tracking-widest uppercase">
+                    02 / The Action
+                  </span>
                 </div>
-                <span className="text-xs font-bold text-amber-700 uppercase tracking-wider block">
-                  Our Mission
-                </span>
-                <blockquote className="text-xl sm:text-2xl font-bold font-['Outfit'] text-slate-900 leading-snug">
+
+                {/* Main Quote Statement */}
+                <blockquote className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-slate-900 leading-snug my-6">
                   "{FOUNDATION_INFO.mission}"
                 </blockquote>
+
+                {/* The 4 Tactical Action Chips */}
+                <div className="grid grid-cols-2 gap-2.5 my-2">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4 text-[#000080] shrink-0" />
+                    <span>Education Sponsorship</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <Compass className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>Youth Mentorship</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <Wrench className="w-4 h-4 text-[#000080] shrink-0" />
+                    <span>Vocational Training</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-rose-500 shrink-0 fill-rose-500" />
+                    <span>Social Interventions</span>
+                  </div>
+                </div>
               </div>
-              <div className="pt-6 mt-6 border-t border-amber-100/80 text-xs text-slate-600 flex items-center justify-between">
-                <span>Education • Mentorship • Skills • Interventions</span>
-                <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform" />
+
+              {/* Bottom Action Link */}
+              <div className="relative z-10 pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+                <button
+                  onClick={() => onNavigate('programs')}
+                  className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
+                >
+                  <span>Explore the 4 Pillars in Detail</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <span className="text-xs text-slate-500 hidden sm:inline-block">Grassroots Driven</span>
               </div>
             </div>
           </div>
