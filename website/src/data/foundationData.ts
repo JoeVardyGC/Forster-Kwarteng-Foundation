@@ -167,10 +167,21 @@ export const PROGRAM_PILLARS: ProgramPillar[] = [
 ];
 
 export const IMPACT_STATS = [
-  { value: '5,000+', label: 'Lives Directly Empowered', description: 'Across Greater Accra, Eastern & Ashanti regions' },
-  { value: '24+', label: 'School & Community Outreaches', description: 'Renovations, book distributions, and clinics' },
-  { value: '150+', label: 'Academic Scholarships Awarded', description: 'Keeping vulnerable children consistently in school' },
-  { value: '100%', label: 'Governance Transparency', description: 'Audited allocations and dedicated donor reporting' },
+  {
+    value: '5,000+',
+    label: 'Lives Directly Empowered',
+    description: 'Across Greater Accra, Eastern & Ashanti regions',
+  },
+  {
+    value: '9',
+    label: 'Schools & Communities Reached',
+    description: 'Direct grassroots educational & social interventions',
+  },
+  {
+    value: '100%',
+    label: 'Governance Transparency',
+    description: 'Audited allocations and dedicated donor reporting',
+  },
 ];
 
 export const DONATION_TIERS: DonationTier[] = [

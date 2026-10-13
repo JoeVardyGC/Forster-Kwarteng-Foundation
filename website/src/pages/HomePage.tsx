@@ -252,22 +252,22 @@ export const HomePage: React.FC<HomePageProps> = ({
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
             {IMPACT_STATS.map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:border-white/40 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl text-center group flex flex-col justify-between"
+                className="bg-white/10 backdrop-blur-md rounded-3xl p-8 sm:p-10 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:border-white/40 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl text-center group flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black font-['Outfit'] text-white tracking-tight drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black font-['Outfit'] text-white tracking-tight drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
                     {stat.value}
                   </div>
-                  <div className="h-1 w-12 bg-amber-400/80 rounded-full mx-auto my-3 group-hover:w-16 transition-all duration-300" />
-                  <div className="text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider">
+                  <div className="h-1.5 w-14 bg-amber-400/90 rounded-full mx-auto my-3.5 group-hover:w-20 transition-all duration-300" />
+                  <div className="text-sm sm:text-base font-bold text-amber-300 uppercase tracking-wider">
                     {stat.label}
                   </div>
                 </div>
-                <div className="text-[11px] sm:text-xs text-blue-100/80 mt-2 line-clamp-2">
+                <div className="text-xs sm:text-sm text-blue-100/85 mt-3 leading-relaxed max-w-xs mx-auto">
                   {stat.description}
                 </div>
               </div>

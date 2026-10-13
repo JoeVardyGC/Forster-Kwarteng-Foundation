@@ -48,22 +48,29 @@ export const ImpactPage: React.FC<ImpactPageProps> = ({ onNavigate, onOpenDonate
         <div className="absolute bottom-0 left-0 right-0 h-1.5 fkf-step-bar"></div>
       </section>
 
-      {/* 2. STATS BANNER */}
-      <section className="bg-slate-50 py-12 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* 2. STATS BANNER (Glassy 3-Card Style) */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] py-16 lg:py-20 text-white">
+        {/* Ambient Blurred Orbs */}
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
             {IMPACT_STATS.map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-white p-6 rounded-2xl border border-slate-200 text-center shadow-xs"
+                className="bg-white/10 backdrop-blur-md rounded-3xl p-8 sm:p-10 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:border-white/40 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl text-center group flex flex-col justify-between"
               >
-                <div className="text-3xl sm:text-4xl font-black font-['Outfit'] text-[#000080]">
-                  {stat.value}
+                <div>
+                  <div className="text-4xl sm:text-5xl lg:text-6xl font-black font-['Outfit'] text-white tracking-tight drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
+                    {stat.value}
+                  </div>
+                  <div className="h-1.5 w-14 bg-amber-400/90 rounded-full mx-auto my-3.5 group-hover:w-20 transition-all duration-300" />
+                  <div className="text-sm sm:text-base font-bold text-amber-300 uppercase tracking-wider">
+                    {stat.label}
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-slate-800 mt-1">
-                  {stat.label}
-                </div>
-                <div className="text-[11px] text-slate-500 mt-0.5">
+                <div className="text-xs sm:text-sm text-blue-100/85 mt-3 leading-relaxed max-w-xs mx-auto">
                   {stat.description}
                 </div>
               </div>
