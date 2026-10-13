@@ -117,3 +117,29 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #39399d;
 }
+
+/* Glassmorphism Utilities inspired by modern glass style */
+.glass-card-dark {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-card-dark:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.glass-card-light {
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.glass-card-light:hover {
+  border-color: rgba(0, 0, 128, 0.25);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 128, 0.12);
+}
+

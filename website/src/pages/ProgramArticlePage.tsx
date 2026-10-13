@@ -274,11 +274,15 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
         </div>
       </section>
 
-      {/* 5. IMPACT METRICS STRIP */}
+      {/* 5. IMPACT METRICS STRIP (Glassy Design) */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
-        <div className="bg-slate-50 p-6 sm:p-8 rounded-2xl border border-slate-200">
-          <div className="text-center mb-6">
-            <span className="text-xs font-bold text-amber-600 uppercase tracking-widest block mb-1">
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-xs backdrop-blur-md">
+          {/* Ambient soft glow */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="text-center mb-6 relative z-10">
+            <span className="text-xs font-bold text-amber-700 bg-amber-100/70 backdrop-blur-xs px-3 py-1 rounded-full border border-amber-200 uppercase tracking-widest inline-block mb-2">
               Verified Frontline Data
             </span>
             <h3 className="text-lg sm:text-xl font-bold font-['Outfit'] text-[#000080]">
@@ -286,11 +290,11 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
             </h3>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 relative z-10">
             {article.impactStats.map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between"
+                className="bg-white/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-[#000080] mb-1">
@@ -423,13 +427,16 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
             </div>
           )}
 
-          {/* C. Beneficiary Spotlight Quote */}
+          {/* C. Beneficiary Spotlight Quote (Glassy Card inspired by Save The Coin) */}
           <section id="story" className="pt-4">
-            <div className="relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#000080] to-[#0a0a85] text-white overflow-hidden shadow-lg">
+            <div className="relative p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white overflow-hidden shadow-2xl border border-white/20">
+              {/* Ambient Glowing Orbs */}
+              <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute bottom-0 left-0 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
               <Quote className="absolute top-4 right-4 w-20 h-20 text-white/10 pointer-events-none" />
 
               <div className="relative z-10 space-y-6">
-                <span className="inline-block px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase tracking-wider border border-amber-400/30">
+                <span className="inline-block px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-xs font-bold uppercase tracking-wider border border-white/20 shadow-xs">
                   Beneficiary Voice & Turnaround
                 </span>
 
@@ -437,11 +444,11 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   "{article.beneficiaryQuote.quote}"
                 </blockquote>
 
-                <div className="flex items-center gap-4 pt-4 border-t border-white/15">
+                <div className="flex items-center gap-4 pt-4 border-t border-white/20">
                   <img
                     src={article.beneficiaryQuote.image}
                     alt={article.beneficiaryQuote.author}
-                    className="w-14 h-14 rounded-full object-cover border-2 border-amber-400 shrink-0"
+                    className="w-14 h-14 rounded-full object-cover border-2 border-amber-400 shrink-0 shadow-md"
                   />
                   <div>
                     <div className="text-base font-bold text-white">
@@ -520,8 +527,12 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
       </main>
 
       {/* 7. RELATED PROGRAMS SECTION (UNDER ARTICLE, DIRECTLY ABOVE FOOTER) */}
-      <section className="bg-slate-50 py-16 lg:py-20 border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative bg-gradient-to-b from-slate-50 via-white to-slate-50 py-16 lg:py-20 border-t border-slate-200 overflow-hidden">
+        {/* Soft Ambient Orbs */}
+        <div className="absolute top-12 left-10 w-96 h-96 bg-blue-100/35 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-12 right-10 w-96 h-96 bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
             <div>
               <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-1">
@@ -546,7 +557,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
               return (
                 <div
                   key={prog.id}
-                  className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group"
+                  className="bg-white/85 backdrop-blur-md rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_rgba(0,0,128,0.12)] hover:border-[#000080]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group"
                 >
                   {/* Image Banner */}
                   <div
@@ -558,11 +569,17 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                       alt={prog.title}
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                    {/* Frosted Glass Badge */}
+                    <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-[11px] font-semibold border border-white/20 shadow-sm flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      <span>Active Initiative</span>
+                    </div>
                   </div>
 
                   {/* Card Body */}
-                  <div className="p-6 flex flex-col justify-between flex-1">
+                  <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
                     <div>
                       <h3
                         onClick={() => onSelectProgram(prog.id)}
@@ -587,7 +604,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
 
                       <button
                         onClick={onOpenDonateModal}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-full border border-amber-200 transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-100/80 hover:bg-amber-200/90 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-amber-300/60 transition-all cursor-pointer shadow-2xs hover:scale-105"
                         title="Support this initiative"
                       >
                         <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />

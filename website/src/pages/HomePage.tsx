@@ -230,22 +230,44 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 2. LIVE IMPACT METRICS STRIP */}
-      <section className="bg-slate-50 py-12 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+      {/* 2. LIVE IMPACT METRICS STRIP (Glassy style inspired by Save The Coin) */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] py-20 lg:py-24 text-white">
+        {/* Ambient Blurred Orbs for Glowing Depth */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 uppercase tracking-widest shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              Verified Frontline Reach
+            </span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-white mt-3 tracking-tight">
+              Measurable Grassroots Impact
+            </h2>
+            <div className="h-1 w-16 bg-[#F5BD02] rounded-full mx-auto my-3" />
+            <p className="text-blue-100/90 text-sm sm:text-base leading-relaxed">
+              Every figure below represents real lives empowered, educations secured, and families supported in Ghanaian communities.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             {IMPACT_STATS.map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 text-center hover:shadow-md transition-shadow hover:border-blue-200"
+                className="bg-white/10 backdrop-blur-md rounded-3xl p-6 sm:p-8 border border-white/20 transition-all duration-500 hover:bg-white/20 hover:border-white/40 hover:-translate-y-2 hover:scale-[1.02] hover:shadow-2xl text-center group flex flex-col justify-between"
               >
-                <div className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-[#000080] mb-1">
-                  {stat.value}
+                <div>
+                  <div className="text-3xl sm:text-4xl lg:text-5xl font-black font-['Outfit'] text-white tracking-tight drop-shadow-sm group-hover:scale-105 transition-transform duration-300">
+                    {stat.value}
+                  </div>
+                  <div className="h-1 w-12 bg-amber-400/80 rounded-full mx-auto my-3 group-hover:w-16 transition-all duration-300" />
+                  <div className="text-xs sm:text-sm font-bold text-amber-300 uppercase tracking-wider">
+                    {stat.label}
+                  </div>
                 </div>
-                <div className="text-xs sm:text-sm font-bold text-slate-800">
-                  {stat.label}
-                </div>
-                <div className="text-[11px] text-slate-500 mt-1 line-clamp-1">
+                <div className="text-[11px] sm:text-xs text-blue-100/80 mt-2 line-clamp-2">
                   {stat.description}
                 </div>
               </div>
@@ -254,10 +276,14 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 3. OUR PROGRAMS SECTION (Based on Reference Design) */}
-      <section className="py-20 lg:py-28 bg-white border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header matching reference image */}
+      {/* 3. OUR PROGRAMS SECTION (Glassy elevation inspired by Save The Coin) */}
+      <section className="relative py-20 lg:py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden border-b border-slate-100">
+        {/* Soft Ambient Glow Orbs */}
+        <div className="absolute top-12 left-10 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-12 right-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Header matching reference image with subtle glass accent */}
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2 font-semibold">
               WHAT WE DO
@@ -271,12 +297,12 @@ export const HomePage: React.FC<HomePageProps> = ({
             </p>
           </div>
 
-          {/* Cards Grid: 3 columns on desktop, matching reference layout */}
+          {/* Cards Grid: 3 columns on desktop with glassy elevation */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {OUR_PROGRAMS.map((prog) => (
               <div
                 key={prog.id}
-                className="bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group"
+                className="bg-white/85 backdrop-blur-md rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_rgba(0,0,128,0.12)] hover:border-[#000080]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group"
               >
                 {/* Image Banner */}
                 <div
@@ -288,11 +314,17 @@ export const HomePage: React.FC<HomePageProps> = ({
                     alt={prog.title}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                  {/* Frosted Glass Badge overlay */}
+                  <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-[11px] font-semibold border border-white/20 shadow-sm flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    <span>Active Initiative</span>
+                  </div>
                 </div>
 
                 {/* Card Content */}
-                <div className="p-6 flex flex-col justify-between flex-1">
+                <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
                   <div>
                     <h3
                       onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
@@ -317,7 +349,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
                     <button
                       onClick={onOpenDonateModal}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-full border border-amber-200 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-100/80 hover:bg-amber-200/90 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-amber-300/60 transition-all cursor-pointer shadow-2xs hover:scale-105"
                       title="Support this initiative"
                     >
                       <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
@@ -327,19 +359,22 @@ export const HomePage: React.FC<HomePageProps> = ({
                 </div>
               </div>
             ))}
-
           </div>
         </div>
       </section>
 
-      {/* 4. VISION & MISSION SPOTLIGHT */}
-      <section className="py-16 lg:py-24 bg-slate-50 border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 4. VISION & MISSION SPOTLIGHT (Glassmorphic Cards) */}
+      <section className="relative py-16 lg:py-24 bg-gradient-to-b from-slate-50 via-blue-50/20 to-slate-50 border-b border-slate-200 overflow-hidden">
+        {/* Subtle Ambient Orbs */}
+        <div className="absolute top-10 right-10 w-80 h-80 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-10 left-10 w-80 h-80 bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-xs font-bold text-amber-500 uppercase tracking-widest bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+            <span className="text-xs font-bold text-amber-700 uppercase tracking-widest bg-amber-100/80 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-amber-200 shadow-2xs">
               Our Organizational Compass
             </span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-[#000080] mt-3">
+            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-[#000080] mt-3 tracking-tight">
               Why the Forster Kwarteng Foundation Exists
             </h2>
             <p className="text-slate-600 text-sm sm:text-base mt-3">
@@ -349,9 +384,9 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             {/* Vision Card */}
-            <div className="bg-gradient-to-br from-blue-50/70 to-white p-8 sm:p-10 rounded-3xl border-2 border-blue-100 shadow-sm relative overflow-hidden flex flex-col justify-between group hover:border-[#000080] transition-colors">
+            <div className="bg-gradient-to-br from-blue-900/5 via-white/85 to-blue-50/70 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-blue-200/80 shadow-sm hover:shadow-xl hover:border-[#000080]/40 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-[#000080] text-amber-400 flex items-center justify-center shadow-md">
+                <div className="w-14 h-14 rounded-2xl bg-[#000080] text-amber-400 flex items-center justify-center shadow-md border border-white/20">
                   <Sparkles className="w-7 h-7" />
                 </div>
                 <span className="text-xs font-bold text-[#000080] uppercase tracking-wider block">
@@ -361,16 +396,16 @@ export const HomePage: React.FC<HomePageProps> = ({
                   "{FOUNDATION_INFO.vision}"
                 </blockquote>
               </div>
-              <div className="pt-6 mt-6 border-t border-blue-100 text-xs text-slate-600 flex items-center justify-between">
+              <div className="pt-6 mt-6 border-t border-blue-100/80 text-xs text-slate-600 flex items-center justify-between">
                 <span>Building sustainable agency across Ghana</span>
-                <ArrowRight className="w-4 h-4 text-[#000080]" />
+                <ArrowRight className="w-4 h-4 text-[#000080] group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
             {/* Mission Card */}
-            <div className="bg-gradient-to-br from-amber-50/60 to-white p-8 sm:p-10 rounded-3xl border-2 border-amber-200 shadow-sm relative overflow-hidden flex flex-col justify-between group hover:border-amber-400 transition-colors">
+            <div className="bg-gradient-to-br from-amber-500/5 via-white/85 to-amber-50/70 backdrop-blur-md p-8 sm:p-10 rounded-3xl border border-amber-200/80 shadow-sm hover:shadow-xl hover:border-amber-400/50 transition-all duration-300 relative overflow-hidden flex flex-col justify-between group">
               <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-[#F5BD02] text-[#000080] flex items-center justify-center shadow-md">
+                <div className="w-14 h-14 rounded-2xl bg-[#F5BD02] text-[#000080] flex items-center justify-center shadow-md border border-amber-300/40">
                   <Heart className="w-7 h-7 fill-[#000080]" />
                 </div>
                 <span className="text-xs font-bold text-amber-700 uppercase tracking-wider block">
@@ -380,21 +415,21 @@ export const HomePage: React.FC<HomePageProps> = ({
                   "{FOUNDATION_INFO.mission}"
                 </blockquote>
               </div>
-              <div className="pt-6 mt-6 border-t border-amber-100 text-xs text-slate-600 flex items-center justify-between">
+              <div className="pt-6 mt-6 border-t border-amber-100/80 text-xs text-slate-600 flex items-center justify-between">
                 <span>Education • Mentorship • Skills • Interventions</span>
-                <ArrowRight className="w-4 h-4 text-amber-600" />
+                <ArrowRight className="w-4 h-4 text-amber-600 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5. THE 4 PILLARS OF SOCIAL IMPACT */}
+      {/* 5. THE 4 PILLARS OF SOCIAL IMPACT (Glassy Card Panels) */}
       <section className="py-16 lg:py-24 bg-white border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
             <div>
-              <span className="text-xs font-bold text-[#000080] uppercase tracking-widest bg-blue-100 px-3 py-1 rounded-full">
+              <span className="text-xs font-bold text-[#000080] uppercase tracking-widest bg-blue-100/80 px-3.5 py-1.5 rounded-full border border-blue-200/60 shadow-2xs">
                 Core Operations
               </span>
               <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-[#000080] mt-3">
@@ -417,10 +452,10 @@ export const HomePage: React.FC<HomePageProps> = ({
             {PROGRAM_PILLARS.map((pillar) => (
               <div
                 key={pillar.id}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group"
+                className="bg-white/85 backdrop-blur-md rounded-3xl p-6 sm:p-7 border border-slate-200/80 shadow-xs hover:shadow-xl hover:border-[#000080]/30 hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-50 border border-amber-200/60 flex items-center justify-center group-hover:scale-110 transition-transform shadow-xs">
                     {pillarIcons[pillar.id]}
                   </div>
 
@@ -434,7 +469,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-slate-100">
-                  <div className="text-[11px] font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md mb-3">
+                  <div className="text-[11px] font-bold text-amber-800 bg-amber-100/80 backdrop-blur-xs px-3 py-1 rounded-full border border-amber-200/60 inline-block mb-3">
                     {pillar.impactMetric}
                   </div>
                   <button
@@ -451,12 +486,16 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 5. INTERACTIVE GIVING CALCULATOR BANNER */}
-      <section className="py-16 bg-[#000080] text-white relative overflow-hidden">
+      {/* 6. INTERACTIVE GIVING CALCULATOR BANNER (Glassmorphic Container with Ambient Glow) */}
+      <section className="relative py-20 bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white overflow-hidden">
+        {/* Ambient Blur Orbs */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="bg-white text-slate-900 rounded-3xl p-6 sm:p-10 shadow-2xl border border-slate-100 max-w-4xl mx-auto">
+          <div className="bg-white/95 backdrop-blur-xl text-slate-900 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl border border-white/50 max-w-4xl mx-auto">
             <div className="text-center max-w-2xl mx-auto mb-8">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 mb-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 mb-2 border border-amber-200">
                 <Heart className="w-3.5 h-3.5 fill-amber-500" />
                 Tangible Giving • Direct Impact
               </span>
@@ -474,7 +513,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 <div
                   key={tier.id}
                   onClick={onOpenDonateModal}
-                  className="p-4 rounded-2xl border-2 border-slate-200 hover:border-[#000080] hover:bg-blue-50/50 transition-all cursor-pointer text-center group"
+                  className="p-4 sm:p-5 rounded-2xl border-2 border-slate-200/90 bg-white/70 backdrop-blur-xs hover:border-[#000080] hover:bg-blue-50/50 hover:shadow-md transition-all cursor-pointer text-center group"
                 >
                   <div className="text-2xl font-black font-['Outfit'] text-[#000080] group-hover:scale-105 transition-transform">
                     {currency === 'GHS' ? `₵${tier.amountGHS}` : `$${tier.amountUSD}`}
@@ -492,7 +531,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             <div className="text-center pt-2">
               <button
                 onClick={onOpenDonateModal}
-                className="px-8 py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-sm rounded-full shadow-md transition-all duration-200 hover:scale-105 inline-flex items-center gap-2 cursor-pointer"
+                className="px-8 py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 inline-flex items-center gap-2 cursor-pointer"
               >
                 <Heart className="w-4 h-4 fill-[#000080]" />
                 <span>Open Instant Giving Portal (MoMo & Card)</span>
@@ -502,10 +541,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 6. BENEFICIARY STORY SPOTLIGHT */}
+      {/* 7. BENEFICIARY STORY SPOTLIGHT (Frosted Glass Card) */}
       <section className="py-16 lg:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-slate-50 rounded-3xl border border-slate-200 p-8 sm:p-12 lg:p-14 overflow-hidden relative">
+          <div className="bg-gradient-to-br from-white/95 via-slate-50/90 to-blue-50/40 backdrop-blur-md rounded-3xl border border-slate-200/80 p-8 sm:p-12 lg:p-14 overflow-hidden relative shadow-sm">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-5 relative">
                 <div className="rounded-2xl overflow-hidden shadow-lg border-4 border-white aspect-4/3">
@@ -554,9 +593,13 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 7. THE 7 CORE VALUES BANNER */}
-      <section className="py-14 bg-gradient-to-r from-[#000080] to-[#0a0a85] text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      {/* 8. THE 7 CORE VALUES BANNER (Glass Cards with Ambient Orbs) */}
+      <section className="relative py-16 bg-gradient-to-r from-[#000080] via-[#0a0a85] to-[#000052] text-white overflow-hidden">
+        {/* Ambient Blur Orbs */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <span className="text-xs font-bold text-amber-400 uppercase tracking-widest block mb-2">
             The Principles That Define Us
           </span>
@@ -569,7 +612,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div
                 key={val.id}
                 onClick={() => onNavigate('about')}
-                className="bg-white/10 hover:bg-white/20 p-3 rounded-xl border border-white/15 backdrop-blur-sm transition-all cursor-pointer text-center group"
+                className="bg-white/10 hover:bg-white/20 p-4 rounded-2xl border border-white/20 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer text-center group"
               >
                 <div className="text-amber-400 font-black text-sm font-['Outfit'] mb-1">
                   0{val.id}
@@ -583,7 +626,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 8. COMMUNITY ACTION CALLOUT */}
+      {/* 9. COMMUNITY ACTION CALLOUT */}
       <section className="py-16 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-[#000080]">
@@ -595,13 +638,13 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button
               onClick={onOpenDonateModal}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-sm rounded-full shadow-md transition-all cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-sm rounded-full shadow-lg hover:shadow-xl transition-all cursor-pointer hover:scale-105"
             >
               Donate Today
             </button>
             <button
               onClick={() => onNavigate('get-involved')}
-              className="w-full sm:w-auto px-8 py-3.5 bg-blue-50 hover:bg-blue-100 text-[#000080] font-bold text-sm rounded-full border border-blue-200 transition-all cursor-pointer"
+              className="w-full sm:w-auto px-8 py-3.5 bg-blue-50/80 hover:bg-blue-100 text-[#000080] font-bold text-sm rounded-full border border-blue-200 transition-all cursor-pointer backdrop-blur-xs"
             >
               Apply as a Volunteer / Partner
             </button>

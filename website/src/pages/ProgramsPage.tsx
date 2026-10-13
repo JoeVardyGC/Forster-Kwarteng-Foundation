@@ -239,9 +239,13 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
         </div>
       </section>
 
-      {/* 5. OUR CORE PROGRAMS & FIELD ARTICLES */}
-      <section className="py-20 bg-white border-t border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 5. OUR CORE PROGRAMS & FIELD ARTICLES (Glassy Style) */}
+      <section className="relative py-20 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-t border-slate-200 overflow-hidden">
+        {/* Ambient Blur Orbs */}
+        <div className="absolute top-12 left-10 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-12 right-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-2 font-semibold">
               FIELD INTERVENTIONS & IMPACT STORIES
@@ -259,7 +263,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
             {OUR_PROGRAMS.map((prog) => (
               <div
                 key={prog.id}
-                className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group"
+                className="bg-white/85 backdrop-blur-md rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_rgba(0,0,128,0.12)] hover:border-[#000080]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group"
               >
                 <div
                   onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
@@ -270,10 +274,16 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
                     alt={prog.title}
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                  {/* Frosted Glass Badge */}
+                  <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-[11px] font-semibold border border-white/20 shadow-sm flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    <span>Active Initiative</span>
+                  </div>
                 </div>
 
-                <div className="p-6 flex flex-col justify-between flex-1">
+                <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
                   <div>
                     <h3
                       onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
@@ -298,7 +308,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
 
                     <button
                       onClick={onOpenDonateModal}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-full border border-amber-200 transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 bg-amber-100/80 hover:bg-amber-200/90 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-amber-300/60 transition-all cursor-pointer shadow-2xs hover:scale-105"
                       title="Support this initiative"
                     >
                       <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
@@ -307,7 +317,6 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
                   </div>
                 </div>
               </div>
-
             ))}
           </div>
         </div>
