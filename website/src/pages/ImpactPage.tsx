@@ -55,6 +55,20 @@ export const ImpactPage: React.FC<ImpactPageProps> = ({ onNavigate, onOpenDonate
         <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 tracking-wider shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              Making A Difference
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold font-['Outfit'] text-white mt-3 tracking-tight">
+              Our Impact
+            </h2>
+            <div className="h-1 w-16 bg-[#F5BD02] rounded-full mx-auto my-3" />
+            <p className="text-blue-100/90 text-sm sm:text-base leading-relaxed">
+              Together, we're making a difference in communities across the region.
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-5xl mx-auto">
             {IMPACT_STATS.map((stat, idx) => (
               <div
