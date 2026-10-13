@@ -14,10 +14,7 @@ import {
   ChevronRight,
   ChevronLeft,
   X,
-  Target,
   Quote,
-  Users,
-  ShieldCheck,
 } from 'lucide-react';
 
 interface ProgramArticlePageProps {
@@ -33,15 +30,12 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
   programId,
   onNavigate,
   onSelectProgram,
-  currency,
-  onToggleCurrency,
   onOpenDonateModal,
 }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [selectedTierIndex, setSelectedTierIndex] = useState<number>(1);
 
   // Retrieve program article data or fallback to first
   const article: ProgramArticle =
@@ -104,12 +98,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeLightboxIndex, isVideoModalOpen, article.gallery.length]);
 
-  // Related programs lookup
+  // Related programs lookup (excluding active)
   const relatedPrograms = article.relatedProgramIds
     .map((id) => OUR_PROGRAMS.find((p) => p.id === id))
     .filter(Boolean);
-
-  const selectedTier = article.donationTiers[selectedTierIndex] || article.donationTiers[0];
 
   return (
     <div className="min-h-screen bg-white text-slate-800">
@@ -123,7 +115,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
 
       {/* 2. BREADCRUMBS & TOP BAR */}
       <nav aria-label="Breadcrumb" className="bg-slate-50 border-b border-slate-200 py-3.5 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
           <div className="flex items-center gap-2 text-slate-500">
             <button
               onClick={() => onNavigate('home')}
@@ -155,7 +147,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
       </nav>
 
       {/* 3. EDITORIAL ARTICLE HEADER */}
-      <header className="pt-8 pb-8 sm:pt-12 sm:pb-10 bg-gradient-to-b from-slate-50 via-white to-white border-b border-slate-100">
+      <header className="pt-10 pb-8 sm:pt-14 sm:pb-10 bg-gradient-to-b from-slate-50 via-white to-white border-b border-slate-100">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Category Badge & Meta */}
           <div className="flex flex-wrap items-center gap-2.5 mb-4">
@@ -261,7 +253,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
       </header>
 
       {/* 4. HERO COVER IMAGE */}
-      <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
         <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-slate-900 group">
           <img
             src={article.coverImage}
@@ -283,10 +275,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
       </section>
 
       {/* 5. IMPACT METRICS STRIP */}
-      <section className="bg-slate-50 py-10 border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="bg-slate-50 p-6 sm:p-8 rounded-2xl border border-slate-200">
           <div className="text-center mb-6">
-            <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">
+            <span className="text-xs font-bold text-amber-600 uppercase tracking-widest block mb-1">
               Verified Frontline Data
             </span>
             <h3 className="text-lg sm:text-xl font-bold font-['Outfit'] text-[#000080]">
@@ -294,21 +286,21 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
             </h3>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {article.impactStats.map((stat, idx) => (
               <div
                 key={idx}
-                className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs hover:border-amber-300 transition-all flex flex-col justify-between"
+                className="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col justify-between"
               >
                 <div>
-                  <div className="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-['Outfit'] text-[#000080] mb-1">
+                  <div className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-[#000080] mb-1">
                     {stat.value}
                   </div>
                   <div className="text-xs sm:text-sm font-bold text-slate-900 mb-1">
                     {stat.label}
                   </div>
                 </div>
-                <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed mt-2 border-t border-slate-100 pt-2">
+                <p className="text-[11px] text-slate-500 leading-relaxed mt-2 border-t border-slate-100 pt-2">
                   {stat.description}
                 </p>
               </div>
@@ -317,356 +309,217 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
         </div>
       </section>
 
-      {/* 6. MAIN CONTENT & SIDEBAR */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-          {/* ARTICLE BODY (LEFT 8 COLUMNS) */}
-          <article className="lg:col-span-8 space-y-12">
-            {/* A. The Grassroots Challenge */}
-            <section id="challenge" className="space-y-5">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-1 bg-amber-500 rounded-full" />
-                <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">
-                  The Grassroots Reality
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
-                {article.challenge.headline}
-              </h2>
-              <div className="space-y-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-                {article.challenge.body.map((paragraph, pIdx) => (
-                  <p key={pIdx}>{paragraph}</p>
-                ))}
-              </div>
-
-              {/* Stat Highlight Card */}
-              {article.challenge.statHighlight && (
-                <div className="bg-amber-50/70 border-l-4 border-amber-500 p-5 rounded-r-xl flex items-start gap-4 mt-6">
-                  <div className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-amber-800 whitespace-nowrap">
-                    {article.challenge.statHighlight.number}
-                  </div>
-                  <div className="text-xs sm:text-sm text-amber-900/90 leading-relaxed pt-1">
-                    {article.challenge.statHighlight.text}
-                  </div>
-                </div>
-              )}
-            </section>
-
-            {/* B. FKF's 3-Phase Intervention */}
-            <section id="intervention" className="space-y-6 pt-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-1 bg-[#000080] rounded-full" />
-                <span className="text-xs font-bold text-[#000080] uppercase tracking-widest">
-                  Our Intervention Strategy
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
-                {article.intervention.title}
-              </h2>
-              <p className="text-base text-slate-600 leading-relaxed">
-                {article.intervention.description}
-              </p>
-
-              {/* 3 Step Cards */}
-              <div className="space-y-4 mt-6">
-                {article.intervention.phases.map((phase) => (
-                  <div
-                    key={phase.phase}
-                    className="p-5 sm:p-6 rounded-xl border border-slate-200 bg-white shadow-xs hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start gap-4"
-                  >
-                    <div className="w-12 h-12 rounded-xl bg-[#000080] text-amber-400 font-extrabold font-['Outfit'] text-lg flex items-center justify-center shrink-0 shadow-xs">
-                      {phase.phase}
-                    </div>
-                    <div>
-                      <h4 className="text-base sm:text-lg font-bold font-['Outfit'] text-slate-900 mb-1.5">
-                        {phase.title}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                        {phase.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* C. Beneficiary Spotlight Quote */}
-            <section id="story" className="pt-4">
-              <div className="relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#000080] to-[#0a0a85] text-white overflow-hidden shadow-lg">
-                <Quote className="absolute top-4 right-4 w-20 h-20 text-white/10 pointer-events-none" />
-
-                <div className="relative z-10 space-y-6">
-                  <span className="inline-block px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase tracking-wider border border-amber-400/30">
-                    Beneficiary Voice & Turnaround
-                  </span>
-
-                  <blockquote className="text-base sm:text-xl font-medium leading-relaxed italic text-blue-50">
-                    "{article.beneficiaryQuote.quote}"
-                  </blockquote>
-
-                  <div className="flex items-center gap-4 pt-4 border-t border-white/15">
-                    <img
-                      src={article.beneficiaryQuote.image}
-                      alt={article.beneficiaryQuote.author}
-                      className="w-14 h-14 rounded-full object-cover border-2 border-amber-400 shrink-0"
-                    />
-                    <div>
-                      <div className="text-base font-bold text-white">
-                        {article.beneficiaryQuote.author}
-                      </div>
-                      <div className="text-xs text-blue-200">
-                        {article.beneficiaryQuote.role} • {article.beneficiaryQuote.location}
-                      </div>
-                      <div className="text-[11px] text-amber-300 font-semibold mt-1">
-                        ✓ {article.beneficiaryQuote.outcome}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* D. Outreach Video Showcase */}
-            <section id="video" className="space-y-4 pt-4">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-1 bg-red-500 rounded-full" />
-                <span className="text-xs font-bold text-red-600 uppercase tracking-widest">
-                  Field Video Showcase
-                </span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
-                {article.video.title}
-              </h2>
-              <p className="text-sm text-slate-600">
-                {article.video.description}
-              </p>
-
-              {/* Video Player Card */}
-              <div
-                onClick={() => setIsVideoModalOpen(true)}
-                className="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 aspect-[16/9] group cursor-pointer bg-slate-900"
-              >
-                <img
-                  src={article.video.thumbnail}
-                  alt={article.video.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-                />
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-amber-400 text-[#000080] flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                    <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-current ml-1" />
-                  </div>
-                </div>
-
-                <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-xs text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-2">
-                  <span>Watch Field Video</span>
-                  <span className="text-amber-300">({article.video.duration})</span>
-                </div>
-              </div>
-            </section>
-
-            {/* E. Photo Gallery with Interactive Lightbox */}
-            <section id="gallery" className="space-y-4 pt-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-1 bg-emerald-500 rounded-full" />
-                    <span className="text-xs font-bold text-emerald-600 uppercase tracking-widest">
-                      Visual Evidence
-                    </span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900 mt-1">
-                    Field Photo Gallery
-                  </h2>
-                </div>
-                <span className="text-xs text-slate-500">
-                  Click any photo to enlarge
-                </span>
-              </div>
-
-              {/* 4 Photo Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {article.gallery.map((item, gIdx) => (
-                  <div
-                    key={gIdx}
-                    onClick={() => setActiveLightboxIndex(gIdx)}
-                    className="group relative rounded-xl overflow-hidden border border-slate-200 aspect-[4/3] bg-slate-100 cursor-pointer shadow-xs hover:shadow-md transition-all"
-                  >
-                    <img
-                      src={item.url}
-                      alt={item.caption}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
-                      <p className="text-white text-xs font-medium line-clamp-2">
-                        {item.caption}
-                      </p>
-                      <span className="text-[10px] text-amber-300 font-bold mt-1">
-                        Click to view in high-resolution ↗
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* F. UN SDG Alignment */}
-            <section className="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
-              <div className="flex items-center gap-2">
-                <Target className="w-4 h-4 text-[#000080]" />
-                <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900">
-                  Global SDG Alignment
-                </h3>
-              </div>
-              <p className="text-xs text-slate-600">
-                This initiative directly advances the United Nations Sustainable Development Goals:
-              </p>
-              <div className="flex flex-wrap gap-2.5">
-                {article.sdgBadges.map((sdg, sIdx) => (
-                  <div
-                    key={sIdx}
-                    className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold text-white shadow-xs"
-                    style={{ backgroundColor: sdg.color }}
-                  >
-                    <span>{sdg.number}:</span>
-                    <span>{sdg.title}</span>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </article>
-
-          {/* STICKY CONVERSION SIDEBAR (RIGHT 4 COLUMNS) */}
-          <aside className="lg:col-span-4 space-y-6 lg:sticky lg:top-8">
-            {/* SPONSOR THIS PROGRAM CARD */}
-            <div className="bg-white rounded-2xl border-2 border-[#000080]/15 shadow-xl p-6 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-24 h-24 bg-amber-400/10 rounded-bl-full pointer-events-none" />
-
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-xs font-extrabold text-[#000080] uppercase tracking-wider bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-                  Support This Initiative
-                </span>
-
-                {/* Currency Switcher */}
-                <button
-                  onClick={onToggleCurrency}
-                  className="px-2.5 py-1 rounded-md text-xs font-extrabold bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer border border-slate-300"
-                  title="Switch between Ghana Cedis and US Dollars"
-                >
-                  {currency === 'GHS' ? '₵ GHS' : '$ USD'} ⇄
-                </button>
-              </div>
-
-              <h3 className="text-xl font-extrabold font-['Outfit'] text-slate-900 mb-1">
-                Sponsor this Program
-              </h3>
-              <p className="text-xs text-slate-600 mb-5 leading-relaxed">
-                Directly power frontline outreaches, materials, and youth empowerment under {article.title}.
-              </p>
-
-              {/* Tiers List */}
-              <div className="space-y-2.5 mb-5">
-                {article.donationTiers.map((tier, tIdx) => {
-                  const isSelected = selectedTierIndex === tIdx;
-                  const amount = currency === 'GHS' ? `GH₵ ${tier.amountGHS}` : `$ ${tier.amountUSD}`;
-                  return (
-                    <button
-                      key={tIdx}
-                      onClick={() => setSelectedTierIndex(tIdx)}
-                      className={`w-full text-left p-3 rounded-xl border transition-all cursor-pointer flex flex-col gap-1 ${
-                        isSelected
-                          ? 'border-[#000080] bg-blue-50/70 shadow-xs ring-1 ring-[#000080]'
-                          : 'border-slate-200 bg-white hover:border-slate-300'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-800">
-                          {tier.label}
-                        </span>
-                        <span className="text-xs font-extrabold text-[#000080] bg-white px-2 py-0.5 rounded border border-slate-200">
-                          {amount}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-slate-500 leading-snug">
-                        {tier.impact}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Selected Tier Summary & Action Button */}
-              <button
-                onClick={onOpenDonateModal}
-                className="w-full py-3.5 px-4 rounded-xl bg-[#000080] hover:bg-blue-900 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer group"
-              >
-                <Heart className="w-4 h-4 text-amber-400 fill-amber-400 group-hover:scale-110 transition-transform" />
-                <span>
-                  Donate {currency === 'GHS' ? `GH₵ ${selectedTier.amountGHS}` : `$ ${selectedTier.amountUSD}`} to This Program
-                </span>
-              </button>
-
-              <div className="flex items-center justify-center gap-1.5 mt-3 text-[11px] text-slate-500 font-medium">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>100% Secure & Tax-Deductible in Ghana</span>
-              </div>
-            </div>
-
-            {/* VOLUNTEER & PARTNER CARD */}
-            <div className="bg-slate-50 rounded-2xl border border-slate-200 p-5 space-y-3">
-              <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-                <Users className="w-4 h-4 text-amber-600" />
-                <span>Join as a Mentor or Partner</span>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
-                Are you an educator, mental health professional, artisan, or corporate organization? Volunteer your expertise.
-              </p>
-              <button
-                onClick={() => onNavigate('get-involved')}
-                className="w-full py-2.5 px-4 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 font-bold text-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>Apply to Volunteer / Partner</span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
-              </button>
-            </div>
-
-            {/* TABLE OF CONTENTS QUICK NAV */}
-            <div className="bg-white rounded-2xl border border-slate-200 p-5 space-y-2 hidden lg:block">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
-                On This Page
+      {/* 6. MAIN ARTICLE EDITORIAL NARRATIVE (FOCUSED SINGLE COLUMN) */}
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24">
+        <article className="space-y-12">
+          {/* A. The Grassroots Challenge */}
+          <section id="challenge" className="space-y-5">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-1 bg-amber-500 rounded-full" />
+              <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">
+                The Grassroots Reality
               </span>
-              <ul className="space-y-1.5 text-xs font-medium text-slate-600">
-                <li>
-                  <a href="#challenge" className="hover:text-[#000080] transition-colors block py-0.5">
-                    → The Grassroots Reality
-                  </a>
-                </li>
-                <li>
-                  <a href="#intervention" className="hover:text-[#000080] transition-colors block py-0.5">
-                    → Our 3-Phase Strategy
-                  </a>
-                </li>
-                <li>
-                  <a href="#story" className="hover:text-[#000080] transition-colors block py-0.5">
-                    → Beneficiary Voice
-                  </a>
-                </li>
-                <li>
-                  <a href="#video" className="hover:text-[#000080] transition-colors block py-0.5">
-                    → Field Video Showcase
-                  </a>
-                </li>
-                <li>
-                  <a href="#gallery" className="hover:text-[#000080] transition-colors block py-0.5">
-                    → Photo Gallery
-                  </a>
-                </li>
-              </ul>
             </div>
-          </aside>
-        </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
+              {article.challenge.headline}
+            </h2>
+            <div className="space-y-4 text-base sm:text-lg text-slate-600 leading-relaxed">
+              {article.challenge.body.map((paragraph, pIdx) => (
+                <p key={pIdx}>{paragraph}</p>
+              ))}
+            </div>
+
+            {/* Stat Highlight Card */}
+            {article.challenge.statHighlight && (
+              <div className="bg-amber-50/70 border-l-4 border-amber-500 p-5 rounded-r-xl flex items-start gap-4 mt-6">
+                <div className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-amber-800 whitespace-nowrap">
+                  {article.challenge.statHighlight.number}
+                </div>
+                <div className="text-xs sm:text-sm text-amber-900/90 leading-relaxed pt-1">
+                  {article.challenge.statHighlight.text}
+                </div>
+              </div>
+            )}
+          </section>
+
+          {/* EMBEDDED INLINE IMAGE 1 (Seamlessly placed within description) */}
+          {article.gallery[0] && (
+            <figure
+              onClick={() => setActiveLightboxIndex(0)}
+              className="rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-900 group cursor-pointer my-8"
+            >
+              <img
+                src={article.gallery[0].url}
+                alt={article.gallery[0].caption}
+                className="w-full h-[320px] sm:h-[440px] object-cover group-hover:scale-102 transition-transform duration-500"
+              />
+              <figcaption className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 flex items-center justify-between">
+                <span>📸 {article.gallery[0].caption}</span>
+                <span className="text-blue-600 font-bold text-[11px] group-hover:underline">
+                  View full image ↗
+                </span>
+              </figcaption>
+            </figure>
+          )}
+
+          {/* B. FKF's 3-Phase Intervention Strategy */}
+          <section id="intervention" className="space-y-6 pt-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-1 bg-[#000080] rounded-full" />
+              <span className="text-xs font-bold text-[#000080] uppercase tracking-widest">
+                Our Intervention Strategy
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
+              {article.intervention.title}
+            </h2>
+            <p className="text-base text-slate-600 leading-relaxed">
+              {article.intervention.description}
+            </p>
+
+            {/* 3 Step Cards */}
+            <div className="space-y-4 mt-6">
+              {article.intervention.phases.map((phase) => (
+                <div
+                  key={phase.phase}
+                  className="p-5 sm:p-6 rounded-xl border border-slate-200 bg-white shadow-xs hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start gap-4"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-[#000080] text-amber-400 font-extrabold font-['Outfit'] text-lg flex items-center justify-center shrink-0 shadow-xs">
+                    {phase.phase}
+                  </div>
+                  <div>
+                    <h4 className="text-base sm:text-lg font-bold font-['Outfit'] text-slate-900 mb-1.5">
+                      {phase.title}
+                    </h4>
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                      {phase.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* EMBEDDED INLINE IMAGE PAIR (Placed directly in description flow) */}
+          {article.gallery.length >= 3 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
+              {article.gallery.slice(1, 3).map((item, idx) => (
+                <figure
+                  key={idx}
+                  onClick={() => setActiveLightboxIndex(idx + 1)}
+                  className="rounded-xl overflow-hidden border border-slate-200 shadow-xs bg-slate-50 group cursor-pointer"
+                >
+                  <img
+                    src={item.url}
+                    alt={item.caption}
+                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <figcaption className="p-3 text-xs text-slate-600 bg-white border-t border-slate-100 flex items-center justify-between">
+                    <span className="truncate max-w-[220px]">{item.caption}</span>
+                    <span className="text-blue-600 font-bold text-[10px] shrink-0">Zoom ↗</span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
+
+          {/* C. Beneficiary Spotlight Quote */}
+          <section id="story" className="pt-4">
+            <div className="relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-[#000080] to-[#0a0a85] text-white overflow-hidden shadow-lg">
+              <Quote className="absolute top-4 right-4 w-20 h-20 text-white/10 pointer-events-none" />
+
+              <div className="relative z-10 space-y-6">
+                <span className="inline-block px-3 py-1 rounded-full bg-amber-400/20 text-amber-300 text-xs font-bold uppercase tracking-wider border border-amber-400/30">
+                  Beneficiary Voice & Turnaround
+                </span>
+
+                <blockquote className="text-base sm:text-xl font-medium leading-relaxed italic text-blue-50">
+                  "{article.beneficiaryQuote.quote}"
+                </blockquote>
+
+                <div className="flex items-center gap-4 pt-4 border-t border-white/15">
+                  <img
+                    src={article.beneficiaryQuote.image}
+                    alt={article.beneficiaryQuote.author}
+                    className="w-14 h-14 rounded-full object-cover border-2 border-amber-400 shrink-0"
+                  />
+                  <div>
+                    <div className="text-base font-bold text-white">
+                      {article.beneficiaryQuote.author}
+                    </div>
+                    <div className="text-xs text-blue-200">
+                      {article.beneficiaryQuote.role} • {article.beneficiaryQuote.location}
+                    </div>
+                    <div className="text-[11px] text-amber-300 font-semibold mt-1">
+                      ✓ {article.beneficiaryQuote.outcome}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* D. Outreach Video Showcase */}
+          <section id="video" className="space-y-4 pt-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-1 bg-red-500 rounded-full" />
+              <span className="text-xs font-bold text-red-600 uppercase tracking-widest">
+                Field Video Showcase
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
+              {article.video.title}
+            </h2>
+            <p className="text-sm text-slate-600">
+              {article.video.description}
+            </p>
+
+            {/* Video Player Card */}
+            <div
+              onClick={() => setIsVideoModalOpen(true)}
+              className="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 aspect-[16/9] group cursor-pointer bg-slate-900"
+            >
+              <img
+                src={article.video.thumbnail}
+                alt={article.video.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+              />
+              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-amber-400 text-[#000080] flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                  <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-current ml-1" />
+                </div>
+              </div>
+
+              <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-xs text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-2">
+                <span>Watch Field Video</span>
+                <span className="text-amber-300">({article.video.duration})</span>
+              </div>
+            </div>
+          </section>
+
+          {/* EMBEDDED INLINE IMAGE 4 (If available) */}
+          {article.gallery[3] && (
+            <figure
+              onClick={() => setActiveLightboxIndex(3)}
+              className="rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-900 group cursor-pointer my-8"
+            >
+              <img
+                src={article.gallery[3].url}
+                alt={article.gallery[3].caption}
+                className="w-full h-[300px] sm:h-[400px] object-cover group-hover:scale-102 transition-transform duration-500"
+              />
+              <figcaption className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 flex items-center justify-between">
+                <span>📸 {article.gallery[3].caption}</span>
+                <span className="text-blue-600 font-bold text-[11px] group-hover:underline">
+                  View full image ↗
+                </span>
+              </figcaption>
+            </figure>
+          )}
+        </article>
       </main>
 
-      {/* 7. RELATED PROGRAMS SECTION (CONTINUOUS EXPLORATION) */}
+      {/* 7. RELATED PROGRAMS SECTION (UNDER ARTICLE, DIRECTLY ABOVE FOOTER) */}
       <section className="bg-slate-50 py-16 lg:py-20 border-t border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
@@ -696,7 +549,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   className="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col group"
                 >
                   {/* Image Banner */}
-                  <div className="relative h-48 overflow-hidden bg-slate-100">
+                  <div
+                    onClick={() => onSelectProgram(prog.id)}
+                    className="relative h-48 overflow-hidden bg-slate-100 cursor-pointer"
+                  >
                     <img
                       src={prog.image}
                       alt={prog.title}
@@ -708,7 +564,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   {/* Card Body */}
                   <div className="p-6 flex flex-col justify-between flex-1">
                     <div>
-                      <h3 className="text-lg font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2">
+                      <h3
+                        onClick={() => onSelectProgram(prog.id)}
+                        className="text-lg font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2 cursor-pointer"
+                      >
                         {prog.title}
                       </h3>
                       <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 line-clamp-2">
@@ -716,14 +575,25 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                       </p>
                     </div>
 
-                    {/* Read More Action Button */}
-                    <button
-                      onClick={() => onSelectProgram(prog.id)}
-                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer self-start"
-                    >
-                      <span>Read More</span>
-                      <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
-                    </button>
+                    {/* Action Bar embedded in card */}
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                      <button
+                        onClick={() => onSelectProgram(prog.id)}
+                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer"
+                      >
+                        <span>Read More</span>
+                        <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
+                      </button>
+
+                      <button
+                        onClick={onOpenDonateModal}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-full border border-amber-200 transition-colors cursor-pointer"
+                        title="Support this initiative"
+                      >
+                        <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                        <span>Donate</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );

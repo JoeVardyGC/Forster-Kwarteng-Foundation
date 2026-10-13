@@ -286,15 +286,28 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
                     </p>
                   </div>
 
-                  <button
-                    onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
-                    className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer self-start"
-                  >
-                    <span>Read More</span>
-                    <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
-                  </button>
+                  {/* Action Bar embedded in card */}
+                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <button
+                      onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer"
+                    >
+                      <span>Read More</span>
+                      <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
+                    </button>
+
+                    <button
+                      onClick={onOpenDonateModal}
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-full border border-amber-200 transition-colors cursor-pointer"
+                      title="Support this initiative"
+                    >
+                      <Heart className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                      <span>Donate</span>
+                    </button>
+                  </div>
                 </div>
               </div>
+
             ))}
           </div>
         </div>
