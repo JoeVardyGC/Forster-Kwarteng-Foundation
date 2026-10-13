@@ -353,14 +353,14 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 4. VISION & MISSION SPOTLIGHT (Architectural Glass Dual Showcase) */}
+      {/* 4. VISION & MISSION SPOTLIGHT (Unified Dual Showcase Based on UI Inspo) */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-b border-slate-200 overflow-hidden">
         {/* Soft Ambient Glow Orbs */}
         <div className="absolute top-10 right-10 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-10 left-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Section Header styled cleanly like Stats and Programs headers */}
+          {/* Section Header */}
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold bg-blue-50/80 backdrop-blur-md border border-blue-200/60 text-[#000080] tracking-wider shadow-2xs">
               Organizational Compass
@@ -374,97 +374,116 @@ export const HomePage: React.FC<HomePageProps> = ({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            {/* 1. Vision Card (The Horizon - Royal Navy Frosted Glass) */}
-            <div className="relative bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white p-8 sm:p-10 lg:p-12 rounded-3xl border border-white/20 shadow-xl overflow-hidden flex flex-col justify-between group hover:shadow-2xl hover:border-white/35 transition-all duration-500">
-              {/* Corner Ambient Glow */}
-              <div className="absolute -top-16 -right-16 w-60 h-60 bg-white/10 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
-
-              <div className="relative z-10">
-                {/* Meta Header */}
-                <div className="flex items-center justify-between pb-6 border-b border-white/15">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-amber-300 tracking-wider">
-                    <Compass className="w-3.5 h-3.5 text-amber-300" />
-                    <span>Our Vision</span>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-blue-200/60 tracking-widest uppercase">
-                    01 / The Horizon
-                  </span>
+          {/* Unified Dual Showcase Container (Matching Inspo Structure) */}
+          <div className="bg-white/95 backdrop-blur-xl rounded-3xl lg:rounded-[36px] border border-slate-200/90 shadow-[0_12px_44px_rgba(0,0,128,0.06)] overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-200/80">
+            {/* LEFT HALF: OUR VISION */}
+            <div className="flex flex-col justify-between group">
+              {/* Top Photo Banner */}
+              <div className="relative h-60 sm:h-72 lg:h-80 overflow-hidden bg-slate-100">
+                <img
+                  src="/assets/hero_girls_right.jpg"
+                  alt="Our Vision — Educating and Empowering Youth in Ghana"
+                  className="w-full h-full object-cover object-[80%_center] group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute top-4 left-4 px-3.5 py-1 rounded-full bg-slate-950/65 backdrop-blur-md text-white text-xs font-mono font-bold border border-white/20 shadow-sm flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#F5BD02]" />
+                  <span>01 / The Horizon</span>
                 </div>
-
-                {/* Main Quote Statement */}
-                <blockquote className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-white leading-snug my-6">
-                  "{FOUNDATION_INFO.vision}"
-                </blockquote>
-
-                <p className="text-xs sm:text-sm text-blue-100/85 leading-relaxed">
-                  We envision a resilient Ghana where poverty and lack of resources never limit human potential, and where young people possess the skills and agency to lead.
-                </p>
               </div>
 
-              {/* Bottom Assurance */}
-              <div className="relative z-10 pt-6 mt-8 border-t border-white/15 flex items-center justify-between text-xs text-blue-200">
-                <span className="flex items-center gap-2 font-medium">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  Building sustainable community agency across Ghana
-                </span>
-                <span className="text-amber-300 font-bold hidden sm:inline-block">Long-Term Impact</span>
+              {/* Content Area */}
+              <div className="p-8 sm:p-10 lg:p-12 flex flex-col justify-between flex-1">
+                <div>
+                  {/* Triangular Brand Accent (From Inspo) */}
+                  <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-4" />
+
+                  <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight mb-4">
+                    Our Vision
+                  </h3>
+
+                  <blockquote className="text-base sm:text-lg font-bold font-['Outfit'] text-[#000080] leading-snug mb-3">
+                    "{FOUNDATION_INFO.vision}"
+                  </blockquote>
+
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal mb-6">
+                    We envision a resilient Ghana where poverty and lack of resources never limit human potential, and where young people possess the skills and agency to lead.
+                  </p>
+                </div>
+
+                {/* Bottom Indicator */}
+                <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs text-slate-500">
+                  <span className="flex items-center gap-2 font-medium text-slate-700">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    Building sustainable community agency across Ghana
+                  </span>
+                  <span className="text-[#000080] font-bold hidden sm:inline-block">Long-Term Impact</span>
+                </div>
               </div>
             </div>
 
-            {/* 2. Mission Card (The Action Engine - Luminous Frosted Glass) */}
-            <div className="relative bg-white/90 backdrop-blur-xl text-slate-900 p-8 sm:p-10 lg:p-12 rounded-3xl border border-slate-200/90 shadow-xl overflow-hidden flex flex-col justify-between group hover:border-[#000080]/30 hover:shadow-2xl transition-all duration-500">
-              {/* Corner Ambient Glow */}
-              <div className="absolute -top-16 -right-16 w-60 h-60 bg-amber-200/35 rounded-full blur-3xl pointer-events-none group-hover:scale-125 transition-transform duration-700" />
-
-              <div className="relative z-10">
-                {/* Meta Header */}
-                <div className="flex items-center justify-between pb-6 border-b border-slate-100">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-50/90 backdrop-blur-md border border-amber-200/70 text-xs font-bold text-amber-800 tracking-wider">
-                    <HeartHandshake className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Our Mission</span>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-slate-400 tracking-widest uppercase">
-                    02 / The Action
-                  </span>
-                </div>
-
-                {/* Main Quote Statement */}
-                <blockquote className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-slate-900 leading-snug my-6">
-                  "{FOUNDATION_INFO.mission}"
-                </blockquote>
-
-                {/* The 4 Tactical Action Chips */}
-                <div className="grid grid-cols-2 gap-2.5 my-2">
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4 text-[#000080] shrink-0" />
-                    <span>Education Sponsorship</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                    <Compass className="w-4 h-4 text-amber-600 shrink-0" />
-                    <span>Youth Mentorship</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                    <Wrench className="w-4 h-4 text-[#000080] shrink-0" />
-                    <span>Vocational Training</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-rose-500 shrink-0 fill-rose-500" />
-                    <span>Social Interventions</span>
-                  </div>
+            {/* RIGHT HALF: OUR MISSION */}
+            <div className="flex flex-col justify-between group">
+              {/* Top Photo Banner */}
+              <div className="relative h-60 sm:h-72 lg:h-80 overflow-hidden bg-slate-100">
+                <img
+                  src="/assets/hero_outreach_right.jpg"
+                  alt="Our Mission — Community Outreach and Support"
+                  className="w-full h-full object-cover object-[80%_center] group-hover:scale-105 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute top-4 left-4 px-3.5 py-1 rounded-full bg-slate-950/65 backdrop-blur-md text-white text-xs font-mono font-bold border border-white/20 shadow-sm flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span>02 / The Action</span>
                 </div>
               </div>
 
-              {/* Bottom Action Link */}
-              <div className="relative z-10 pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
-                <button
-                  onClick={() => onNavigate('programs')}
-                  className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
-                >
-                  <span>Explore the 4 Pillars in Detail</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <span className="text-xs text-slate-500 hidden sm:inline-block">Grassroots Driven</span>
+              {/* Content Area */}
+              <div className="p-8 sm:p-10 lg:p-12 flex flex-col justify-between flex-1">
+                <div>
+                  {/* Triangular Brand Accent (From Inspo) */}
+                  <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-4" />
+
+                  <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight mb-4">
+                    Our Mission
+                  </h3>
+
+                  <blockquote className="text-base sm:text-lg font-bold font-['Outfit'] text-[#000080] leading-snug mb-3">
+                    "{FOUNDATION_INFO.mission}"
+                  </blockquote>
+
+                  {/* The 4 Tactical Action Chips */}
+                  <div className="grid grid-cols-2 gap-2.5 my-4">
+                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                      <GraduationCap className="w-4 h-4 text-[#000080] shrink-0" />
+                      <span>Education Sponsorship</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                      <Compass className="w-4 h-4 text-amber-600 shrink-0" />
+                      <span>Youth Mentorship</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                      <Wrench className="w-4 h-4 text-[#000080] shrink-0" />
+                      <span>Vocational Training</span>
+                    </div>
+                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                      <Heart className="w-4 h-4 text-rose-500 shrink-0 fill-rose-500" />
+                      <span>Social Interventions</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Action Link */}
+                <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs">
+                  <button
+                    onClick={() => onNavigate('programs')}
+                    className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
+                  >
+                    <span>Explore the 4 Pillars in Detail</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-slate-500 hidden sm:inline-block">Grassroots Driven</span>
+                </div>
               </div>
             </div>
           </div>
