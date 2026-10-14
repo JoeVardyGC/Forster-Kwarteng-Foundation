@@ -120,7 +120,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Based on Reference Structure) */}
       <section
-        className="relative min-h-[700px] sm:min-h-[620px] lg:min-h-[660px] flex items-center text-white overflow-hidden"
+        className="relative min-h-[600px] sm:min-h-[620px] lg:min-h-[660px] flex items-center text-white overflow-hidden"
       >
         {/* Full-Bleed Background Carousel Images */}
         <div className="absolute inset-0 z-0">
