@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { PageId, Currency } from '../types';
-import { DONATION_TIERS, FOUNDATION_INFO } from '../data/foundationData';
+import { FOUNDATION_INFO } from '../data/foundationData';
 import {
   Heart,
   ShieldCheck,
@@ -13,7 +13,6 @@ import {
   PhoneCall,
   CheckCircle2,
   HelpCircle,
-  ArrowRight,
   Sparkles,
   Users,
 } from 'lucide-react';
@@ -31,8 +30,6 @@ export const DonatePage: React.FC<DonatePageProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'momo' | 'bank'>('momo');
   const [copiedField, setCopiedField] = useState<string | null>(null);
-  const [selectedTierId, setSelectedTierId] = useState<string>(DONATION_TIERS[1].id);
-  const [customAmount, setCustomAmount] = useState<string>('');
 
   const copyToClipboard = (text: string, fieldName: string) => {
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -98,15 +95,8 @@ export const DonatePage: React.FC<DonatePageProps> = ({
     country: 'Ghana',
   };
 
-  const selectedTier = DONATION_TIERS.find((t) => t.id === selectedTierId);
-  const activeAmount = customAmount
-    ? parseFloat(customAmount) || 0
-    : currency === 'GHS'
-    ? selectedTier?.amountGHS || 0
-    : selectedTier?.amountUSD || 0;
-
   const whatsappMessage = encodeURIComponent(
-    `Hello Forster Kwarteng Foundation, I would like to confirm my donation of ${currency === 'GHS' ? `₵${activeAmount}` : `$${activeAmount}`} to support your foundation programs! Please find my payment details here.`
+    'Hello Forster Kwarteng Foundation, I have just made a donation to support your foundation programs! Please find my transaction confirmation here.'
   );
 
   return (
@@ -435,122 +425,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({
             </div>
           </div>
 
-          {/* 3. CONTRIBUTION TIERS & IMPACT OVERVIEW */}
-          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
-              <div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-[#000080] block font-mono">
-                  GIVING IMPACT TIERS
-                </span>
-                <h3 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 mt-0.5">
-                  See What Your Support Accomplishes
-                </h3>
-              </div>
-
-              {/* Currency Toggle */}
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-slate-500 font-medium">Currency:</span>
-                <button
-                  type="button"
-                  onClick={onToggleCurrency}
-                  className="px-3.5 py-1.5 rounded-xl border border-slate-200 font-bold text-[#000080] bg-blue-50/80 hover:bg-blue-100 transition-colors cursor-pointer"
-                >
-                  {currency === 'GHS' ? '₵ GHS (Ghana Cedis)' : '$ USD (US Dollars)'}
-                </button>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {DONATION_TIERS.map((tier) => {
-                const isSelected = selectedTierId === tier.id && !customAmount;
-                const displayAmount =
-                  currency === 'GHS' ? `₵${tier.amountGHS}` : `$${tier.amountUSD}`;
-
-                return (
-                  <div
-                    key={tier.id}
-                    onClick={() => {
-                      setSelectedTierId(tier.id);
-                      setCustomAmount('');
-                    }}
-                    className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${
-                      isSelected
-                        ? 'border-[#000080] bg-blue-50/80 shadow-sm ring-2 ring-[#000080]/15'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
-                    }`}
-                  >
-                    {tier.popular && (
-                      <span className="absolute -top-2.5 right-3 bg-amber-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
-                        Most Popular
-                      </span>
-                    )}
-                    <div>
-                      <div className="text-2xl font-black font-['Outfit'] text-[#000080]">
-                        {displayAmount}
-                      </div>
-                      <div className="text-xs font-bold text-slate-900 mt-1">
-                        {tier.label}
-                      </div>
-                      <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                        {tier.impactDescription}
-                      </p>
-                    </div>
-
-                    <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold text-[#000080] flex items-center justify-between">
-                      <span>Select Tier</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* Custom Gift Card */}
-              <div
-                className={`p-5 rounded-2xl border-2 flex flex-col justify-between transition-all ${
-                  customAmount
-                    ? 'border-[#000080] bg-blue-50/80 ring-2 ring-[#000080]/15'
-                    : 'border-slate-200 bg-white'
-                }`}
-              >
-                <div>
-                  <label className="text-xs font-bold text-slate-900 block mb-1">
-                    Custom Contribution
-                  </label>
-                  <p className="text-xs text-slate-500 mb-3">
-                    Give any amount that fits your vision for change.
-                  </p>
-                  <div className="flex items-center gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                    <span className="text-base font-bold text-slate-700">
-                      {currency === 'GHS' ? '₵' : '$'}
-                    </span>
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="e.g. 500"
-                      value={customAmount}
-                      onChange={(e) => setCustomAmount(e.target.value)}
-                      className="w-full text-base font-bold text-[#000080] bg-transparent focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
-                  Every Cedi counts directly.
-                </div>
-              </div>
-            </div>
-
-            {/* Impact Note Banner */}
-            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/90 text-xs text-amber-900 flex items-start gap-3">
-              <Heart className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 fill-amber-600" />
-              <div>
-                <strong className="font-bold">Chosen Impact Focus: </strong>
-                <span>{selectedTier?.impactDescription}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* 4. DONOR FAQ ACCORDION */}
+          {/* 3. DONOR FAQ ACCORDION */}
           <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm space-y-6">
             <div className="text-center max-w-xl mx-auto space-y-1">
               <h3 className="text-2xl font-extrabold font-['Outfit'] text-slate-900">
