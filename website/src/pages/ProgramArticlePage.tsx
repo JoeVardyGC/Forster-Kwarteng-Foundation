@@ -11,11 +11,7 @@ import {
   ChevronLeft,
   X,
   Quote,
-  Eye,
-  MessageSquare,
   Share2,
-  Download,
-  ShieldCheck,
   Send,
   Bookmark,
 } from 'lucide-react';
@@ -152,7 +148,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
               onClick={() => onNavigate('programs')}
               className="hover:text-[#000080] font-medium transition-colors cursor-pointer"
             >
-              Projects
+              Our Projects
             </button>
             <span>/</span>
             <span className="text-slate-900 font-semibold truncate max-w-xs">
@@ -165,7 +161,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
             className="inline-flex items-center gap-1.5 text-xs font-bold text-[#000080] hover:text-blue-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-full transition-all shadow-2xs cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>All Projects</span>
+            <span>Our Projects</span>
           </button>
         </div>
       </nav>
@@ -183,7 +179,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
 
         {/* Center Category Badge */}
         <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#000080] bg-blue-50/90 px-3 py-1 rounded-full border border-blue-200/60 shadow-2xs">
-          Project Dispatch
+          Our Projects
         </span>
 
         {/* Circular Share Button from inspo */}
@@ -207,10 +203,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
           {/* LEFT COLUMN: PRIMARY ARTICLE DETAILS (lg:col-span-8)      */}
           {/* ========================================================= */}
           <div className="lg:col-span-8 space-y-4">
-            {/* Top Heading outside card matching Desktop Inspo ("Politics" header) */}
+            {/* Top Heading outside card matching Desktop Inspo */}
             <div className="hidden lg:flex items-center justify-between pb-1">
               <h2 className="text-2xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
-                Projects & Initiatives
+                Our Projects
               </h2>
             </div>
 
@@ -235,30 +231,14 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                 </div>
               </div>
 
-              {/* Meta Row: Category Pill + Impact Metrics (Directly from Desktop Inspo) */}
+              {/* Meta Row: Category Pill (Blue) */}
               <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1 pb-3">
-                <span className="px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-extrabold uppercase tracking-wider bg-rose-50 text-rose-600 border border-rose-200/80 shadow-2xs">
+                <span className="px-3 py-1 rounded-full text-[11px] sm:text-xs font-extrabold uppercase tracking-wider bg-blue-50 text-[#000080] border border-blue-200/80 shadow-2xs">
                   {article.category}
                 </span>
-
-                {/* Social / Field Engagement Counters from Inspo */}
-                <div className="flex items-center gap-3.5 text-xs font-semibold text-slate-500">
-                  <span className="flex items-center gap-1.5" title="Direct Beneficiaries Reached">
-                    <Eye className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{article.impactStats[0]?.value || '2.6k'} Reached</span>
-                  </span>
-                  <span className="flex items-center gap-1.5" title="Community Hubs">
-                    <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{article.impactStats[1]?.value || '9'} Hubs</span>
-                  </span>
-                  <span className="flex items-center gap-1.5 text-emerald-600 font-bold">
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Verified</span>
-                  </span>
-                </div>
               </div>
 
-              {/* Main Headline & Action Buttons Row (Direct arrangement from Desktop Inspo) */}
+              {/* Main Headline & Action Buttons Row */}
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mt-2 mb-4">
                 <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight leading-snug sm:leading-tight flex-1">
                   {article.title}
@@ -286,7 +266,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   >
                     {copiedLink ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <Check className="w-4 h-4 text-emerald-600" />
                         <span className="text-emerald-600">Copied!</span>
                       </>
                     ) : (
@@ -299,68 +279,26 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                 </div>
               </div>
 
-              {/* Byline Row with Circular Avatar (Directly matching Mobile Inspo Screen) */}
-              <div className="flex items-center justify-between py-3 my-4 border-y border-slate-100">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-50 border border-slate-200 shadow-2xs p-1 flex items-center justify-center shrink-0">
-                    <img
-                      src="/assets/fkf-emblem-mark.png"
-                      alt="Forster Kwarteng Foundation"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-                  <div>
-                    <div className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
-                      FKF Field Desk
-                    </div>
-                    <div className="text-[11px] text-slate-500">
-                      {article.location}
-                    </div>
-                  </div>
+              {/* Post Meta Row: Date, Location, Reading Time */}
+              <div className="flex items-center justify-between py-3 my-4 border-y border-slate-100 text-xs text-slate-500 font-medium">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-slate-700">{article.publishedDate}</span>
+                  {article.location && (
+                    <>
+                      <span>•</span>
+                      <span>{article.location}</span>
+                    </>
+                  )}
                 </div>
-
-                <div className="text-right text-[11px] sm:text-xs text-slate-500 font-medium">
-                  <div>{article.publishedDate}</div>
-                  <div className="text-slate-400">{article.readTime}</div>
+                <div className="flex items-center gap-1.5 text-slate-500">
+                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  <span>{article.readTime}</span>
                 </div>
               </div>
 
-              {/* Editorial Summary Paragraph */}
-              <div className="text-sm sm:text-lg text-slate-600 leading-relaxed font-normal mb-8 pb-6 border-b border-slate-100">
+              {/* Editorial Summary / Lead Paragraph */}
+              <div className="text-base sm:text-lg text-slate-700 leading-relaxed font-normal mb-8 pb-6 border-b border-slate-100">
                 {article.summary}
-              </div>
-
-              {/* Key Impact Metrics Grid (Frosted Glass Elevation) */}
-              <div className="mb-10 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-4 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs">
-                <div className="text-center mb-4 sm:mb-5">
-                  <span className="text-[10px] sm:text-[11px] font-bold text-amber-700 bg-amber-100/70 px-3 py-0.5 sm:py-1 rounded-full border border-amber-200 uppercase tracking-widest inline-block mb-1">
-                    Verified Frontline Data
-                  </span>
-                  <h3 className="text-base sm:text-lg font-bold font-['Outfit'] text-[#000080]">
-                    Key Impact Metrics at a Glance
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
-                  {article.impactStats.map((stat, idx) => (
-                    <div
-                      key={idx}
-                      className="bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs hover:border-blue-300 transition-all flex flex-col justify-between"
-                    >
-                      <div>
-                        <div className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-[#000080] mb-0.5">
-                          {stat.value}
-                        </div>
-                        <div className="text-xs font-bold text-slate-900 mb-1 leading-tight">
-                          {stat.label}
-                        </div>
-                      </div>
-                      <p className="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed mt-2 border-t border-slate-100 pt-1.5 hidden sm:block">
-                        {stat.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
               </div>
 
               {/* Main Narrative Content Sections */}
@@ -394,28 +332,6 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                     </div>
                   )}
                 </section>
-
-                {/* Embedded Photo 1 */}
-                {article.gallery[0] && (
-                  <figure
-                    onClick={() => setActiveLightboxIndex(0)}
-                    className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-900 group cursor-pointer my-4 sm:my-6"
-                  >
-                    <img
-                      src={article.gallery[0].url}
-                      alt={article.gallery[0].caption}
-                      className="w-full h-56 sm:h-96 object-cover group-hover:scale-102 transition-transform duration-500"
-                    />
-                    <figcaption className="p-2.5 sm:p-3 bg-slate-50 border-t border-slate-200 text-[11px] sm:text-xs text-slate-600 flex items-center justify-between">
-                      <span className="truncate max-w-[240px] sm:max-w-none">
-                        📸 {article.gallery[0].caption}
-                      </span>
-                      <span className="text-blue-600 font-bold group-hover:underline shrink-0">
-                        View ↗
-                      </span>
-                    </figcaption>
-                  </figure>
-                )}
 
                 {/* 2. Intervention Strategy */}
                 <section id="intervention" className="space-y-4 sm:space-y-5">
@@ -494,8 +410,8 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                 {/* 4. Field Video Showcase */}
                 <section id="video" className="space-y-2.5 sm:space-y-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-5 sm:w-6 h-1 bg-red-500 rounded-full" />
-                    <span className="text-[11px] sm:text-xs font-bold text-red-600 uppercase tracking-widest">
+                    <div className="w-5 sm:w-6 h-1 bg-[#000080] rounded-full" />
+                    <span className="text-[11px] sm:text-xs font-bold text-[#000080] uppercase tracking-widest">
                       Field Video Showcase
                     </span>
                   </div>
@@ -524,7 +440,51 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   </div>
                 </section>
 
-                {/* 5. Direct Frontline Giving Callout (In article) */}
+                {/* 5. Field Images Gallery */}
+                {article.gallery && article.gallery.length > 0 && (
+                  <section id="gallery" className="space-y-3 sm:space-y-4">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 sm:w-6 h-1 bg-[#000080] rounded-full" />
+                      <span className="text-[11px] sm:text-xs font-bold text-[#000080] uppercase tracking-widest">
+                        Field Images
+                      </span>
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
+                      Outreach Photo Documentation
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-600">
+                      Visual records from our community workshops, mentorship summits, and direct distributions.
+                    </p>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                      {article.gallery.map((img, idx) => (
+                        <figure
+                          key={idx}
+                          onClick={() => setActiveLightboxIndex(idx)}
+                          className="rounded-2xl overflow-hidden border border-slate-200 shadow-xs bg-slate-900 group cursor-pointer hover:shadow-md transition-all flex flex-col justify-between"
+                        >
+                          <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
+                            <img
+                              src={img.url}
+                              alt={img.caption}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+                              <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-xs text-white text-xs px-3 py-1.5 rounded-full font-medium">
+                                View Full Size ↗
+                              </span>
+                            </div>
+                          </div>
+                          <figcaption className="p-3 bg-slate-50 border-t border-slate-200 text-[11px] sm:text-xs text-slate-600 leading-relaxed">
+                            📸 {img.caption}
+                          </figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {/* 6. Direct Frontline Giving Callout (In article) */}
                 <div className="pt-6 border-t border-slate-100 text-center">
                   <button
                     onClick={onOpenDonateModal}
@@ -570,7 +530,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                     {/* Metadata & Title */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between text-[10px] mb-1">
-                        <span className="font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200/60">
+                        <span className="font-extrabold uppercase tracking-wider text-[#000080] bg-blue-50/90 px-2 py-0.5 rounded-full border border-blue-200/70">
                           {getProgramCategoryTag(prog.id)}
                         </span>
                         <span className="text-slate-400 font-medium flex items-center gap-1">
@@ -627,7 +587,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   <div className="px-1.5 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between text-[11px] mb-2">
-                        <span className="font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200/70">
+                        <span className="font-extrabold uppercase tracking-wider text-[#000080] bg-blue-50/90 px-2.5 py-0.5 rounded-full border border-blue-200/70">
                           {getProgramCategoryTag(prog.id)}
                         </span>
                         <span className="text-slate-400 font-medium flex items-center gap-1">
