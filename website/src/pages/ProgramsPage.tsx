@@ -14,7 +14,6 @@ import {
   ChevronRight,
   ArrowRight,
   Heart,
-  Target,
   GraduationCap,
   Compass,
   Wrench,
@@ -357,13 +356,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
                           {item.description}
                         </p>
 
-                        {/* Impact Tag / Highlight */}
-                        <div className="pt-1">
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-amber-50/80 border border-amber-200/80 text-[11px] font-bold text-amber-900">
-                            <Target className="w-3 h-3 text-amber-600 shrink-0" />
-                            <span>{item.metric}</span>
-                          </div>
-                        </div>
+
                       </div>
 
                       {/* Card Action Footer */}
