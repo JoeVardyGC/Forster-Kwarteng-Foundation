@@ -1,470 +1,458 @@
 import React, { useState } from 'react';
 import type { Currency } from '../types';
-import { DONATION_TIERS, FOUNDATION_INFO } from '../data/foundationData';
-import { X, Heart, ShieldCheck, Check, Smartphone, CreditCard, Building2, CheckCircle2, Download } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import { FOUNDATION_INFO } from '../data/foundationData';
+import {
+  X,
+  Heart,
+  Smartphone,
+  Building2,
+  Copy,
+  Check,
+  ShieldCheck,
+  MessageCircle,
+  ExternalLink,
+  PhoneCall,
+  CheckCircle2,
+} from 'lucide-react';
 
 interface DonationModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currency: Currency;
-  onToggleCurrency: () => void;
+  currency?: Currency;
+  onToggleCurrency?: () => void;
 }
 
 export const DonationModal: React.FC<DonationModalProps> = ({
   isOpen,
   onClose,
-  currency,
-  onToggleCurrency,
 }) => {
-  const [frequency, setFrequency] = useState<'once' | 'monthly'>('once');
-  const [selectedTierId, setSelectedTierId] = useState<string>(DONATION_TIERS[1].id);
-  const [customAmount, setCustomAmount] = useState<string>('');
-  const [paymentMethod, setPaymentMethod] = useState<'momo' | 'card' | 'bank'>('momo');
-  const [donorName, setDonorName] = useState('');
-  const [donorEmail, setDonorEmail] = useState('');
-  const [momoNumber, setMomoNumber] = useState('');
-  const [momoProvider, setMomoProvider] = useState<'mtn' | 'telecel' | 'at'>('mtn');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [receiptRef, setReceiptRef] = useState('');
+  const [activeTab, setActiveTab] = useState<'momo' | 'bank'>('momo');
+  const [copiedField, setCopiedField] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
-  const selectedTier = DONATION_TIERS.find((t) => t.id === selectedTierId);
-  const activeAmount = customAmount
-    ? parseFloat(customAmount) || 0
-    : currency === 'GHS'
-    ? selectedTier?.amountGHS || 0
-    : selectedTier?.amountUSD || 0;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(true);
-
-    // Simulate Paystack / Ghana MoMo API Handshake
+  const copyToClipboard = (text: string, fieldName: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {
+        fallbackCopyTextToClipboard(text);
+      });
+    } else {
+      fallbackCopyTextToClipboard(text);
+    }
+    setCopiedField(fieldName);
     setTimeout(() => {
-      setIsProcessing(false);
-      const ref = 'FKF-' + Math.floor(100000 + Math.random() * 900000);
-      setReceiptRef(ref);
-      setIsCompleted(true);
-
-      // Trigger Celebration Confetti
-      try {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-          colors: ['#000080', '#F5BD02', '#39399D', '#10B981'],
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }, 1500);
+      setCopiedField(null);
+    }, 2500);
   };
 
-  const resetAndClose = () => {
-    setIsCompleted(false);
-    setIsProcessing(false);
-    onClose();
+  const fallbackCopyTextToClipboard = (text: string) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.top = '0';
+    textArea.style.left = '0';
+    textArea.style.opacity = '0';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Fallback copy error:', err);
+    }
+    document.body.removeChild(textArea);
   };
+
+  const momoAccounts = [
+    {
+      network: 'MTN Mobile Money',
+      badge: 'MTN MoMo',
+      badgeColor: 'bg-amber-400 text-slate-950',
+      number: '0546732812',
+      formatted: '054 673 2812',
+      accountName: 'Forster Kwarteng Foundation',
+      isPrimary: true,
+    },
+    {
+      network: 'MTN & Telecel Cash',
+      badge: 'Telecel / MTN',
+      badgeColor: 'bg-red-500 text-white',
+      number: '0556727083',
+      formatted: '055 672 7083',
+      accountName: 'Forster Kwarteng Foundation',
+      isPrimary: false,
+    },
+  ];
+
+  const bankDetails = {
+    bankName: 'GCB Bank PLC / Ecobank Ghana',
+    accountName: 'Forster Kwarteng Foundation',
+    accountNumber: '1041009823420',
+    branch: 'High Street Branch, Accra',
+    swiftCode: 'GCBLGHAC',
+    country: 'Ghana',
+  };
+
+  const whatsappMessage = encodeURIComponent(
+    'Hello Forster Kwarteng Foundation, I have just made a donation to support your foundation programs! Please find my transaction confirmation here.'
+  );
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
-        {/* Stepped Accent Stripe */}
-        <div className="h-2 w-full fkf-step-bar"></div>
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4">
+      <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-200/90 animate-in fade-in zoom-in-95 duration-200">
+        {/* Top Gold Accent Bar */}
+        <div className="h-1.5 w-full bg-gradient-to-r from-[#000080] via-[#F5BD02] to-[#000080]" />
 
         {/* Modal Header */}
-        <div className="bg-[#000080] text-white px-6 py-5 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src="/assets/foster logo main white gold.png"
-              alt="Forster Kwarteng Foundation"
-              className="h-10 sm:h-12 w-auto object-contain"
-            />
+        <div className="bg-[#000080] text-white px-6 sm:px-8 pt-6 pb-7 relative overflow-hidden">
+          {/* Subtle Ambient Orbs */}
+          <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-400/20 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-blue-400/20 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="flex items-start justify-between relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-white p-1.5 shadow-md flex items-center justify-center shrink-0">
+                <img
+                  src="/assets/foster logo main white gold.png"
+                  alt="Forster Kwarteng Foundation"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <div>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-amber-300 block font-mono">
+                  DIRECT COMMUNITY GIVING
+                </span>
+                <h3 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-white">
+                  Donate to FKF
+                </h3>
+              </div>
+            </div>
+
+            <button
+              onClick={onClose}
+              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all cursor-pointer shrink-0"
+              aria-label="Close modal"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
-          <button
-            onClick={resetAndClose}
-            className="p-2 text-blue-200 hover:text-white hover:bg-blue-900/60 rounded-full transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <p className="text-xs sm:text-sm text-blue-100/90 mt-3 leading-relaxed relative z-10 font-normal">
+            100% of your gift directly equips vulnerable school children with uniforms and books, trains youth in TVET skills, and delivers sustainable community care.
+          </p>
+
+          {/* Clean Segmented Tab Switcher */}
+          <div className="mt-5 grid grid-cols-2 gap-2 p-1.5 bg-blue-950/60 rounded-2xl border border-white/15 relative z-10">
+            <button
+              type="button"
+              onClick={() => setActiveTab('momo')}
+              className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                activeTab === 'momo'
+                  ? 'bg-[#F5BD02] text-[#000080] shadow-md scale-[1.02]'
+                  : 'text-blue-100 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Smartphone className="w-4 h-4" />
+              <span>Mobile Money</span>
+              <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-900/40 text-amber-900 hidden sm:inline">
+                Instant
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setActiveTab('bank')}
+              className={`py-2.5 px-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                activeTab === 'bank'
+                  ? 'bg-[#F5BD02] text-[#000080] shadow-md scale-[1.02]'
+                  : 'text-blue-100 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Building2 className="w-4 h-4" />
+              <span>Bank Transfer</span>
+            </button>
+          </div>
         </div>
 
-        {isCompleted ? (
-          /* Success Screen */
-          <div className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto ring-8 ring-emerald-50">
-              <CheckCircle2 className="w-8 h-8" />
-            </div>
-
-            <div>
-              <h4 className="text-2xl font-bold font-['Outfit'] text-[#000080]">
-                Medaase! Thank You, {donorName || 'Kind Supporter'}!
-              </h4>
-              <p className="text-sm text-slate-600 mt-2 max-w-md mx-auto">
-                Your contribution of{' '}
-                <span className="font-bold text-slate-900">
-                  {currency === 'GHS' ? `₵${activeAmount}` : `$${activeAmount}`}
-                </span>{' '}
-                has been received. A verification receipt has been sent to{' '}
-                <span className="font-semibold text-slate-900">{donorEmail || 'your email'}</span>.
-              </p>
-            </div>
-
-            {/* Simulated Receipt Card */}
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-5 text-left text-xs space-y-2 max-w-md mx-auto">
-              <div className="flex justify-between border-b border-slate-200 pb-2">
-                <span className="text-slate-500">Transaction Reference</span>
-                <span className="font-mono font-bold text-slate-900">{receiptRef}</span>
-              </div>
-              <div className="flex justify-between border-b border-slate-200 pb-2">
-                <span className="text-slate-500">Beneficiary Organization</span>
-                <span className="font-medium text-slate-900">Forster Kwarteng Foundation</span>
-              </div>
-              <div className="flex justify-between border-b border-slate-200 pb-2">
-                <span className="text-slate-500">Giving Frequency</span>
-                <span className="capitalize font-medium text-slate-900">
-                  {frequency === 'once' ? 'One-time Gift' : 'Monthly Supporter'}
+        {/* Modal Body */}
+        <div className="p-6 sm:p-8 bg-slate-50/60 space-y-6">
+          {/* ========================================================= */}
+          {/* TAB 1: MOBILE MONEY                                       */}
+          {/* ========================================================= */}
+          {activeTab === 'momo' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px] font-mono">
+                  Official Mobile Money Numbers
+                </span>
+                <span className="text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200 text-[11px] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Zero Platform Fees
                 </span>
               </div>
-              <div className="flex justify-between pt-1">
-                <span className="text-slate-500">Payment Channel</span>
-                <span className="font-medium text-slate-900">
-                  {paymentMethod === 'momo'
-                    ? `Mobile Money (${momoProvider.toUpperCase()})`
-                    : paymentMethod === 'card'
-                    ? 'Credit / Debit Card'
-                    : 'Bank Transfer'}
-                </span>
-              </div>
-            </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-              <button
-                onClick={() => alert(`Official Receipt ${receiptRef} downloaded!`)}
-                className="w-full sm:w-auto px-6 py-2.5 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs hover:bg-slate-50 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Download className="w-4 h-4 text-slate-500" />
-                <span>Download PDF Receipt</span>
-              </button>
-              <button
-                onClick={resetAndClose}
-                className="w-full sm:w-auto px-8 py-2.5 rounded-xl bg-[#000080] hover:bg-[#0a0a85] text-white font-bold text-xs shadow-md cursor-pointer"
-              >
-                Return to Website
-              </button>
-            </div>
-          </div>
-        ) : (
-          /* Donation Form */
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
-            {/* Step 1: Frequency & Currency */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-              {/* Frequency Selector */}
-              <div className="w-full sm:w-auto flex items-center bg-slate-100 p-1 rounded-xl">
-                <button
-                  type="button"
-                  onClick={() => setFrequency('once')}
-                  className={`flex-1 sm:flex-none px-5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    frequency === 'once'
-                      ? 'bg-white text-[#000080] shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Give Once
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setFrequency('monthly')}
-                  className={`flex-1 sm:flex-none px-5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    frequency === 'monthly'
-                      ? 'bg-white text-[#000080] shadow-sm'
-                      : 'text-slate-600 hover:text-slate-900'
-                  }`}
-                >
-                  Give Monthly
-                </button>
-              </div>
-
-              {/* Currency Toggle */}
-              <div className="flex items-center gap-2 text-xs">
-                <span className="text-slate-500">Currency:</span>
-                <button
-                  type="button"
-                  onClick={onToggleCurrency}
-                  className="px-3 py-1.5 rounded-lg border border-slate-200 font-bold text-[#000080] bg-blue-50/60 hover:bg-blue-100/60 cursor-pointer"
-                >
-                  {currency === 'GHS' ? '₵ GHS (Ghana)' : '$ USD (International)'}
-                </button>
-              </div>
-            </div>
-
-            {/* Step 2: Select Impact Tier */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5">
-                Choose Donation Amount
-              </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {DONATION_TIERS.map((tier) => {
-                  const isSelected = selectedTierId === tier.id && !customAmount;
-                  const displayAmount =
-                    currency === 'GHS' ? `₵${tier.amountGHS}` : `$${tier.amountUSD}`;
-
+              {/* MoMo Accounts Cards */}
+              <div className="space-y-3">
+                {momoAccounts.map((acc, index) => {
+                  const isCopied = copiedField === `momo-${index}`;
                   return (
-                    <button
-                      key={tier.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedTierId(tier.id);
-                        setCustomAmount('');
-                      }}
-                      className={`p-3 rounded-xl border text-left transition-all relative cursor-pointer ${
-                        isSelected
-                          ? 'border-[#000080] bg-blue-50/70 ring-2 ring-[#000080]/20'
-                          : 'border-slate-200 hover:border-slate-300 bg-white'
-                      }`}
+                    <div
+                      key={index}
+                      className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-xs hover:border-[#000080]/30 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                     >
-                      {tier.popular && (
-                        <span className="absolute -top-2 right-2 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase">
-                          Popular
-                        </span>
-                      )}
-                      <div className="font-extrabold text-base text-[#000080]">
-                        {displayAmount}
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider ${acc.badgeColor}`}
+                          >
+                            {acc.badge}
+                          </span>
+                          <span className="text-xs text-slate-500 font-medium">
+                            {acc.network}
+                          </span>
+                        </div>
+                        <div className="text-xl sm:text-2xl font-black font-mono tracking-tight text-slate-900">
+                          {acc.formatted}
+                        </div>
+                        <div className="text-xs text-slate-600 font-medium">
+                          Account Name:{' '}
+                          <span className="text-[#000080] font-bold">
+                            {acc.accountName}
+                          </span>
+                        </div>
                       </div>
-                      <div className="text-[11px] font-semibold text-slate-700 line-clamp-1">
-                        {tier.label}
-                      </div>
-                    </button>
+
+                      <button
+                        type="button"
+                        onClick={() => copyToClipboard(acc.number, `momo-${index}`)}
+                        className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0 ${
+                          isCopied
+                            ? 'bg-emerald-600 text-white shadow-sm'
+                            : 'bg-slate-100 hover:bg-[#000080] text-slate-700 hover:text-white border border-slate-200 hover:border-[#000080]'
+                        }`}
+                      >
+                        {isCopied ? (
+                          <>
+                            <Check className="w-4 h-4" />
+                            <span>Copied!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-4 h-4" />
+                            <span>Copy Number</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                   );
                 })}
-
-                {/* Custom Amount Box */}
-                <div
-                  className={`p-2.5 rounded-xl border flex flex-col justify-center transition-all ${
-                    customAmount
-                      ? 'border-[#000080] bg-blue-50/70 ring-2 ring-[#000080]/20'
-                      : 'border-slate-200 bg-white'
-                  }`}
-                >
-                  <label className="text-[10px] text-slate-500 font-semibold mb-0.5">
-                    Other Amount
-                  </label>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold text-slate-600">
-                      {currency === 'GHS' ? '₵' : '$'}
-                    </span>
-                    <input
-                      type="number"
-                      min="1"
-                      placeholder="0.00"
-                      value={customAmount}
-                      onChange={(e) => {
-                        setCustomAmount(e.target.value);
-                      }}
-                      className="w-full text-xs font-bold text-[#000080] bg-transparent focus:outline-none"
-                    />
-                  </div>
-                </div>
               </div>
 
-              {/* Dynamic Impact Statement */}
-              <div className="mt-3 p-3 rounded-xl bg-amber-50/80 border border-amber-200/60 text-xs text-amber-900 flex items-start gap-2">
-                <Heart className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 fill-amber-600" />
-                <p>
-                  <span className="font-bold">Real-World Impact: </span>
-                  {selectedTier?.impactDescription}
-                </p>
+              {/* How to Donate Instructions */}
+              <div className="bg-blue-50/70 border border-blue-200/70 rounded-2xl p-4 text-xs text-slate-700 space-y-1.5">
+                <div className="font-bold text-[#000080] flex items-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#000080]" />
+                  <span>Quick Giving Steps:</span>
+                </div>
+                <ol className="list-decimal list-inside space-y-1 text-slate-600 pl-1 leading-relaxed">
+                  <li>Dial <strong className="text-slate-900 font-mono">*170#</strong> or open your MoMo App.</li>
+                  <li>Transfer to any of the official numbers above.</li>
+                  <li>Confirm the recipient name displays: <strong className="text-[#000080]">FORSTER KWARTENG FOUNDATION</strong>.</li>
+                  <li>Use reference: <strong className="text-slate-900 font-mono">FKF DONATION</strong> or your name.</li>
+                </ol>
+              </div>
+
+              {/* Action Buttons: WhatsApp Confirmation */}
+              <div className="pt-1 flex flex-col sm:flex-row gap-2.5">
+                <a
+                  href={`https://wa.me/233546732812?text=${whatsappMessage}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>Confirm on WhatsApp</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                </a>
+
+                <a
+                  href="tel:+233546732812"
+                  className="py-3 px-4 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+                >
+                  <PhoneCall className="w-4 h-4 text-[#000080]" />
+                  <span>Call Foundation</span>
+                </a>
               </div>
             </div>
+          )}
 
-            {/* Step 3: Payment Method Selection */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2.5">
-                Payment Channel (Ghana & Global)
-              </label>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('momo')}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1 text-center transition-all cursor-pointer ${
-                    paymentMethod === 'momo'
-                      ? 'border-[#000080] bg-blue-50 text-[#000080] font-bold'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  <Smartphone className="w-5 h-5 text-amber-500" />
-                  <span className="text-xs">Mobile Money</span>
-                  <span className="text-[10px] text-slate-400">MTN / Telecel</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('card')}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1 text-center transition-all cursor-pointer ${
-                    paymentMethod === 'card'
-                      ? 'border-[#000080] bg-blue-50 text-[#000080] font-bold'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  <CreditCard className="w-5 h-5 text-blue-600" />
-                  <span className="text-xs">Debit / Credit</span>
-                  <span className="text-[10px] text-slate-400">Visa / Mastercard</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod('bank')}
-                  className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-1 text-center transition-all cursor-pointer ${
-                    paymentMethod === 'bank'
-                      ? 'border-[#000080] bg-blue-50 text-[#000080] font-bold'
-                      : 'border-slate-200 text-slate-600 hover:bg-slate-50'
-                  }`}
-                >
-                  <Building2 className="w-5 h-5 text-emerald-600" />
-                  <span className="text-xs">Bank Transfer</span>
-                  <span className="text-[10px] text-slate-400">Accra Official</span>
-                </button>
+          {/* ========================================================= */}
+          {/* TAB 2: BANK TRANSFER                                      */}
+          {/* ========================================================= */}
+          {activeTab === 'bank' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px] font-mono">
+                  Official Corporate Bank Account
+                </span>
+                <span className="text-[#000080] font-semibold bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200 text-[11px]">
+                  Ghana & International Wires
+                </span>
               </div>
 
-              {/* MoMo Provider Sub-Selection */}
-              {paymentMethod === 'momo' && (
-                <div className="mt-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                  <div className="flex items-center gap-3">
-                    <label className="text-xs font-semibold text-slate-700">Network:</label>
+              {/* Bank Account Details Card */}
+              <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs space-y-4">
+                <div className="space-y-3 text-xs">
+                  <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
+                    <span className="text-slate-500 font-medium">Bank Name</span>
+                    <span className="font-bold text-slate-900 text-right">
+                      {bankDetails.bankName}
+                    </span>
+                  </div>
+
+                  <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
+                    <span className="text-slate-500 font-medium">Account Name</span>
+                    <span className="font-bold text-[#000080] text-right">
+                      {bankDetails.accountName}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                    <span className="text-slate-500 font-medium">Account Number</span>
                     <div className="flex items-center gap-2">
+                      <span className="font-mono font-black text-base text-slate-900">
+                        {bankDetails.accountNumber}
+                      </span>
                       <button
                         type="button"
-                        onClick={() => setMomoProvider('mtn')}
-                        className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                          momoProvider === 'mtn'
-                            ? 'bg-amber-400 text-slate-950 shadow-sm'
-                            : 'bg-white border text-slate-600'
+                        onClick={() =>
+                          copyToClipboard(bankDetails.accountNumber, 'bank-acc')
+                        }
+                        className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          copiedField === 'bank-acc'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                         }`}
+                        title="Copy Account Number"
                       >
-                        MTN MoMo
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setMomoProvider('telecel')}
-                        className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                          momoProvider === 'telecel'
-                            ? 'bg-red-500 text-white shadow-sm'
-                            : 'bg-white border text-slate-600'
-                        }`}
-                      >
-                        Telecel Cash
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setMomoProvider('at')}
-                        className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
-                          momoProvider === 'at'
-                            ? 'bg-blue-600 text-white shadow-sm'
-                            : 'bg-white border text-slate-600'
-                        }`}
-                      >
-                        AT Money
+                        {copiedField === 'bank-acc' ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5" />
+                        )}
                       </button>
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                      Mobile Money Number (Ghana)
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="e.g. 054 673 2812"
-                      value={momoNumber}
-                      onChange={(e) => setMomoNumber(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-[#000080]"
-                    />
+                  <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
+                    <span className="text-slate-500 font-medium">Branch</span>
+                    <span className="font-medium text-slate-800 text-right">
+                      {bankDetails.branch}
+                    </span>
+                  </div>
+
+                  <div className="flex items-start justify-between">
+                    <span className="text-slate-500 font-medium">Swift Code</span>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold text-slate-900">
+                        {bankDetails.swiftCode}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          copyToClipboard(bankDetails.swiftCode, 'bank-swift')
+                        }
+                        className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                          copiedField === 'bank-swift'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                        }`}
+                        title="Copy Swift Code"
+                      >
+                        {copiedField === 'bank-swift' ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {/* Bank Details Note */}
-              {paymentMethod === 'bank' && (
-                <div className="mt-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1 text-slate-700">
-                  <p className="font-bold text-[#000080]">Direct Foundation Bank Account (Ghana):</p>
-                  <p>Bank: GCB Bank PLC / Ecobank Ghana</p>
-                  <p>Account Name: Forster Kwarteng Foundation</p>
-                  <p>Branch: High Street, Accra</p>
-                  <p className="text-[11px] text-slate-500 pt-1">
-                    Please use your name as the transfer reference and send proof of payment to{' '}
-                    <span className="font-semibold text-slate-800">{FOUNDATION_INFO.email}</span>.
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Step 4: Donor Details */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Full Name / Organization
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Kwesi Boateng"
-                  value={donorName}
-                  onChange={(e) => setDonorName(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-[#000080]"
-                />
+                {/* Copy All Bank Info Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    const slip = `Bank: ${bankDetails.bankName}\nAccount Name: ${bankDetails.accountName}\nAccount Number: ${bankDetails.accountNumber}\nBranch: ${bankDetails.branch}\nSwift: ${bankDetails.swiftCode}`;
+                    copyToClipboard(slip, 'bank-all');
+                  }}
+                  className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    copiedField === 'bank-all'
+                      ? 'bg-emerald-600 text-white shadow-sm'
+                      : 'bg-slate-100 hover:bg-[#000080] text-slate-700 hover:text-white border border-slate-200'
+                  }`}
+                >
+                  {copiedField === 'bank-all' ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      <span>All Bank Details Copied!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      <span>Copy Full Bank Slip</span>
+                    </>
+                  )}
+                </button>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Email for Official Receipt
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="name@example.com"
-                  value={donorEmail}
-                  onChange={(e) => setDonorEmail(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-[#000080]"
-                />
+              {/* Bank Notice */}
+              <div className="bg-amber-50/70 border border-amber-200/70 rounded-2xl p-4 text-xs text-amber-900 space-y-1">
+                <p className="font-bold flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-amber-700" />
+                  <span>Transfer Notice:</span>
+                </p>
+                <p className="text-amber-800/90 leading-relaxed">
+                  For wire transfers and corporate donations, please send proof of payment or receipt to{' '}
+                  <strong className="text-amber-950 underline">{FOUNDATION_INFO.email}</strong> or on WhatsApp to receive an official Foundation tax receipt and recognition letter.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-1 flex flex-col sm:flex-row gap-2.5">
+                <a
+                  href={`mailto:${FOUNDATION_INFO.email}?subject=Donation%20Confirmation%20-%20Forster%20Kwarteng%20Foundation`}
+                  className="flex-1 py-3 px-4 rounded-xl bg-[#000080] hover:bg-[#0a0a85] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                >
+                  <span>Email Payment Receipt</span>
+                  <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                </a>
+
+                <a
+                  href={`https://wa.me/233546732812?text=${whatsappMessage}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <span>Confirm via WhatsApp</span>
+                </a>
               </div>
             </div>
+          )}
 
-            {/* Security Guarantee Strip */}
-            <div className="flex items-center justify-between text-[11px] text-slate-500 border-t border-slate-100 pt-3">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                256-bit Bank-Grade Encryption
-              </span>
-              <span>Audited by Registered Board</span>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isProcessing || activeAmount <= 0}
-              className="w-full py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-            >
-              {isProcessing ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-[#000080] border-t-transparent rounded-full animate-spin"></div>
-                  <span>Processing Secure Donation...</span>
-                </>
-              ) : (
-                <>
-                  <Heart className="w-4 h-4 fill-[#000080]" />
-                  <span>
-                    Complete Donation of{' '}
-                    {currency === 'GHS' ? `₵${activeAmount}` : `$${activeAmount}`}
-                  </span>
-                </>
-              )}
-            </button>
-          </form>
-        )}
+          {/* Trust & Official Registration Badge */}
+          <div className="pt-2 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
+            <span className="flex items-center gap-1.5 font-medium text-slate-600">
+              <ShieldCheck className="w-4 h-4 text-[#000080]" />
+              Official Registration: <strong className="text-slate-800 font-mono">{FOUNDATION_INFO.registrationNo}</strong>
+            </span>
+            <span className="font-semibold text-emerald-700 flex items-center gap-1">
+              <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+              Empowering Lives Across Ghana
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
