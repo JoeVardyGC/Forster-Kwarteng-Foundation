@@ -4,17 +4,20 @@ import { PROGRAM_ARTICLES, OUR_PROGRAMS } from '../data/foundationData';
 import {
   ArrowLeft,
   Clock,
-  MapPin,
-  Calendar,
   Check,
-  Copy,
-  Printer,
   Heart,
   Play,
   ChevronRight,
   ChevronLeft,
   X,
   Quote,
+  Eye,
+  MessageSquare,
+  Share2,
+  Download,
+  ShieldCheck,
+  Send,
+  Bookmark,
 } from 'lucide-react';
 
 interface ProgramArticlePageProps {
@@ -36,6 +39,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   // Retrieve program article data or fallback to first
   const article: ProgramArticle =
@@ -71,6 +75,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
     });
   };
 
+  const handleSaveToggle = () => {
+    setIsSaved((prev) => !prev);
+  };
+
   // Lightbox key controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -98,13 +106,28 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [activeLightboxIndex, isVideoModalOpen, article.gallery.length]);
 
-  // Related programs lookup (excluding active)
-  const relatedPrograms = article.relatedProgramIds
-    .map((id) => OUR_PROGRAMS.find((p) => p.id === id))
-    .filter(Boolean);
+  // Related programs lookup (all other programs)
+  const otherPrograms = OUR_PROGRAMS.filter((p) => p.id !== article.id);
+
+  const getProgramCategoryTag = (id: string) => {
+    switch (id) {
+      case 'skills-training':
+        return 'Vocational Skills';
+      case 'capacity-building':
+        return 'Capacity Building';
+      case 'stem-tvet':
+        return 'STEM & TVET';
+      case 'community-outreach':
+        return 'Community Relief';
+      case 'mental-health':
+        return 'Mental Health';
+      default:
+        return 'Active Initiative';
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-white text-slate-800">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 pb-20 lg:pb-12">
       {/* 1. TOP STICKY READING PROGRESS BAR */}
       <div className="fixed top-0 left-0 right-0 h-1 bg-slate-100 z-50">
         <div
@@ -113,9 +136,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
         />
       </div>
 
-      {/* 2. BREADCRUMBS & TOP BAR */}
-      <nav aria-label="Breadcrumb" className="bg-slate-50 border-b border-slate-200 py-3.5 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
+      {/* 2. NAVIGATION BAR */}
+      {/* DESKTOP BREADCRUMBS (lg and above) */}
+      <nav aria-label="Breadcrumb" className="hidden lg:block bg-white border-b border-slate-200 py-3.5 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
           <div className="flex items-center gap-2 text-slate-500">
             <button
               onClick={() => onNavigate('home')}
@@ -131,486 +155,552 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
               Programs
             </button>
             <span>/</span>
-            <span className="text-slate-900 font-semibold truncate max-w-[200px] sm:max-w-xs">
+            <span className="text-slate-900 font-semibold truncate max-w-xs">
               {article.title}
             </span>
           </div>
 
           <button
-            onClick={() => onNavigate('home')}
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#000080] hover:text-blue-700 bg-white border border-slate-200 hover:border-blue-300 px-3 py-1.5 rounded-full transition-all shadow-xs cursor-pointer"
+            onClick={() => onNavigate('programs')}
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#000080] hover:text-blue-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-full transition-all shadow-2xs cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Back to Programs</span>
+            <span>All Programs</span>
           </button>
         </div>
       </nav>
 
-      {/* 3. EDITORIAL ARTICLE HEADER */}
-      <header className="pt-10 pb-8 sm:pt-14 sm:pb-10 bg-gradient-to-b from-slate-50 via-white to-white border-b border-slate-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Category Badge & Meta */}
-          <div className="flex flex-wrap items-center gap-2.5 mb-4">
-            <span className="px-3.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider bg-blue-50 text-[#000080] border border-blue-200">
-              {article.category}
-            </span>
-            <span className="inline-flex items-center gap-1 text-xs text-slate-500 font-medium">
-              <Clock className="w-3.5 h-3.5 text-amber-500" />
-              {article.readTime}
-            </span>
-            <span className="inline-flex items-center gap-1 text-xs text-slate-500 font-medium">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
-              {article.publishedDate}
-            </span>
-            <span className="inline-flex items-center gap-1 text-xs text-slate-500 font-medium">
-              <MapPin className="w-3.5 h-3.5 text-red-500" />
-              {article.location}
-            </span>
+      {/* MOBILE TOP FLOATING BAR (Directly matching mobile inspo image) */}
+      <div className="lg:hidden px-4 py-3 flex items-center justify-between">
+        {/* Circular Back Button from inspo */}
+        <button
+          onClick={() => onNavigate('programs')}
+          className="w-10 h-10 rounded-full bg-white shadow-md border border-slate-200/80 flex items-center justify-center text-slate-700 hover:text-[#000080] active:scale-95 transition-all cursor-pointer"
+          aria-label="Back to programs"
+        >
+          <ArrowLeft className="w-5 h-5" />
+        </button>
+
+        {/* Center Category Badge */}
+        <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#000080] bg-blue-50/90 px-3 py-1 rounded-full border border-blue-200/60 shadow-2xs">
+          Program Dispatch
+        </span>
+
+        {/* Circular Share Button from inspo */}
+        <button
+          onClick={handleCopyLink}
+          className="w-10 h-10 rounded-full bg-white shadow-md border border-slate-200/80 flex items-center justify-center text-slate-700 hover:text-[#000080] active:scale-95 transition-all cursor-pointer"
+          aria-label="Share story"
+        >
+          {copiedLink ? (
+            <Check className="w-4 h-4 text-emerald-600" />
+          ) : (
+            <Share2 className="w-4 h-4" />
+          )}
+        </button>
+      </div>
+
+      {/* 3. MAIN EDITORIAL CONTENT AREA */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-6 lg:pt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+          {/* ========================================================= */}
+          {/* LEFT COLUMN: PRIMARY ARTICLE DETAILS (lg:col-span-8)      */}
+          {/* ========================================================= */}
+          <div className="lg:col-span-8 space-y-4">
+            {/* Top Heading outside card matching Desktop Inspo ("Politics" header) */}
+            <div className="hidden lg:flex items-center justify-between pb-1">
+              <h2 className="text-2xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
+                Programs & Initiatives
+              </h2>
+            </div>
+
+            <main className="bg-white rounded-3xl p-4 sm:p-7 lg:p-9 border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
+              {/* Featured Hero Cover Image (With Rounded Corners directly from Inspo) */}
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden aspect-[16/10] sm:aspect-[16/9] bg-slate-900 shadow-sm group mb-5">
+                <img
+                  src={article.coverImage}
+                  alt={article.title}
+                  className="w-full h-full object-cover object-center group-hover:scale-103 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+
+                {/* Caption Overlay */}
+                <div className="absolute bottom-3 left-3 right-3 text-white text-xs font-medium flex items-center justify-between gap-3">
+                  <span className="drop-shadow-md bg-black/55 backdrop-blur-xs px-2.5 py-1 rounded-lg border border-white/10 truncate text-[11px] sm:text-xs">
+                    📸 {article.coverImageCaption}
+                  </span>
+                  <span className="hidden sm:inline-block text-[10px] uppercase tracking-wider text-amber-300 font-bold bg-[#000080]/90 px-2 py-0.5 rounded">
+                    Field Photo
+                  </span>
+                </div>
+              </div>
+
+              {/* Meta Row: Category Pill + Impact Metrics (Directly from Desktop Inspo) */}
+              <div className="flex flex-wrap items-center justify-between gap-2.5 pt-1 pb-3">
+                <span className="px-3 py-0.5 sm:py-1 rounded-full text-[11px] sm:text-xs font-extrabold uppercase tracking-wider bg-rose-50 text-rose-600 border border-rose-200/80 shadow-2xs">
+                  {article.category}
+                </span>
+
+                {/* Social / Field Engagement Counters from Inspo */}
+                <div className="flex items-center gap-3.5 text-xs font-semibold text-slate-500">
+                  <span className="flex items-center gap-1.5" title="Direct Beneficiaries Reached">
+                    <Eye className="w-3.5 h-3.5 text-slate-400" />
+                    <span>{article.impactStats[0]?.value || '2.6k'} Reached</span>
+                  </span>
+                  <span className="flex items-center gap-1.5" title="Community Hubs">
+                    <MessageSquare className="w-3.5 h-3.5 text-slate-400" />
+                    <span>{article.impactStats[1]?.value || '9'} Hubs</span>
+                  </span>
+                  <span className="flex items-center gap-1.5 text-emerald-600 font-bold">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>Verified</span>
+                  </span>
+                </div>
+              </div>
+
+              {/* Main Headline & Action Buttons Row (Direct arrangement from Desktop Inspo) */}
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mt-2 mb-4">
+                <h1 className="text-xl sm:text-3xl lg:text-4xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight leading-snug sm:leading-tight flex-1">
+                  {article.title}
+                </h1>
+
+                {/* Desktop Action Buttons: Save & Share stacked pills next to title */}
+                <div className="hidden sm:flex flex-col items-end gap-2 shrink-0 pt-1">
+                  <button
+                    onClick={handleSaveToggle}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-slate-300 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-50 transition-all shadow-2xs cursor-pointer whitespace-nowrap"
+                    title="Save / Bookmark article"
+                  >
+                    <Bookmark
+                      className={`w-3.5 h-3.5 ${
+                        isSaved ? 'text-amber-500 fill-amber-500' : 'text-slate-600'
+                      }`}
+                    />
+                    <span>{isSaved ? 'Saved to pocket' : 'Save to pocket'}</span>
+                  </button>
+
+                  <button
+                    onClick={handleCopyLink}
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50/90 border border-blue-200/80 text-xs font-bold text-[#000080] hover:bg-blue-100 transition-all shadow-2xs cursor-pointer whitespace-nowrap"
+                    title="Share program story"
+                  >
+                    {copiedLink ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-emerald-600">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="w-3.5 h-3.5 text-[#000080]" />
+                        <span>Share on media</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Byline Row with Circular Avatar (Directly matching Mobile Inspo Screen) */}
+              <div className="flex items-center justify-between py-3 my-4 border-y border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-50 border border-slate-200 shadow-2xs p-1 flex items-center justify-center shrink-0">
+                    <img
+                      src="/assets/fkf-emblem-mark.png"
+                      alt="Forster Kwarteng Foundation"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <div>
+                    <div className="text-xs sm:text-sm font-bold text-slate-900 leading-tight">
+                      FKF Field Desk
+                    </div>
+                    <div className="text-[11px] text-slate-500">
+                      {article.location}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="text-right text-[11px] sm:text-xs text-slate-500 font-medium">
+                  <div>{article.publishedDate}</div>
+                  <div className="text-slate-400">{article.readTime}</div>
+                </div>
+              </div>
+
+              {/* Editorial Summary Paragraph */}
+              <div className="text-sm sm:text-lg text-slate-600 leading-relaxed font-normal mb-8 pb-6 border-b border-slate-100">
+                {article.summary}
+              </div>
+
+              {/* Key Impact Metrics Grid (Frosted Glass Elevation) */}
+              <div className="mb-10 bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-4 sm:p-7 rounded-2xl border border-slate-200/90 shadow-2xs">
+                <div className="text-center mb-4 sm:mb-5">
+                  <span className="text-[10px] sm:text-[11px] font-bold text-amber-700 bg-amber-100/70 px-3 py-0.5 sm:py-1 rounded-full border border-amber-200 uppercase tracking-widest inline-block mb-1">
+                    Verified Frontline Data
+                  </span>
+                  <h3 className="text-base sm:text-lg font-bold font-['Outfit'] text-[#000080]">
+                    Key Impact Metrics at a Glance
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
+                  {article.impactStats.map((stat, idx) => (
+                    <div
+                      key={idx}
+                      className="bg-white/95 backdrop-blur-md p-3 sm:p-4 rounded-xl border border-slate-200/80 shadow-2xs hover:border-blue-300 transition-all flex flex-col justify-between"
+                    >
+                      <div>
+                        <div className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-[#000080] mb-0.5">
+                          {stat.value}
+                        </div>
+                        <div className="text-xs font-bold text-slate-900 mb-1 leading-tight">
+                          {stat.label}
+                        </div>
+                      </div>
+                      <p className="text-[10px] sm:text-[11px] text-slate-500 leading-relaxed mt-2 border-t border-slate-100 pt-1.5 hidden sm:block">
+                        {stat.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Main Narrative Content Sections */}
+              <div className="space-y-10 sm:space-y-12">
+                {/* 1. The Grassroots Challenge */}
+                <section id="challenge" className="space-y-3 sm:space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 sm:w-6 h-1 bg-amber-500 rounded-full" />
+                    <span className="text-[11px] sm:text-xs font-bold text-amber-600 uppercase tracking-widest">
+                      The Grassroots Reality
+                    </span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
+                    {article.challenge.headline}
+                  </h2>
+                  <div className="space-y-3 text-xs sm:text-base text-slate-600 leading-relaxed">
+                    {article.challenge.body.map((paragraph, pIdx) => (
+                      <p key={pIdx}>{paragraph}</p>
+                    ))}
+                  </div>
+
+                  {/* Stat Highlight Card */}
+                  {article.challenge.statHighlight && (
+                    <div className="bg-amber-50/70 border-l-4 border-amber-500 p-3.5 sm:p-4 rounded-r-xl flex items-start gap-3 mt-4">
+                      <div className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-amber-800 whitespace-nowrap">
+                        {article.challenge.statHighlight.number}
+                      </div>
+                      <div className="text-xs text-amber-900/90 leading-relaxed pt-0.5">
+                        {article.challenge.statHighlight.text}
+                      </div>
+                    </div>
+                  )}
+                </section>
+
+                {/* Embedded Photo 1 */}
+                {article.gallery[0] && (
+                  <figure
+                    onClick={() => setActiveLightboxIndex(0)}
+                    className="rounded-2xl overflow-hidden border border-slate-200 shadow-sm bg-slate-900 group cursor-pointer my-4 sm:my-6"
+                  >
+                    <img
+                      src={article.gallery[0].url}
+                      alt={article.gallery[0].caption}
+                      className="w-full h-56 sm:h-96 object-cover group-hover:scale-102 transition-transform duration-500"
+                    />
+                    <figcaption className="p-2.5 sm:p-3 bg-slate-50 border-t border-slate-200 text-[11px] sm:text-xs text-slate-600 flex items-center justify-between">
+                      <span className="truncate max-w-[240px] sm:max-w-none">
+                        📸 {article.gallery[0].caption}
+                      </span>
+                      <span className="text-blue-600 font-bold group-hover:underline shrink-0">
+                        View ↗
+                      </span>
+                    </figcaption>
+                  </figure>
+                )}
+
+                {/* 2. Intervention Strategy */}
+                <section id="intervention" className="space-y-4 sm:space-y-5">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 sm:w-6 h-1 bg-[#000080] rounded-full" />
+                    <span className="text-[11px] sm:text-xs font-bold text-[#000080] uppercase tracking-widest">
+                      Our Intervention Strategy
+                    </span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
+                    {article.intervention.title}
+                  </h2>
+                  <p className="text-xs sm:text-base text-slate-600 leading-relaxed">
+                    {article.intervention.description}
+                  </p>
+
+                  {/* 3 Step Cards */}
+                  <div className="space-y-3 mt-3">
+                    {article.intervention.phases.map((phase) => (
+                      <div
+                        key={phase.phase}
+                        className="p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start gap-3 sm:gap-4"
+                      >
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#000080] text-amber-400 font-extrabold font-['Outfit'] text-sm sm:text-base flex items-center justify-center shrink-0 shadow-xs">
+                          {phase.phase}
+                        </div>
+                        <div>
+                          <h4 className="text-sm sm:text-base font-bold font-['Outfit'] text-slate-900 mb-0.5">
+                            {phase.title}
+                          </h4>
+                          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                            {phase.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* 3. Beneficiary Spotlight Quote */}
+                <section id="story">
+                  <div className="relative p-5 sm:p-8 rounded-3xl bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white overflow-hidden shadow-xl border border-white/20">
+                    <Quote className="absolute top-4 right-4 w-12 sm:w-16 h-12 sm:h-16 text-white/10 pointer-events-none" />
+
+                    <div className="relative z-10 space-y-3 sm:space-y-4">
+                      <span className="inline-block px-3 py-0.5 sm:py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/20 shadow-xs">
+                        Beneficiary Voice & Turnaround
+                      </span>
+
+                      <blockquote className="text-sm sm:text-lg font-medium leading-relaxed italic text-blue-50">
+                        "{article.beneficiaryQuote.quote}"
+                      </blockquote>
+
+                      <div className="flex items-center gap-3 pt-3 sm:pt-4 border-t border-white/20">
+                        <img
+                          src={article.beneficiaryQuote.image}
+                          alt={article.beneficiaryQuote.author}
+                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-amber-400 shrink-0 shadow-md"
+                        />
+                        <div>
+                          <div className="text-xs sm:text-sm font-bold text-white">
+                            {article.beneficiaryQuote.author}
+                          </div>
+                          <div className="text-[11px] sm:text-xs text-blue-200">
+                            {article.beneficiaryQuote.role} • {article.beneficiaryQuote.location}
+                          </div>
+                          <div className="text-[10px] sm:text-[11px] text-amber-300 font-semibold mt-0.5">
+                            ✓ {article.beneficiaryQuote.outcome}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 4. Field Video Showcase */}
+                <section id="video" className="space-y-2.5 sm:space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 sm:w-6 h-1 bg-red-500 rounded-full" />
+                    <span className="text-[11px] sm:text-xs font-bold text-red-600 uppercase tracking-widest">
+                      Field Video Showcase
+                    </span>
+                  </div>
+                  <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
+                    {article.video.title}
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-600">
+                    {article.video.description}
+                  </p>
+
+                  {/* Video Player Card */}
+                  <div
+                    onClick={() => setIsVideoModalOpen(true)}
+                    className="relative rounded-2xl overflow-hidden shadow-md border border-slate-200 aspect-[16/9] group cursor-pointer bg-slate-900"
+                  >
+                    <img
+                      src={article.video.thumbnail}
+                      alt={article.video.title}
+                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                    />
+                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#F5BD02] text-[#000080] flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                        <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-0.5 sm:ml-1" />
+                      </div>
+                    </div>
+                  </div>
+                </section>
+
+                {/* 5. Direct Frontline Giving Callout (In article) */}
+                <div className="pt-6 border-t border-slate-100 text-center">
+                  <button
+                    onClick={onOpenDonateModal}
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-sm rounded-full shadow-lg hover:shadow-xl hover:scale-102 transition-all cursor-pointer"
+                  >
+                    <Heart className="w-4 h-4 fill-[#000080]" />
+                    <span>Support {article.title}</span>
+                  </button>
+                </div>
+              </div>
+            </main>
+
+            {/* MOBILE ONLY: RELATED PROGRAMS STACK (Appears under article on mobile) */}
+            <div className="lg:hidden mt-8 space-y-4">
+              <div className="flex items-center justify-between pb-1 px-1">
+                <h3 className="text-xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
+                  Related Programs
+                </h3>
+                <button
+                  onClick={() => onNavigate('programs')}
+                  className="text-xs font-semibold text-slate-500 hover:text-[#000080] transition-colors cursor-pointer"
+                >
+                  See all →
+                </button>
+              </div>
+
+              <div className="space-y-3.5">
+                {otherPrograms.map((prog) => (
+                  <div
+                    key={prog.id}
+                    onClick={() => onSelectProgram(prog.id)}
+                    className="bg-white rounded-2xl border border-slate-200/90 p-3 shadow-xs hover:shadow-md transition-all active:scale-98 group cursor-pointer flex gap-3.5 items-center"
+                  >
+                    {/* Compact Thumbnail on mobile */}
+                    <div className="relative w-24 h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                      <img
+                        src={prog.image}
+                        alt={prog.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
+
+                    {/* Metadata & Title */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between text-[10px] mb-1">
+                        <span className="font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200/60">
+                          {getProgramCategoryTag(prog.id)}
+                        </span>
+                        <span className="text-slate-400 font-medium flex items-center gap-1">
+                          <Clock className="w-2.5 h-2.5 text-slate-400" />
+                          <span>4 min</span>
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-xs sm:text-sm font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors line-clamp-2 leading-snug">
+                        {prog.title}
+                      </h4>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight leading-tight sm:leading-tight mb-5">
-            {article.title}
-          </h1>
-
-          {/* Lead / Subtitle */}
-          <p className="text-base sm:text-lg lg:text-xl text-slate-600 leading-relaxed font-normal mb-8">
-            {article.summary}
-          </p>
-
-          {/* Utility Share / Print Row */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-slate-200/80">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">
-                Share story:
-              </span>
-              {/* WhatsApp */}
-              <a
-                href={`https://api.whatsapp.com/send?text=${encodeURIComponent(
-                  `Read about ${article.title} at Forster Kwarteng Foundation: ` + window.location.href
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-600 flex items-center justify-center transition-colors text-xs font-bold"
-                title="Share on WhatsApp"
-              >
-                WA
-              </a>
-              {/* Twitter / X */}
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Discover how @FKF_Ghana is making an impact through ${article.title}: ` + window.location.href
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-sky-50 text-slate-600 hover:text-sky-600 flex items-center justify-center transition-colors text-xs font-bold"
-                title="Share on X"
-              >
-                𝕏
-              </a>
-              {/* LinkedIn */}
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                  window.location.href
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-700 flex items-center justify-center transition-colors text-xs font-bold"
-                title="Share on LinkedIn"
-              >
-                in
-              </a>
-              {/* Copy Link */}
+          {/* ========================================================= */}
+          {/* RIGHT COLUMN: RELATED PROGRAMS SIDEBAR (lg:col-span-4)    */}
+          {/* ========================================================= */}
+          <aside className="hidden lg:block lg:col-span-4 space-y-4 lg:sticky lg:top-24">
+            {/* Header: Related Programs + See All Link (Directly from Desktop Inspo) */}
+            <div className="flex items-center justify-between pb-1">
+              <h3 className="text-2xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
+                Related Programs
+              </h3>
               <button
-                onClick={handleCopyLink}
-                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium transition-colors cursor-pointer"
-                title="Copy link to clipboard"
+                onClick={() => onNavigate('programs')}
+                className="text-xs sm:text-sm font-semibold text-slate-500 hover:text-[#000080] transition-colors cursor-pointer"
               >
-                {copiedLink ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="text-emerald-600 font-bold">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Copy Link</span>
-                  </>
-                )}
+                See all →
               </button>
             </div>
 
-            <button
-              onClick={() => window.print()}
-              className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
-              title="Print article"
-            >
-              <Printer className="w-3.5 h-3.5" />
-              <span>Print / PDF</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* 4. HERO COVER IMAGE */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
-        <div className="relative rounded-2xl overflow-hidden shadow-xl border border-slate-200 bg-slate-900 group">
-          <img
-            src={article.coverImage}
-            alt={article.title}
-            className="w-full h-[320px] sm:h-[440px] lg:h-[500px] object-cover object-center group-hover:scale-102 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
-
-          {/* Quick Caption Overlay */}
-          <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 text-white text-xs sm:text-sm font-medium flex items-center justify-between gap-4">
-            <span className="drop-shadow-md bg-black/40 backdrop-blur-xs px-3 py-1.5 rounded-lg border border-white/10">
-              📸 {article.coverImageCaption}
-            </span>
-            <span className="hidden sm:inline-block text-[11px] uppercase tracking-wider text-amber-300 font-bold bg-[#000080]/80 px-2.5 py-1 rounded">
-              Verified Field Photo
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* 5. IMPACT METRICS STRIP (Glassy Design) */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
-        <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50/40 p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-xs backdrop-blur-md">
-          {/* Ambient soft glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="text-center mb-6 relative z-10">
-            <span className="text-xs font-bold text-amber-700 bg-amber-100/70 backdrop-blur-xs px-3 py-1 rounded-full border border-amber-200 uppercase tracking-widest inline-block mb-2">
-              Verified Frontline Data
-            </span>
-            <h3 className="text-lg sm:text-xl font-bold font-['Outfit'] text-[#000080]">
-              Key Impact Metrics at a Glance
-            </h3>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 relative z-10">
-            {article.impactStats.map((stat, idx) => (
-              <div
-                key={idx}
-                className="bg-white/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-2xs hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5 transition-all flex flex-col justify-between"
-              >
-                <div>
-                  <div className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-[#000080] mb-1">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs sm:text-sm font-bold text-slate-900 mb-1">
-                    {stat.label}
-                  </div>
-                </div>
-                <p className="text-[11px] text-slate-500 leading-relaxed mt-2 border-t border-slate-100 pt-2">
-                  {stat.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 6. MAIN ARTICLE EDITORIAL NARRATIVE (FOCUSED SINGLE COLUMN) */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 lg:pb-24">
-        <article className="space-y-12">
-          {/* A. The Grassroots Challenge */}
-          <section id="challenge" className="space-y-5">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-1 bg-amber-500 rounded-full" />
-              <span className="text-xs font-bold text-amber-600 uppercase tracking-widest">
-                The Grassroots Reality
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
-              {article.challenge.headline}
-            </h2>
-            <div className="space-y-4 text-base sm:text-lg text-slate-600 leading-relaxed">
-              {article.challenge.body.map((paragraph, pIdx) => (
-                <p key={pIdx}>{paragraph}</p>
-              ))}
-            </div>
-
-            {/* Stat Highlight Card */}
-            {article.challenge.statHighlight && (
-              <div className="bg-amber-50/70 border-l-4 border-amber-500 p-5 rounded-r-xl flex items-start gap-4 mt-6">
-                <div className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-amber-800 whitespace-nowrap">
-                  {article.challenge.statHighlight.number}
-                </div>
-                <div className="text-xs sm:text-sm text-amber-900/90 leading-relaxed pt-1">
-                  {article.challenge.statHighlight.text}
-                </div>
-              </div>
-            )}
-          </section>
-
-          {/* EMBEDDED INLINE IMAGE 1 (Seamlessly placed within description) */}
-          {article.gallery[0] && (
-            <figure
-              onClick={() => setActiveLightboxIndex(0)}
-              className="rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-900 group cursor-pointer my-8"
-            >
-              <img
-                src={article.gallery[0].url}
-                alt={article.gallery[0].caption}
-                className="w-full h-[320px] sm:h-[440px] object-cover group-hover:scale-102 transition-transform duration-500"
-              />
-              <figcaption className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 flex items-center justify-between">
-                <span>📸 {article.gallery[0].caption}</span>
-                <span className="text-blue-600 font-bold text-[11px] group-hover:underline">
-                  View full image ↗
-                </span>
-              </figcaption>
-            </figure>
-          )}
-
-          {/* B. FKF's 3-Phase Intervention Strategy */}
-          <section id="intervention" className="space-y-6 pt-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-1 bg-[#000080] rounded-full" />
-              <span className="text-xs font-bold text-[#000080] uppercase tracking-widest">
-                Our Intervention Strategy
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
-              {article.intervention.title}
-            </h2>
-            <p className="text-base text-slate-600 leading-relaxed">
-              {article.intervention.description}
-            </p>
-
-            {/* 3 Step Cards */}
-            <div className="space-y-4 mt-6">
-              {article.intervention.phases.map((phase) => (
-                <div
-                  key={phase.phase}
-                  className="p-5 sm:p-6 rounded-xl border border-slate-200 bg-white shadow-xs hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start gap-4"
-                >
-                  <div className="w-12 h-12 rounded-xl bg-[#000080] text-amber-400 font-extrabold font-['Outfit'] text-lg flex items-center justify-center shrink-0 shadow-xs">
-                    {phase.phase}
-                  </div>
-                  <div>
-                    <h4 className="text-base sm:text-lg font-bold font-['Outfit'] text-slate-900 mb-1.5">
-                      {phase.title}
-                    </h4>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                      {phase.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* EMBEDDED INLINE IMAGE PAIR (Placed directly in description flow) */}
-          {article.gallery.length >= 3 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 my-8">
-              {article.gallery.slice(1, 3).map((item, idx) => (
-                <figure
-                  key={idx}
-                  onClick={() => setActiveLightboxIndex(idx + 1)}
-                  className="rounded-xl overflow-hidden border border-slate-200 shadow-xs bg-slate-50 group cursor-pointer"
-                >
-                  <img
-                    src={item.url}
-                    alt={item.caption}
-                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <figcaption className="p-3 text-xs text-slate-600 bg-white border-t border-slate-100 flex items-center justify-between">
-                    <span className="truncate max-w-[220px]">{item.caption}</span>
-                    <span className="text-blue-600 font-bold text-[10px] shrink-0">Zoom ↗</span>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
-
-          {/* C. Beneficiary Spotlight Quote (Glassy Card inspired by Save The Coin) */}
-          <section id="story" className="pt-4">
-            <div className="relative p-6 sm:p-10 rounded-3xl bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white overflow-hidden shadow-2xl border border-white/20">
-              {/* Ambient Glowing Orbs */}
-              <div className="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-72 h-72 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
-              <Quote className="absolute top-4 right-4 w-20 h-20 text-white/10 pointer-events-none" />
-
-              <div className="relative z-10 space-y-6">
-                <span className="inline-block px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-xs font-bold uppercase tracking-wider border border-white/20 shadow-xs">
-                  Beneficiary Voice & Turnaround
-                </span>
-
-                <blockquote className="text-base sm:text-xl font-medium leading-relaxed italic text-blue-50">
-                  "{article.beneficiaryQuote.quote}"
-                </blockquote>
-
-                <div className="flex items-center gap-4 pt-4 border-t border-white/20">
-                  <img
-                    src={article.beneficiaryQuote.image}
-                    alt={article.beneficiaryQuote.author}
-                    className="w-14 h-14 rounded-full object-cover border-2 border-amber-400 shrink-0 shadow-md"
-                  />
-                  <div>
-                    <div className="text-base font-bold text-white">
-                      {article.beneficiaryQuote.author}
-                    </div>
-                    <div className="text-xs text-blue-200">
-                      {article.beneficiaryQuote.role} • {article.beneficiaryQuote.location}
-                    </div>
-                    <div className="text-[11px] text-amber-300 font-semibold mt-1">
-                      ✓ {article.beneficiaryQuote.outcome}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* D. Outreach Video Showcase */}
-          <section id="video" className="space-y-4 pt-4">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-1 bg-red-500 rounded-full" />
-              <span className="text-xs font-bold text-red-600 uppercase tracking-widest">
-                Field Video Showcase
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
-              {article.video.title}
-            </h2>
-            <p className="text-sm text-slate-600">
-              {article.video.description}
-            </p>
-
-            {/* Video Player Card */}
-            <div
-              onClick={() => setIsVideoModalOpen(true)}
-              className="relative rounded-2xl overflow-hidden shadow-lg border border-slate-200 aspect-[16/9] group cursor-pointer bg-slate-900"
-            >
-              <img
-                src={article.video.thumbnail}
-                alt={article.video.title}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-              />
-              <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-amber-400 text-[#000080] flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                  <Play className="w-7 h-7 sm:w-8 sm:h-8 fill-current ml-1" />
-                </div>
-              </div>
-
-              <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-xs text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-2">
-                <span>Watch Field Video</span>
-                <span className="text-amber-300">({article.video.duration})</span>
-              </div>
-            </div>
-          </section>
-
-          {/* EMBEDDED INLINE IMAGE 4 (If available) */}
-          {article.gallery[3] && (
-            <figure
-              onClick={() => setActiveLightboxIndex(3)}
-              className="rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-900 group cursor-pointer my-8"
-            >
-              <img
-                src={article.gallery[3].url}
-                alt={article.gallery[3].caption}
-                className="w-full h-[300px] sm:h-[400px] object-cover group-hover:scale-102 transition-transform duration-500"
-              />
-              <figcaption className="p-3.5 bg-slate-50 border-t border-slate-200 text-xs text-slate-600 flex items-center justify-between">
-                <span>📸 {article.gallery[3].caption}</span>
-                <span className="text-blue-600 font-bold text-[11px] group-hover:underline">
-                  View full image ↗
-                </span>
-              </figcaption>
-            </figure>
-          )}
-        </article>
-      </main>
-
-      {/* 7. RELATED PROGRAMS SECTION (UNDER ARTICLE, DIRECTLY ABOVE FOOTER) */}
-      <section className="relative bg-gradient-to-b from-slate-50 via-white to-slate-50 py-16 lg:py-20 border-t border-slate-200 overflow-hidden">
-        {/* Soft Ambient Orbs */}
-        <div className="absolute top-12 left-10 w-96 h-96 bg-blue-100/35 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-12 right-10 w-96 h-96 bg-amber-100/30 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
-            <div>
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-widest block mb-1">
-                Explore More Initiatives
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900">
-                Related FKF Programs
-              </h2>
-            </div>
-            <button
-              onClick={() => onNavigate('programs')}
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#000080] hover:text-blue-700 cursor-pointer"
-            >
-              <span>View all programs</span>
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {relatedPrograms.map((prog) => {
-              if (!prog) return null;
-              return (
+            {/* Vertical Stack of Program Cards (Directly matching Desktop Inspo) */}
+            <div className="space-y-4">
+              {otherPrograms.map((prog) => (
                 <div
                   key={prog.id}
-                  className="bg-white/85 backdrop-blur-md rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_rgba(0,0,128,0.12)] hover:border-[#000080]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group"
+                  onClick={() => onSelectProgram(prog.id)}
+                  className="bg-white rounded-2xl border border-slate-200/90 p-3.5 shadow-xs hover:shadow-lg hover:border-[#000080]/30 hover:-translate-y-1 transition-all duration-300 group cursor-pointer flex flex-col"
                 >
-                  {/* Image Banner */}
-                  <div
-                    onClick={() => onSelectProgram(prog.id)}
-                    className="relative h-48 overflow-hidden bg-slate-100 cursor-pointer"
-                  >
+                  {/* Thumbnail Image Banner */}
+                  <div className="relative h-44 sm:h-48 rounded-xl overflow-hidden bg-slate-100 mb-3.5">
                     <img
                       src={prog.image}
                       alt={prog.title}
-                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                    {/* Frosted Glass Badge */}
-                    <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-[11px] font-semibold border border-white/20 shadow-sm flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                      <span>Active Initiative</span>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
                   </div>
 
-                  {/* Card Body */}
-                  <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
+                  {/* Meta Tag & Metric */}
+                  <div className="px-1.5 flex-1 flex flex-col justify-between">
                     <div>
-                      <h3
-                        onClick={() => onSelectProgram(prog.id)}
-                        className="text-lg font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2 cursor-pointer"
-                      >
+                      <div className="flex items-center justify-between text-[11px] mb-2">
+                        <span className="font-extrabold uppercase tracking-wider text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200/70">
+                          {getProgramCategoryTag(prog.id)}
+                        </span>
+                        <span className="text-slate-400 font-medium flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-slate-400" />
+                          <span>4 min</span>
+                        </span>
+                      </div>
+
+                      {/* Title */}
+                      <h4 className="font-bold text-sm sm:text-base font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors line-clamp-2 leading-snug mb-1.5">
                         {prog.title}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 line-clamp-2">
+                      </h4>
+
+                      {/* Brief description */}
+                      <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
                         {prog.description}
                       </p>
                     </div>
 
-                    {/* Action Bar embedded in card */}
-                    <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                      <button
-                        onClick={() => onSelectProgram(prog.id)}
-                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer"
-                      >
-                        <span>Read More</span>
-                        <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
-                      </button>
+                    {/* Bottom quick arrow */}
+                    <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-[#000080] group-hover:text-[#0a0a85]">
+                      <span>Read Full Report</span>
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+              ))}
+            </div>
 
-      {/* LIGHTBOX MODAL */}
+            {/* Quick Sticky Support Card */}
+            <div className="bg-gradient-to-br from-[#000080] to-[#0a0a85] text-white p-6 rounded-2xl shadow-md space-y-3">
+              <span className="text-[11px] font-bold text-amber-300 uppercase tracking-wider block">
+                Direct Grassroots Action
+              </span>
+              <h4 className="text-base font-bold font-['Outfit']">
+                Help Us Expand These Programs Across Ghana
+              </h4>
+              <p className="text-xs text-blue-100/80 leading-relaxed">
+                Your monthly gift funds school kits, vocational toolkits, and community health screenings.
+              </p>
+              <button
+                onClick={onOpenDonateModal}
+                className="w-full py-2.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs rounded-full shadow transition-all cursor-pointer"
+              >
+                Donate to FKF Today
+              </button>
+            </div>
+          </aside>
+        </div>
+      </div>
+
+      {/* 4. MOBILE FLOATING ACTION CAPSULE (Directly inspired by bottom pill in mobile inspo) */}
+      <div className="lg:hidden fixed bottom-4 left-4 right-4 z-40 max-w-md mx-auto">
+        <div className="bg-white/95 backdrop-blur-md border border-slate-200/90 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.12)] p-1.5 pl-4 flex items-center justify-between gap-3">
+          <div
+            onClick={onOpenDonateModal}
+            className="flex-1 text-xs text-slate-500 font-medium truncate cursor-pointer hover:text-slate-700"
+          >
+            Support this initiative or leave a gift...
+          </div>
+
+          <button
+            onClick={onOpenDonateModal}
+            className="w-9 h-9 rounded-full bg-[#000080] hover:bg-[#0a0a85] text-[#F5BD02] flex items-center justify-center shadow-md active:scale-95 transition-all shrink-0 cursor-pointer"
+            title="Support program"
+            aria-label="Support program"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* 5. LIGHTBOX MODAL */}
       {activeLightboxIndex !== null && (
         <div
           role="dialog"
@@ -675,7 +765,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
         </div>
       )}
 
-      {/* VIDEO PREVIEW MODAL */}
+      {/* 6. VIDEO PREVIEW MODAL */}
       {isVideoModalOpen && (
         <div
           role="dialog"
