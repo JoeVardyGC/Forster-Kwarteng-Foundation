@@ -1,7 +1,7 @@
 import React from 'react';
 import type { PageId } from '../types';
 import { FOUNDATION_INFO, CORE_VALUES } from '../data/foundationData';
-import { Phone, Mail, MapPin, Heart, ArrowUp, ShieldCheck } from 'lucide-react';
+import { Phone, Mail, MapPin, Heart, ArrowUp } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (page: PageId) => void;
@@ -32,10 +32,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
           <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="max-w-xl text-center lg:text-left relative z-10">
-            <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-amber-400/15 text-amber-300 border border-amber-400/30 mb-3 backdrop-blur-md shadow-xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-              100% Transparent Non-Profit Governance
-            </span>
             <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-white tracking-tight">
               Stay Connected with Our Field Outreaches
             </h3>
