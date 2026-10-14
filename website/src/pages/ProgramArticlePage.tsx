@@ -10,7 +10,6 @@ import {
   ChevronRight,
   ChevronLeft,
   X,
-  Quote,
   Share2,
   Send,
   Bookmark,
@@ -333,81 +332,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   )}
                 </section>
 
-                {/* 2. Intervention Strategy */}
-                <section id="intervention" className="space-y-4 sm:space-y-5">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 sm:w-6 h-1 bg-[#000080] rounded-full" />
-                    <span className="text-[11px] sm:text-xs font-bold text-[#000080] uppercase tracking-widest">
-                      Our Intervention Strategy
-                    </span>
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
-                    {article.intervention.title}
-                  </h2>
-                  <p className="text-xs sm:text-base text-slate-600 leading-relaxed">
-                    {article.intervention.description}
-                  </p>
-
-                  {/* 3 Step Cards */}
-                  <div className="space-y-3 mt-3">
-                    {article.intervention.phases.map((phase) => (
-                      <div
-                        key={phase.phase}
-                        className="p-4 sm:p-5 rounded-2xl border border-slate-200 bg-slate-50/50 hover:bg-white hover:border-blue-300 transition-all flex flex-col sm:flex-row items-start gap-3 sm:gap-4"
-                      >
-                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#000080] text-amber-400 font-extrabold font-['Outfit'] text-sm sm:text-base flex items-center justify-center shrink-0 shadow-xs">
-                          {phase.phase}
-                        </div>
-                        <div>
-                          <h4 className="text-sm sm:text-base font-bold font-['Outfit'] text-slate-900 mb-0.5">
-                            {phase.title}
-                          </h4>
-                          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                            {phase.description}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-
-                {/* 3. Beneficiary Spotlight Quote */}
-                <section id="story">
-                  <div className="relative p-5 sm:p-8 rounded-3xl bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white overflow-hidden shadow-xl border border-white/20">
-                    <Quote className="absolute top-4 right-4 w-12 sm:w-16 h-12 sm:h-16 text-white/10 pointer-events-none" />
-
-                    <div className="relative z-10 space-y-3 sm:space-y-4">
-                      <span className="inline-block px-3 py-0.5 sm:py-1 rounded-full bg-white/10 backdrop-blur-md text-amber-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider border border-white/20 shadow-xs">
-                        Beneficiary Voice & Turnaround
-                      </span>
-
-                      <blockquote className="text-sm sm:text-lg font-medium leading-relaxed italic text-blue-50">
-                        "{article.beneficiaryQuote.quote}"
-                      </blockquote>
-
-                      <div className="flex items-center gap-3 pt-3 sm:pt-4 border-t border-white/20">
-                        <img
-                          src={article.beneficiaryQuote.image}
-                          alt={article.beneficiaryQuote.author}
-                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-amber-400 shrink-0 shadow-md"
-                        />
-                        <div>
-                          <div className="text-xs sm:text-sm font-bold text-white">
-                            {article.beneficiaryQuote.author}
-                          </div>
-                          <div className="text-[11px] sm:text-xs text-blue-200">
-                            {article.beneficiaryQuote.role} • {article.beneficiaryQuote.location}
-                          </div>
-                          <div className="text-[10px] sm:text-[11px] text-amber-300 font-semibold mt-0.5">
-                            ✓ {article.beneficiaryQuote.outcome}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-
-                {/* 4. Field Video Showcase */}
+                {/* 2. Field Video Showcase */}
                 <section id="video" className="space-y-2.5 sm:space-y-3">
                   <div className="flex items-center gap-2">
                     <div className="w-5 sm:w-6 h-1 bg-[#000080] rounded-full" />
@@ -440,7 +365,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   </div>
                 </section>
 
-                {/* 5. Field Images Gallery */}
+                {/* 3. Field Images Gallery */}
                 {article.gallery && article.gallery.length > 0 && (
                   <section id="gallery" className="space-y-3 sm:space-y-4">
                     <div className="flex items-center gap-2">
@@ -484,7 +409,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                   </section>
                 )}
 
-                {/* 6. Direct Frontline Giving Callout (In article) */}
+                {/* 4. Direct Frontline Giving Callout (In article) */}
                 <div className="pt-6 border-t border-slate-100 text-center">
                   <button
                     onClick={onOpenDonateModal}
