@@ -142,7 +142,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 sm:pt-12 sm:pb-18 lg:pt-8 lg:pb-20 relative z-20 w-full">
           <div className="max-w-xl lg:max-w-2xl space-y-6">
             {/* Dynamic Storytelling Text with Smooth Cross-Fade & Zero Layout Shift */}
-            <div className="relative min-h-[220px] sm:min-h-[235px] lg:min-h-[250px]">
+            <div className="relative min-h-[260px] sm:min-h-[240px] lg:min-h-[250px]">
               {HERO_SLIDES.map((slide, idx) => (
                 <div
                   key={slide.id}
@@ -158,7 +158,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </div>
 
                   {/* Bold Headline */}
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.14]">
+                  <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] sm:leading-[1.14]">
                     {slide.headlinePrefix}{' '}
                     <span className="text-[#F5BD02] inline-block drop-shadow-md">
                       {slide.headlineHighlight}
