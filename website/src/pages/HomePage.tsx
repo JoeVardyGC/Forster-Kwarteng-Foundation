@@ -118,9 +118,9 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="space-y-0">
-      {/* 1. FULL-BLEED HERO SECTION (Arrangement inspired by reference image) */}
+      {/* 1. FULL-BLEED HERO SECTION (Arranged like Reference Screenshot) */}
       <section
-        className="relative min-h-[540px] sm:min-h-[600px] lg:min-h-[640px] flex items-center text-white overflow-hidden"
+        className="relative min-h-[520px] sm:min-h-[600px] lg:min-h-[660px] flex items-center text-white overflow-hidden pb-12 sm:pb-16"
       >
         {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
@@ -141,16 +141,19 @@ export const HomePage: React.FC<HomePageProps> = ({
 
           {/* Directional Cinematic Gradient & Vignette - Reduced opacity so images are vivid & visible */}
           <div className="absolute inset-0 bg-gradient-to-r from-[#000030]/85 via-[#000045]/50 via-50% to-transparent z-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-black/15 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-black/20 z-10"></div>
+
+          {/* Smooth Bottom Fade to seamlessly merge with the next section */}
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#000080] to-transparent z-10 pointer-events-none"></div>
 
           {/* Warm Golden Sun Flare (Top-Center like in reference image) */}
           <div className="absolute -top-28 left-1/4 w-[500px] h-[350px] bg-amber-400/20 rounded-full blur-[110px] pointer-events-none z-15"></div>
         </div>
 
-        {/* Side Chevrons (< and > on left & right edges like reference image) */}
+        {/* Side Chevrons (< and > on left & right edges like in reference) */}
         <button
           onClick={handlePrevSlide}
-          className="absolute left-2.5 sm:left-6 top-[42%] sm:top-1/2 -translate-y-1/2 z-25 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/35 hover:bg-black/60 border border-white/25 text-white/90 hover:text-white flex items-center justify-center backdrop-blur-md active:scale-90 transition-all cursor-pointer shadow-md"
+          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-950/40 hover:bg-slate-950/70 border border-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all cursor-pointer active:scale-90"
           aria-label="Previous slide"
         >
           <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -158,21 +161,21 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <button
           onClick={handleNextSlide}
-          className="absolute right-2.5 sm:right-6 top-[42%] sm:top-1/2 -translate-y-1/2 z-25 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/35 hover:bg-black/60 border border-white/25 text-white/90 hover:text-white flex items-center justify-center backdrop-blur-md active:scale-90 transition-all cursor-pointer shadow-md"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-950/40 hover:bg-slate-950/70 border border-white/20 backdrop-blur-md text-white flex items-center justify-center transition-all cursor-pointer active:scale-90"
           aria-label="Next slide"
         >
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        {/* Content Container - Compact width to leave right side clear for imagery */}
-        <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 pt-8 pb-18 sm:pt-10 sm:pb-22 lg:pt-10 lg:pb-24 relative z-20 w-full">
-          <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-4 sm:space-y-5">
-            {/* Dynamic Storytelling Text with Smooth Cross-Fade & Zero Layout Shift */}
-            <div className="relative min-h-[190px] sm:min-h-[210px] lg:min-h-[230px]">
+        {/* Content Container - Compact width with reference layout & clearance from side chevrons */}
+        <div className="max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-8 pb-4 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
+          <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3.5 sm:space-y-4">
+            {/* Dynamic Storytelling Text */}
+            <div className="relative min-h-[170px] sm:min-h-[210px] lg:min-h-[235px]">
               {HERO_SLIDES.map((slide, idx) => (
                 <div
                   key={slide.id}
-                  className={`space-y-3 sm:space-y-4 transition-all duration-700 ease-out ${
+                  className={`space-y-2.5 sm:space-y-3 transition-all duration-700 ease-out ${
                     idx === currentSlide
                       ? 'opacity-100 translate-y-0 relative z-10'
                       : 'opacity-0 translate-y-2 pointer-events-none absolute inset-0 z-0'
@@ -183,8 +186,8 @@ export const HomePage: React.FC<HomePageProps> = ({
                     <span>{slide.pillar}</span>
                   </div>
 
-                  {/* Bold Headline - Broken into clean, punchy lines like reference */}
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
+                  {/* Bold Headline - Broken into clean, punchy lines */}
+                  <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.14] drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
                     {slide.headlinePrefix}{' '}
                     <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
                       {slide.headlineHighlight}
@@ -192,44 +195,44 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </h1>
 
                   {/* Description Text - Focused max-width for clean reading */}
-                  <p className="text-sm sm:text-base lg:text-lg text-blue-100/95 leading-relaxed font-normal max-w-md sm:max-w-lg drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
+                  <p className="text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
                     {slide.description}
                   </p>
                 </div>
               ))}
             </div>
 
-            {/* Action Buttons: 2-Button Horizontal Row like reference */}
-            <div className="pt-2 flex flex-row items-center gap-2.5 sm:gap-4 w-full max-w-md">
+            {/* Action Buttons: Side-by-Side Pill Buttons (Just like in Reference Image) */}
+            <div className="pt-1 flex flex-row items-center gap-2.5 sm:gap-3.5">
               <button
                 onClick={onOpenDonateModal}
-                className="flex-1 py-3 px-3.5 sm:px-6 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs xs:text-sm sm:text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer truncate"
+                className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs sm:text-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer group shrink-0"
               >
-                <Heart className="w-4 h-4 fill-[#000080] shrink-0" />
-                <span className="truncate">Make a Donation</span>
+                <Heart className="w-4 h-4 fill-[#000080] group-hover:scale-110 transition-transform" />
+                <span>Make a Donation</span>
               </button>
 
               <button
                 onClick={handleScrollToPrograms}
-                className="flex-1 py-3 px-3.5 sm:px-6 bg-white hover:bg-slate-100 text-[#000080] font-bold text-xs xs:text-sm sm:text-base rounded-full shadow-md border border-slate-200/80 transition-all duration-200 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer truncate"
+                className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-white hover:bg-slate-100 text-[#000080] font-bold text-xs sm:text-sm rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
               >
-                <span className="truncate">Our Projects</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#000080] shrink-0" />
+                <span>Explore Projects</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            {/* Centered Slide Dash Indicators directly below buttons like reference */}
-            <div className="pt-2 sm:pt-3 flex items-center justify-center gap-1.5 w-full max-w-md">
+            {/* Slide Indicators: Centered Dots & Elongated Active Pill */}
+            <div className="pt-2 flex items-center gap-1.5">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentSlide(idx)}
-                  className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                  className={`h-1.5 rounded-full transition-all duration-400 cursor-pointer ${
                     idx === currentSlide
-                      ? 'w-6 bg-[#F5BD02] shadow-[0_0_8px_rgba(245,189,2,0.8)]'
+                      ? 'w-7 bg-[#F5BD02] shadow-[0_0_10px_rgba(245,189,2,0.9)]'
                       : 'w-2 bg-white/40 hover:bg-white/70'
                   }`}
-                  aria-label={`Go to slide ${idx + 1}`}
+                  aria-label={`Go to slide ${idx + 1}: ${slide.tag}`}
                   title={slide.tag}
                 />
               ))}
@@ -238,96 +241,92 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 2. ELEVATED IMPACT TRANSITION BRIDGE (Inspired by reference arrangement, with rich styling) */}
-      <section className="relative z-30 -mt-10 sm:-mt-14 lg:-mt-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <div className="bg-white/95 backdrop-blur-2xl rounded-3xl p-5 sm:p-7 lg:p-8 shadow-[0_20px_50px_rgba(0,0,128,0.14)] border border-slate-100/90 relative overflow-hidden">
-          {/* Radiant Gold Top Edge */}
-          <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-400 via-[#F5BD02] to-[#000080]" />
+      {/* 2. LIVE IMPACT METRICS STRIP WITH ELEVATED FLOATING TRANSITION CARD */}
+      <section className="relative bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] pt-0 pb-16 sm:pb-20 text-white overflow-visible">
+        {/* Ambient Blurred Orbs for Glowing Depth */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Header with Verified Live Badge */}
-          <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-2 pb-3.5 mb-4 border-b border-slate-100">
-            <div className="flex items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200/60 shadow-2xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                Making A Difference • Verified Impact
+        {/* The Elevated Floating Transition Card covering the Hero-to-Next Section boundary */}
+        <div className="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -translate-y-8 sm:-translate-y-12">
+          <div className="bg-white text-slate-900 rounded-3xl border border-slate-200/90 shadow-[0_24px_50px_rgba(0,0,80,0.22)] p-5 sm:p-7 backdrop-blur-xl">
+            {/* Card Header Badge (Adds prestige & life, removing plainness) */}
+            <div className="flex items-center justify-between pb-3.5 mb-2 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-[#000080]">
+                  Verified Community Impact • Accra, Ghana
+                </span>
+              </div>
+              <span className="inline-flex items-center text-[10px] sm:text-[11px] font-bold text-amber-800 bg-amber-100/80 border border-amber-200/60 px-2.5 py-0.5 rounded-full">
+                Annual Metrics
               </span>
             </div>
-            <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 tracking-wider uppercase">
-              Ghana Field Mission • 2026 Live Metrics
-            </span>
-          </div>
 
-          {/* 3 Impact Metrics: Stacked on Mobile (reference style), 3-Column on Desktop */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-6 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-            {/* Stat 1: 1,200+ */}
-            <div className="pt-3 first:pt-0 md:pt-0 md:px-4 first:pl-0 flex items-center md:items-start gap-3.5 sm:gap-4">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-amber-100 to-amber-200/50 border border-amber-300/60 text-amber-800 flex items-center justify-center shrink-0 shadow-sm">
-                <Users className="w-5 h-5 sm:w-6 sm:h-6" />
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-2xl sm:text-3xl font-black font-['Outfit'] text-[#000080] tracking-tight">
-                  1,200+
+            {/* 3 Metric Rows (Stacked on Mobile, 3 Columns on Desktop) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
+              {/* Stat 1: Education */}
+              <div className="py-3.5 md:py-2 md:px-5 flex items-center gap-4 first:pt-2 md:first:pl-0">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-[#F5BD02] text-[#000080] flex items-center justify-center shadow-md shadow-amber-500/25 shrink-0">
+                  <GraduationCap className="w-6 h-6" />
                 </div>
-                <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-                  Lives Directly Impacted
+                <div className="flex-1 min-w-0">
+                  <div className="text-2xl sm:text-3xl font-black font-['Outfit'] text-[#000080] tracking-tight">
+                    5,000+
+                  </div>
+                  <div className="text-xs font-bold text-slate-800 uppercase tracking-wide truncate">
+                    Lives Directly Empowered
+                  </div>
+                  <div className="text-[11px] text-slate-500 truncate">
+                    Across Greater Accra, Eastern & Ashanti
+                  </div>
                 </div>
-                <p className="text-xs text-slate-600 line-clamp-2">
-                  Vulnerable school children, orphans, and families supported across Ghana.
-                </p>
               </div>
-            </div>
 
-            {/* Stat 2: 500+ */}
-            <div className="pt-3 md:pt-0 md:px-4 flex items-center md:items-start gap-3.5 sm:gap-4">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-blue-100 to-blue-200/50 border border-blue-300/60 text-[#000080] flex items-center justify-center shrink-0 shadow-sm">
-                <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6" />
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-2xl sm:text-3xl font-black font-['Outfit'] text-[#000080] tracking-tight">
-                  500+
+              {/* Stat 2: Communities */}
+              <div className="py-3.5 md:py-2 md:px-5 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#000080] to-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-700/25 shrink-0">
+                  <HeartHandshake className="w-6 h-6" />
                 </div>
-                <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-                  Desks & Learning Kits
+                <div className="flex-1 min-w-0">
+                  <div className="text-2xl sm:text-3xl font-black font-['Outfit'] text-[#000080] tracking-tight">
+                    9
+                  </div>
+                  <div className="text-xs font-bold text-slate-800 uppercase tracking-wide truncate">
+                    Schools & Communities
+                  </div>
+                  <div className="text-[11px] text-slate-500 truncate">
+                    Direct educational & welfare outreaches
+                  </div>
                 </div>
-                <p className="text-xs text-slate-600 line-clamp-2">
-                  Textbooks, uniforms, and classroom furniture supplied to public schools.
-                </p>
               </div>
-            </div>
 
-            {/* Stat 3: 9 Active Hubs */}
-            <div className="pt-3 md:pt-0 md:px-4 last:pr-0 flex items-center md:items-start gap-3.5 sm:gap-4">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-emerald-100 to-emerald-200/50 border border-emerald-300/60 text-emerald-800 flex items-center justify-center shrink-0 shadow-sm">
-                <HeartHandshake className="w-5 h-5 sm:w-6 sm:h-6" />
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-2xl sm:text-3xl font-black font-['Outfit'] text-[#000080] tracking-tight">
-                  9 Active Hubs
+              {/* Stat 3: Transparency */}
+              <div className="py-3.5 md:py-2 md:px-5 flex items-center gap-4 last:pb-2 md:last:pr-0">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/25 shrink-0">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
-                <div className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">
-                  Community Field Outreaches
+                <div className="flex-1 min-w-0">
+                  <div className="text-2xl sm:text-3xl font-black font-['Outfit'] text-[#000080] tracking-tight">
+                    100%
+                  </div>
+                  <div className="text-xs font-bold text-slate-800 uppercase tracking-wide truncate">
+                    Direct Program Delivery
+                  </div>
+                  <div className="text-[11px] text-slate-500 truncate">
+                    Audited grassroots allocation & reports
+                  </div>
                 </div>
-                <p className="text-xs text-slate-600 line-clamp-2">
-                  Grassroots programs fostering educational and vocational opportunities.
-                </p>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Bottom Verification & Action Strip */}
-          <div className="pt-3.5 mt-4 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-            <span className="text-slate-500 font-medium flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-              Registered Non-Profit DSW/1042 • 100% Transparency Guarantee
-            </span>
-            <button
-              onClick={onOpenDonateModal}
-              className="font-bold text-[#000080] hover:text-amber-600 flex items-center gap-1 transition-colors cursor-pointer self-end sm:self-auto"
-            >
-              <span>Support Our Field Mission</span>
-              <ArrowRight className="w-3.5 h-3.5 text-amber-500" />
-            </button>
-          </div>
+        {/* Supporting Context beneath the floating transition card */}
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-2 sm:pt-4">
+          <p className="text-blue-100/90 text-xs sm:text-sm max-w-xl mx-auto leading-relaxed">
+            Every contribution directly powers scholarships, uniforms, classroom repairs, and community welfare programs across Ghana.
+          </p>
         </div>
       </section>
 
