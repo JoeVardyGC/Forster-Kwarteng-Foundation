@@ -132,8 +132,8 @@ export interface ProgramArticle {
     phases: ProgramPhase[];
   };
   beneficiaryQuote: ProgramBeneficiaryQuote;
-  video: ProgramVideoInfo;
-  gallery: ProgramGalleryItem[];
+  video?: ProgramVideoInfo;
+  gallery?: ProgramGalleryItem[];
   sdgBadges: { number: string; title: string; color: string }[];
   donationTiers: ProgramDonationTier[];
   relatedProgramIds: string[];

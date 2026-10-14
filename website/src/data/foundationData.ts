@@ -413,24 +413,6 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
       description:
         'Step inside an FKF school outreach session and witness students breaking the silence around mental health and discovering hope together.',
     },
-    gallery: [
-      {
-        url: '/assets/program_mental_health.jpg',
-        caption: 'Interactive mental wellness breakout session with secondary school students.',
-      },
-      {
-        url: '/assets/hero_girls_right.jpg',
-        caption: 'Students participating in a peer mentorship and self-confidence circle.',
-      },
-      {
-        url: '/assets/hero_group_right.jpg',
-        caption: 'Community youth advocates celebrating the launch of the School Wellness Club.',
-      },
-      {
-        url: '/assets/hero_outreach_right.jpg',
-        caption: 'FKF facilitators distributing student wellness toolkits and journals.',
-      },
-    ],
     sdgBadges: [
       { number: 'SDG 3', title: 'Good Health & Well-being', color: '#4C9F38' },
       { number: 'SDG 4', title: 'Quality Education', color: '#C5192D' },
@@ -669,13 +651,6 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
       location: 'Ejisu, Ashanti Region',
       image: '/assets/orphan_community_outreach.jpg',
       outcome: 'Mobilized community matching funds for 2 local civic projects.',
-    },
-    video: {
-      title: 'Empowering Grassroots Architects: The FKF Capacity Lab',
-      duration: '3:20 mins',
-      thumbnail: '/assets/program_capacity_building.jpg',
-      description:
-        'See how community leaders master modern digital tools to track projects, manage volunteers, and report metrics.',
     },
     gallery: [
       {
@@ -934,31 +909,6 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
       image: '/assets/orphan_boy_classroom.jpg',
       outcome: '3 grandchildren returned to school; received micro-grant to restock kiosk.',
     },
-    video: {
-      title: 'Smiles of Hope: The Annual FKF Community Outreach Caravan',
-      duration: '3:50 mins',
-      thumbnail: '/assets/program_community_outreach.jpg',
-      description:
-        'Experience the energy, compassion, and smiles as our volunteer team delivers food, warmth, and educational supplies.',
-    },
-    gallery: [
-      {
-        url: '/assets/program_community_outreach.jpg',
-        caption: 'Food staple packages and nutrition parcels ready for direct delivery.',
-      },
-      {
-        url: '/assets/orphan_community_outreach.jpg',
-        caption: 'FKF volunteers organizing medical screening and hygiene kits.',
-      },
-      {
-        url: '/assets/hero_outreach_right.jpg',
-        caption: 'Children receiving new school uniforms, notebooks, and school bags.',
-      },
-      {
-        url: '/assets/orphan_boy_classroom.jpg',
-        caption: 'Smiles from students after receiving their back-to-school hampers.',
-      },
-    ],
     sdgBadges: [
       { number: 'SDG 2', title: 'Zero Hunger', color: '#DDA63A' },
       { number: 'SDG 1', title: 'No Poverty', color: '#E5243B' },

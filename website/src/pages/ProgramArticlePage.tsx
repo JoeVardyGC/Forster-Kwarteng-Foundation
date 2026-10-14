@@ -76,17 +76,18 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
   // Lightbox key controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (activeLightboxIndex !== null) {
+      const galleryLength = article.gallery?.length || 0;
+      if (activeLightboxIndex !== null && galleryLength > 0) {
         if (e.key === 'Escape') setActiveLightboxIndex(null);
         if (e.key === 'ArrowRight') {
           setActiveLightboxIndex((prev) =>
-            prev !== null ? (prev + 1) % article.gallery.length : null
+            prev !== null ? (prev + 1) % galleryLength : null
           );
         }
         if (e.key === 'ArrowLeft') {
           setActiveLightboxIndex((prev) =>
             prev !== null
-              ? (prev - 1 + article.gallery.length) % article.gallery.length
+              ? (prev - 1 + galleryLength) % galleryLength
               : null
           );
         }
@@ -98,7 +99,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeLightboxIndex, isVideoModalOpen, article.gallery.length]);
+  }, [activeLightboxIndex, isVideoModalOpen, article.gallery?.length]);
 
   // Related programs lookup (all other programs)
   const otherPrograms = OUR_PROGRAMS.filter((p) => p.id !== article.id);
@@ -326,37 +327,39 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                 </section>
 
                 {/* 2. Field Video Showcase */}
-                <section id="video" className="space-y-2.5 sm:space-y-3">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 sm:w-6 h-1 bg-[#000080] rounded-full" />
-                    <span className="text-[11px] sm:text-xs font-bold text-[#000080] uppercase tracking-widest">
-                      Field Video Showcase
-                    </span>
-                  </div>
-                  <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
-                    {article.video.title}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-slate-600">
-                    {article.video.description}
-                  </p>
+                {article.video && article.video.thumbnail && (
+                  <section id="video" className="space-y-2.5 sm:space-y-3">
+                    <div className="flex items-center gap-2">
+                      <div className="w-5 sm:w-6 h-1 bg-[#000080] rounded-full" />
+                      <span className="text-[11px] sm:text-xs font-bold text-[#000080] uppercase tracking-widest">
+                        Field Video Showcase
+                      </span>
+                    </div>
+                    <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
+                      {article.video.title}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-600">
+                      {article.video.description}
+                    </p>
 
-                  {/* Video Player Card */}
-                  <div
-                    onClick={() => setIsVideoModalOpen(true)}
-                    className="relative rounded-2xl overflow-hidden shadow-md border border-slate-200 aspect-[16/9] group cursor-pointer bg-slate-900"
-                  >
-                    <img
-                      src={article.video.thumbnail}
-                      alt={article.video.title}
-                      className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 opacity-90 group-hover:opacity-100"
-                    />
-                    <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
-                      <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#F5BD02] text-[#000080] flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                        <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-0.5 sm:ml-1" />
+                    {/* Video Player Card */}
+                    <div
+                      onClick={() => setIsVideoModalOpen(true)}
+                      className="relative rounded-2xl overflow-hidden shadow-md border border-slate-200 aspect-[16/9] group cursor-pointer bg-slate-900"
+                    >
+                      <img
+                        src={article.video.thumbnail}
+                        alt={article.video.title}
+                        className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500 opacity-90 group-hover:opacity-100"
+                      />
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-[#F5BD02] text-[#000080] flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                          <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-0.5 sm:ml-1" />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </section>
+                  </section>
+                )}
 
                 {/* 3. Field Images Gallery */}
                 {article.gallery && article.gallery.length > 0 && (
@@ -563,7 +566,9 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
       </div>
 
       {/* 5. LIGHTBOX MODAL */}
-      {activeLightboxIndex !== null && (
+      {activeLightboxIndex !== null &&
+        article.gallery &&
+        article.gallery[activeLightboxIndex] && (
         <div
           role="dialog"
           aria-modal="true"
@@ -628,7 +633,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
       )}
 
       {/* 6. VIDEO PREVIEW MODAL */}
-      {isVideoModalOpen && (
+      {isVideoModalOpen && article.video && (
         <div
           role="dialog"
           aria-modal="true"
