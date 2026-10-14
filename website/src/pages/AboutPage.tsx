@@ -390,6 +390,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
           {/* Status Pills */}
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-500 font-semibold pt-1">
             <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#000080] px-3.5 py-1.5 rounded-full border border-blue-200/60 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              Official Registration: {FOUNDATION_INFO.registrationNo}
+            </span>
+            <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#000080] px-3.5 py-1.5 rounded-full border border-blue-200/60 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#000080]" />
               Non-Profit & Charitable Status
             </span>

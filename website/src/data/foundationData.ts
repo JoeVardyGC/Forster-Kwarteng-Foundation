@@ -16,7 +16,7 @@ export const FOUNDATION_INFO = {
   email: 'info@forsterkwartengfoundation.org',
   secondaryEmail: 'contact@forsterkwartengfoundation.org',
   website: 'www.forsterkwartengfoundation.org',
-  registrationNo: 'CG098232024 / DSW/1042',
+  registrationNo: '000000000000000000000',
   operatingHours: 'Monday – Friday: 8:00 AM – 5:00 PM GMT',
 };
 
