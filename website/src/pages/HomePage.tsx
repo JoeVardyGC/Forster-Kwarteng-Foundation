@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { PageId, Currency } from '../types';
+import { UpcomingProjectsSection } from '../components/UpcomingProjectsSection';
 import {
   FOUNDATION_INFO,
   PROGRAM_PILLARS,
@@ -457,6 +458,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
       </section>
+
+      {/* 4.5. UPCOMING PROJECTS & FIELD CALENDAR SECTION (With Live Countdown) */}
+      <UpcomingProjectsSection
+        onNavigate={onNavigate}
+        onOpenDonateModal={onOpenDonateModal}
+      />
 
       {/* 5. THE 4 PILLARS OF SOCIAL IMPACT (Architectural Glass Pillar Showcase) */}
       <section className="relative py-20 lg:py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 border-t border-slate-200 overflow-hidden">

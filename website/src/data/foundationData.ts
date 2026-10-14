@@ -1,4 +1,4 @@
-import type { CoreValue, ProgramPillar, BeneficiaryStory, DonationTier, FinancialMetric, FoundationProgram, ProgramArticle } from '../types';
+import type { CoreValue, ProgramPillar, BeneficiaryStory, DonationTier, FinancialMetric, FoundationProgram, ProgramArticle, UpcomingProjectEvent } from '../types';
 
 export const FOUNDATION_INFO = {
   name: 'FORSTER KWARTENG FOUNDATION',
@@ -988,5 +988,62 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     relatedProgramIds: ['mental-health', 'skills-training', 'stem-tvet'],
   },
 };
+
+export const UPCOMING_PROJECTS: UpcomingProjectEvent[] = [
+  {
+    id: 'back-to-school-rural-outreach',
+    title: 'Annual Back-to-School Rural Outreach & Textbook Distribution',
+    category: 'Education Sponsorship',
+    targetDate: '2026-11-05T09:00:00',
+    formattedDate: 'Thursday, November 5, 2026',
+    time: '9:00 AM – 3:00 PM GMT',
+    location: 'Prampram & Kpone Basic Schools, Greater Accra',
+    summary:
+      'Equipping over 500 orphaned and economically vulnerable primary pupils with essential syllabus textbooks, tailored school uniforms, backpacks, and geometry sets for the new academic term.',
+    image: '/assets/orphan_boy_classroom.jpg',
+    status: 'Featured',
+    highlightMetric: {
+      value: '500+ Pupils',
+      label: 'Target Beneficiaries',
+    },
+    tags: ['Education', 'Textbooks', 'Rural Outreach'],
+  },
+  {
+    id: 'youth-tvet-skills-summit',
+    title: 'Youth TVET & Vocational Apprenticeship Summit',
+    category: 'Skills Development',
+    targetDate: '2026-11-22T10:00:00',
+    formattedDate: 'Sunday, November 22, 2026',
+    time: '10:00 AM – 4:30 PM GMT',
+    location: 'Madina Community Center, Greater Accra',
+    summary:
+      'Connecting out-of-school youth with certified artisan master trainers in electrical installation, fashion design, and digital literacy with sponsored starter toolkits upon graduation.',
+    image: '/assets/program_skills_training.jpg',
+    status: 'Upcoming',
+    highlightMetric: {
+      value: '120 Youth',
+      label: 'Apprentices Enrolled',
+    },
+    tags: ['Vocational', 'Youth Jobs', 'Starter Kits'],
+  },
+  {
+    id: 'community-health-mental-wellness-camp',
+    title: 'Community Health Screening & Mental Wellness Camp',
+    category: 'Healthcare & Wellness',
+    targetDate: '2026-12-12T08:30:00',
+    formattedDate: 'Saturday, December 12, 2026',
+    time: '8:30 AM – 4:00 PM GMT',
+    location: 'Pokuase Community Clinic, Greater Accra',
+    summary:
+      'Delivering free primary medical checkups, diagnostic eye screenings, and confidential psychological counseling led by licensed psychiatric nurses and volunteer medical practitioners.',
+    image: '/assets/program_community_outreach.jpg',
+    status: 'Upcoming',
+    highlightMetric: {
+      value: '800+ Care Sessions',
+      label: 'Projected Reach',
+    },
+    tags: ['Health Camp', 'Mental Health', 'Free Medical'],
+  },
+];
 
 

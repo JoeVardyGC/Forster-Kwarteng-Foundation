@@ -139,4 +139,22 @@ export interface ProgramArticle {
   relatedProgramIds: string[];
 }
 
+export interface UpcomingProjectEvent {
+  id: string;
+  title: string;
+  category: string;
+  targetDate: string;
+  formattedDate: string;
+  time: string;
+  location: string;
+  summary: string;
+  image: string;
+  status: 'Upcoming' | 'In Progress' | 'Featured';
+  highlightMetric?: {
+    value: string;
+    label: string;
+  };
+  tags: string[];
+}
+
 
