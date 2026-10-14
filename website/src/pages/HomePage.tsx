@@ -122,7 +122,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       <section
         className="relative min-h-[560px] sm:min-h-[620px] lg:min-h-[660px] flex items-center text-white overflow-hidden"
       >
-        {/* Full-Bleed Background Carousel Images */}
+        {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
           {HERO_SLIDES.map((slide, idx) => (
             <div
@@ -134,22 +134,22 @@ export const HomePage: React.FC<HomePageProps> = ({
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="w-full h-full object-cover object-right sm:object-[85%_center] lg:object-[85%_center] scale-100 transition-transform duration-7000 ease-out"
+                className="w-full h-full object-cover object-[82%_center] sm:object-[86%_center] lg:object-[85%_center] scale-100 transition-transform duration-7000 ease-out"
               />
             </div>
           ))}
 
-          {/* Directional Cinematic Gradient & Vignette (Protects left-side text while keeping right-side characters 100% visible) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#00003d]/95 via-[#000066]/70 via-45% to-transparent z-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-black/20 z-10"></div>
+          {/* Directional Cinematic Gradient & Vignette - Reduced opacity so images are vivid & visible */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#000030]/80 via-[#000045]/45 via-50% to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-black/15 z-10"></div>
 
           {/* Warm Golden Sun Flare (Top-Center like in reference image) */}
-          <div className="absolute -top-28 left-1/4 w-[500px] h-[350px] bg-amber-400/25 rounded-full blur-[110px] pointer-events-none z-15"></div>
+          <div className="absolute -top-28 left-1/4 w-[500px] h-[350px] bg-amber-400/20 rounded-full blur-[110px] pointer-events-none z-15"></div>
         </div>
 
-        {/* Content Container - Left Aligned exactly like Reference */}
+        {/* Content Container - Compact width to leave right side clear for imagery */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 sm:pt-8 sm:pb-18 lg:pt-8 lg:pb-20 relative z-20 w-full">
-          <div className="max-w-xl lg:max-w-2xl space-y-6">
+          <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-6">
             {/* Dynamic Storytelling Text with Smooth Cross-Fade & Zero Layout Shift */}
             <div className="relative min-h-[220px] sm:min-h-[235px] lg:min-h-[250px]">
               {HERO_SLIDES.map((slide, idx) => (
@@ -162,20 +162,20 @@ export const HomePage: React.FC<HomePageProps> = ({
                   }`}
                 >
                   {/* Non-Profit & Pillar Badge */}
-                  <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 shadow-sm">
+                  <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold text-amber-300 shadow-sm">
                     <span>{slide.pillar}</span>
                   </div>
 
-                  {/* Bold Headline */}
-                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.14]">
+                  {/* Bold Headline - Broken into clean, punchy lines */}
+                  <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
                     {slide.headlinePrefix}{' '}
-                    <span className="text-[#F5BD02] inline-block drop-shadow-md">
+                    <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
                       {slide.headlineHighlight}
                     </span>
                   </h1>
 
-                  {/* Description Text */}
-                  <p className="text-base sm:text-lg text-blue-100/90 leading-relaxed font-normal max-w-xl">
+                  {/* Description Text - Focused max-width for clean reading */}
+                  <p className="text-base sm:text-lg text-blue-100/95 leading-relaxed font-normal max-w-md sm:max-w-lg drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
                     {slide.description}
                   </p>
                 </div>
@@ -203,7 +203,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
 
-        {/* Catchy Redesigned Carousel Scroller (Positioned at bottom center space on mobile, right on desktop) */}
+        {/* Catchy Redesigned Carousel Scroller (Without slide numbers) */}
         <div className="absolute bottom-3.5 sm:bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-8 sm:translate-x-0 z-20 flex items-center gap-2 bg-slate-950/75 hover:bg-slate-950/90 backdrop-blur-xl border border-white/20 px-3 py-1.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.45)] transition-all">
           <button
             onClick={handlePrevSlide}
@@ -228,13 +228,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                 title={slide.tag}
               />
             ))}
-          </div>
-
-          {/* Bold Mono Counter */}
-          <div className="flex items-center text-[11px] font-mono font-extrabold px-1 tracking-tight text-white/90 select-none">
-            <span className="text-amber-300">0{currentSlide + 1}</span>
-            <span className="text-white/30 mx-0.5">/</span>
-            <span className="text-white/50">0{HERO_SLIDES.length}</span>
           </div>
 
           <button
