@@ -8,11 +8,7 @@ import {
   ShieldCheck,
   Zap,
   Award,
-  ChevronRight,
   ArrowRight,
-  GraduationCap,
-  Compass,
-  Wrench,
   HeartHandshake,
   FileText,
   Leaf,
@@ -120,81 +116,38 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
         </div>
 
         {/* ========================================================= */}
-        {/* 2. DUAL VISION & MISSION SHOWCASE CARDS                  */}
+        {/* 2. DUAL CARDS: OUR MISSION & OUR VISION                   */}
         {/* ========================================================= */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 relative z-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
-            {/* OUR VISION CARD */}
-            <div className="bg-[#000080] text-white rounded-3xl p-7 sm:p-9 shadow-xl border border-blue-900 flex flex-col justify-between group">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+            {/* Our Mission Card */}
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-slate-200/80 border-t-4 border-t-[#000080] flex flex-col justify-between">
               <div>
-                <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-4" />
-                <span className="text-[11px] font-bold uppercase tracking-widest text-amber-300 block mb-2 font-mono">
-                  ORGANIZATIONAL COMPASS
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-white mb-4">
-                  Our Vision
+                <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 mb-3">
+                  Our Mission
                 </h2>
-                <blockquote className="text-base sm:text-lg font-medium text-blue-100 leading-relaxed mb-4">
-                  "{FOUNDATION_INFO.vision}"
-                </blockquote>
-                <p className="text-xs sm:text-sm text-blue-200/80 leading-relaxed font-normal">
-                  We envision a thriving Ghana where no individual is held back by socioeconomic barriers, and where every child and young adult has access to life-changing opportunities and the support needed to lead a dignified, self-reliant life.
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  Forster Kwarteng Foundation is committed to promoting quality basic education,
+                  youth mentorship, building individual and community capacities, and advancing
+                  Technical and Vocational Education and Training (TVET) as a sustainable pathway to
+                  empowerment. The Foundation further supports vulnerable groups through social
+                  interventions, donations, and empowerment programs aimed at fostering inclusion and
+                  dignity for all.
                 </p>
-              </div>
-              <div className="pt-6 border-t border-white/15 mt-6 flex items-center justify-between text-xs text-blue-200">
-                <span className="flex items-center gap-2 font-medium text-blue-100">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  Building Empowered Communities
-                </span>
               </div>
             </div>
 
-            {/* OUR MISSION CARD */}
-            <div className="bg-white rounded-3xl p-7 sm:p-9 shadow-xl border border-slate-200/80 border-t-4 border-t-[#000080] flex flex-col justify-between group">
+            {/* Our Vision Card */}
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-slate-200/80 border-t-4 border-t-[#000080] flex flex-col justify-between">
               <div>
-                <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-4" />
-                <span className="text-[11px] font-bold uppercase tracking-widest text-[#000080] block mb-2 font-mono">
-                  CORE COMMITMENT
-                </span>
-                <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900 mb-4">
-                  Our Mission
+                <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 mb-3">
+                  Our Vision
                 </h2>
-                <blockquote className="text-base sm:text-lg font-semibold text-slate-800 leading-relaxed mb-4">
-                  "{FOUNDATION_INFO.mission}"
-                </blockquote>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6 font-normal">
-                  We translate compassion into measurable grassroots outcomes across four strategic pillars:
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
+                  To create a society in which individuals are mentally sound, skillfully empowered,
+                  and economically independent, thereby contributing meaningfully to national
+                  development and social well-being across Ghana and beyond.
                 </p>
-
-                {/* 4 Pillars Tactical Chips */}
-                <div className="grid grid-cols-2 gap-2.5 text-xs">
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold flex items-center gap-2">
-                    <GraduationCap className="w-4 h-4 text-[#000080] shrink-0" />
-                    <span>Education</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold flex items-center gap-2">
-                    <Compass className="w-4 h-4 text-amber-600 shrink-0" />
-                    <span>Mentorship</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold flex items-center gap-2">
-                    <Wrench className="w-4 h-4 text-[#000080] shrink-0" />
-                    <span>Skills Training</span>
-                  </div>
-                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-semibold flex items-center gap-2">
-                    <Heart className="w-4 h-4 text-rose-500 shrink-0 fill-rose-500" />
-                    <span>Community Impact</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs">
-                <button
-                  onClick={() => onNavigate('programs')}
-                  className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  <span>Explore Our 4 Pillars</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
             </div>
           </div>
