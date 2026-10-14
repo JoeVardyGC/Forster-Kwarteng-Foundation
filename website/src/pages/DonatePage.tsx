@@ -481,7 +481,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({
                 Want to See Where Your Support Goes?
               </h3>
               <p className="text-xs sm:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed">
-                Discover our 4 core pillars and read real beneficiary stories from students and young artisans empowered by our projects.
+                Explore our active field initiatives and read real beneficiary stories from students, artisans, and families empowered by your generosity.
               </p>
               <button
                 type="button"
