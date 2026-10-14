@@ -187,7 +187,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onClick={() => onNavigate('programs')}
                 className="px-8 py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-base rounded-full border border-white/30 backdrop-blur-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Explore Our 4 Pillars</span>
+                <span>Explore Our Programs</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -446,7 +446,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   onClick={() => onNavigate('programs')}
                   className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
                 >
-                  <span>Explore the 4 Pillars in Detail</span>
+                  <span>Explore Our Programs in Detail</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -529,7 +529,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               onClick={() => onNavigate('programs')}
               className="inline-flex items-center gap-2.5 px-8 py-4 bg-white/90 hover:bg-white text-[#000080] font-bold text-sm rounded-full border border-slate-200/90 shadow-sm hover:shadow-lg hover:border-[#000080]/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
             >
-              <span>Explore All 4 Pillars in Detail</span>
+              <span>Explore All Programs in Detail</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
