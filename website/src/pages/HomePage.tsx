@@ -618,7 +618,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
 
                   {/* Subtle Founder Identification Pill at Bottom of Photo */}
-                  <div className="absolute bottom-4 left-4 right-4 p-3.5 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-between">
+                  <div className="absolute bottom-4 left-4 right-4 p-3.5 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/20 text-white shadow-lg">
                     <div>
                       <div className="text-xs sm:text-sm font-extrabold font-['Outfit'] tracking-wide text-white">
                         Mr. Forster Kwarteng
@@ -627,7 +627,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                         Founder & Chief Executive Officer
                       </div>
                     </div>
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 shadow-xs animate-pulse" />
                   </div>
                 </div>
               </div>

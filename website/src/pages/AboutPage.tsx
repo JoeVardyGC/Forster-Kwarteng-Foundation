@@ -323,9 +323,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
                   <div className="text-sm font-extrabold font-['Outfit'] tracking-wide text-white">
                     {founderInfo.name}
                   </div>
-                  <div className="text-xs font-medium text-amber-300 flex items-center justify-between mt-0.5">
-                    <span>{founderInfo.role}</span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 shadow-xs animate-pulse" />
+                  <div className="text-xs font-medium text-amber-300 mt-0.5">
+                    {founderInfo.role}
                   </div>
                 </div>
               </div>
