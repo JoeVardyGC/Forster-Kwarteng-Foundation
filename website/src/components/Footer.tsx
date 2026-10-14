@@ -146,7 +146,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="block font-bold text-white mb-0.5">Physical Secretariat</span>
+                  <span className="block font-bold text-white mb-0.5">Location</span>
                   <span className="text-blue-200/80 leading-relaxed block">{FOUNDATION_INFO.address}</span>
                 </div>
               </div>
@@ -179,7 +179,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
                   <Mail className="w-4 h-4" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <span className="block font-bold text-white mb-0.5">Official Correspondence</span>
+                  <span className="block font-bold text-white mb-0.5">Email</span>
                   <a
                     href={`mailto:${FOUNDATION_INFO.email}`}
                     className="text-blue-200/80 hover:text-amber-300 transition-colors block truncate"
