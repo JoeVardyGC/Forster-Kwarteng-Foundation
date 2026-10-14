@@ -107,11 +107,20 @@ export const HomePage: React.FC<HomePageProps> = ({
     community: <HeartHandshake className="w-6 h-6" />,
   };
 
+  const handleScrollToPrograms = () => {
+    const el = document.getElementById('programs-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      onNavigate('programs');
+    }
+  };
+
   return (
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Based on Reference Structure) */}
       <section
-        className="relative min-h-[600px] sm:min-h-[620px] lg:min-h-[660px] flex items-center text-white overflow-hidden"
+        className="relative min-h-[700px] sm:min-h-[620px] lg:min-h-[660px] flex items-center text-white overflow-hidden"
       >
         {/* Full-Bleed Background Carousel Images */}
         <div className="absolute inset-0 z-0">
@@ -125,40 +134,40 @@ export const HomePage: React.FC<HomePageProps> = ({
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="w-full h-full object-cover object-right sm:object-[85%_center] lg:object-[85%_center] scale-100 transition-transform duration-7000 ease-out"
+                className="w-full h-full object-cover object-[86%_center] sm:object-[85%_center] lg:object-[85%_center] scale-100 transition-transform duration-7000 ease-out"
               />
             </div>
           ))}
 
           {/* Directional Cinematic Gradient & Vignette (Protects left-side text while keeping right-side characters 100% visible) */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#00003d]/95 via-[#000066]/70 via-45% to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#00003d]/95 via-[#000055]/65 via-40% to-transparent z-10"></div>
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-black/20 z-10"></div>
 
           {/* Warm Golden Sun Flare (Top-Center like in reference image) */}
           <div className="absolute -top-28 left-1/4 w-[500px] h-[350px] bg-amber-400/25 rounded-full blur-[110px] pointer-events-none z-15"></div>
         </div>
 
-        {/* Content Container - Left Aligned exactly like Reference */}
+        {/* Content Container - Left Aligned with room on the right for background imagery */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 sm:pt-12 sm:pb-18 lg:pt-8 lg:pb-20 relative z-20 w-full">
-          <div className="max-w-xl lg:max-w-2xl space-y-6">
+          <div className="max-w-[74%] sm:max-w-xl lg:max-w-2xl space-y-6">
             {/* Dynamic Storytelling Text with Smooth Cross-Fade & Zero Layout Shift */}
-            <div className="relative min-h-[260px] sm:min-h-[240px] lg:min-h-[250px]">
+            <div className="relative min-h-[250px] sm:min-h-[240px] lg:min-h-[250px]">
               {HERO_SLIDES.map((slide, idx) => (
                 <div
                   key={slide.id}
-                  className={`space-y-4 sm:space-y-5 transition-all duration-700 ease-out ${
+                  className={`space-y-3.5 sm:space-y-5 transition-all duration-700 ease-out ${
                     idx === currentSlide
                       ? 'opacity-100 translate-y-0 relative z-10'
                       : 'opacity-0 translate-y-2 pointer-events-none absolute inset-0 z-0'
                   }`}
                 >
                   {/* Non-Profit & Pillar Badge */}
-                  <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 shadow-sm">
+                  <div className="inline-flex items-center px-3.5 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 shadow-sm">
                     <span>{slide.pillar}</span>
                   </div>
 
                   {/* Bold Headline */}
-                  <h1 className="text-4xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] sm:leading-[1.14]">
+                  <h1 className="text-2xl xs:text-3xl sm:text-5xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.15] sm:leading-[1.14]">
                     {slide.headlinePrefix}{' '}
                     <span className="text-[#F5BD02] inline-block drop-shadow-md">
                       {slide.headlineHighlight}
@@ -166,29 +175,29 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </h1>
 
                   {/* Description Text */}
-                  <p className="text-base sm:text-lg text-blue-100/90 leading-relaxed font-normal max-w-xl">
+                  <p className="text-xs sm:text-base text-blue-100/90 leading-relaxed font-normal max-w-sm sm:max-w-xl">
                     {slide.description}
                   </p>
                 </div>
               ))}
             </div>
 
-            {/* Action Buttons: Pill-shaped like reference */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            {/* Action Buttons: Clean pill buttons anchored to left */}
+            <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
               <button
                 onClick={onOpenDonateModal}
-                className="px-8 py-4 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2.5 cursor-pointer group"
+                className="w-auto px-6 py-3 sm:px-8 sm:py-4 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs sm:text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer group"
               >
-                <Heart className="w-5 h-5 fill-[#000080] group-hover:scale-110 transition-transform" />
+                <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-[#000080] group-hover:scale-110 transition-transform" />
                 <span>Make a Donation</span>
               </button>
 
               <button
-                onClick={() => onNavigate('programs')}
-                className="px-8 py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-base rounded-full border border-white/30 backdrop-blur-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+                onClick={handleScrollToPrograms}
+                className="w-auto px-6 py-3 sm:px-8 sm:py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-base rounded-full border border-white/30 backdrop-blur-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>Explore Our Programs</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
           </div>
@@ -274,7 +283,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       </section>
 
       {/* 3. OUR PROGRAMS SECTION (Glassy elevation inspired by Save The Coin) */}
-      <section className="relative py-20 lg:py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden border-b border-slate-100">
+      <section id="programs-section" className="relative py-20 lg:py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden border-b border-slate-100">
         {/* Soft Ambient Glow Orbs */}
         <div className="absolute top-12 left-10 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-12 right-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />

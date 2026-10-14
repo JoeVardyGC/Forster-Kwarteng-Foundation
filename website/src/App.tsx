@@ -97,6 +97,10 @@ export function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleOpenDonate = () => {
+    handleNavigate('donate');
+  };
+
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 'home':
@@ -105,14 +109,14 @@ export function App() {
             onNavigate={handleNavigate}
             onSelectProgram={handleSelectProgram}
             currency={currency}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
+            onOpenDonateModal={handleOpenDonate}
           />
         );
       case 'about':
         return (
           <AboutPage
             onNavigate={handleNavigate}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
+            onOpenDonateModal={handleOpenDonate}
           />
         );
       case 'programs':
@@ -120,7 +124,7 @@ export function App() {
           <ProgramsPage
             onNavigate={handleNavigate}
             onSelectProgram={handleSelectProgram}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
+            onOpenDonateModal={handleOpenDonate}
           />
         );
       case 'program-article':
@@ -131,14 +135,14 @@ export function App() {
             onSelectProgram={handleSelectProgram}
             currency={currency}
             onToggleCurrency={toggleCurrency}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
+            onOpenDonateModal={handleOpenDonate}
           />
         );
       case 'transparency':
         return (
           <TransparencyPage
             onNavigate={handleNavigate}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
+            onOpenDonateModal={handleOpenDonate}
           />
         );
       case 'donate':
@@ -146,13 +150,14 @@ export function App() {
           <DonatePage
             currency={currency}
             onToggleCurrency={toggleCurrency}
+            onNavigate={handleNavigate}
           />
         );
       case 'get-involved':
         return (
           <GetInvolvedPage
             onNavigate={handleNavigate}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
+            onOpenDonateModal={handleOpenDonate}
           />
         );
       case 'contact':
@@ -163,7 +168,7 @@ export function App() {
             onNavigate={handleNavigate}
             onSelectProgram={handleSelectProgram}
             currency={currency}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
+            onOpenDonateModal={handleOpenDonate}
           />
         );
     }
@@ -179,7 +184,7 @@ export function App() {
       <Navbar
         currentPage={currentPage}
         onNavigate={handleNavigate}
-        onOpenDonateModal={() => setIsDonateModalOpen(true)}
+        onOpenDonateModal={handleOpenDonate}
       />
 
       {/* Main Page Content Body */}
@@ -188,7 +193,7 @@ export function App() {
       {/* Global Footer */}
       <Footer
         onNavigate={handleNavigate}
-        onOpenDonateModal={() => setIsDonateModalOpen(true)}
+        onOpenDonateModal={handleOpenDonate}
       />
 
       {/* Global Giving Modal (Accessible Everywhere) */}

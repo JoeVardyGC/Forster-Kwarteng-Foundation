@@ -1,35 +1,100 @@
 import React, { useState } from 'react';
-import type { Currency } from '../types';
+import type { PageId, Currency } from '../types';
 import { DONATION_TIERS, FOUNDATION_INFO } from '../data/foundationData';
 import {
   Heart,
   ShieldCheck,
-  CheckCircle2,
   Smartphone,
-  CreditCard,
   Building2,
-  Download,
+  Copy,
+  Check,
+  MessageCircle,
+  ExternalLink,
+  PhoneCall,
+  CheckCircle2,
   HelpCircle,
+  ArrowRight,
+  Sparkles,
+  Users,
 } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 interface DonatePageProps {
   currency: Currency;
   onToggleCurrency: () => void;
+  onNavigate?: (page: PageId) => void;
 }
 
-export const DonatePage: React.FC<DonatePageProps> = ({ currency, onToggleCurrency }) => {
-  const [frequency, setFrequency] = useState<'once' | 'monthly'>('once');
+export const DonatePage: React.FC<DonatePageProps> = ({
+  currency,
+  onToggleCurrency,
+  onNavigate,
+}) => {
+  const [activeTab, setActiveTab] = useState<'momo' | 'bank'>('momo');
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [selectedTierId, setSelectedTierId] = useState<string>(DONATION_TIERS[1].id);
   const [customAmount, setCustomAmount] = useState<string>('');
-  const [paymentMethod, setPaymentMethod] = useState<'momo' | 'card' | 'bank'>('momo');
-  const [momoProvider, setMomoProvider] = useState<'mtn' | 'telecel' | 'at'>('mtn');
-  const [momoNumber, setMomoNumber] = useState('');
-  const [donorName, setDonorName] = useState('');
-  const [donorEmail, setDonorEmail] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [receiptRef, setReceiptRef] = useState('');
+
+  const copyToClipboard = (text: string, fieldName: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {
+        fallbackCopyTextToClipboard(text);
+      });
+    } else {
+      fallbackCopyTextToClipboard(text);
+    }
+    setCopiedField(fieldName);
+    setTimeout(() => {
+      setCopiedField(null);
+    }, 2500);
+  };
+
+  const fallbackCopyTextToClipboard = (text: string) => {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.top = '0';
+    textArea.style.left = '0';
+    textArea.style.opacity = '0';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand('copy');
+    } catch (err) {
+      console.error('Fallback copy error:', err);
+    }
+    document.body.removeChild(textArea);
+  };
+
+  const momoAccounts = [
+    {
+      network: 'MTN Mobile Money',
+      badge: 'MTN MoMo',
+      badgeColor: 'bg-amber-400 text-slate-950',
+      number: '0546732812',
+      formatted: '054 673 2812',
+      accountName: 'Forster Kwarteng Foundation',
+      isPrimary: true,
+    },
+    {
+      network: 'MTN & Telecel Cash',
+      badge: 'Telecel / MTN',
+      badgeColor: 'bg-red-500 text-white',
+      number: '0556727083',
+      formatted: '055 672 7083',
+      accountName: 'Forster Kwarteng Foundation',
+      isPrimary: false,
+    },
+  ];
+
+  const bankDetails = {
+    bankName: 'GCB Bank PLC / Ecobank Ghana',
+    accountName: 'Forster Kwarteng Foundation',
+    accountNumber: '1041009823420',
+    branch: 'High Street Branch, Accra',
+    swiftCode: 'GCBLGHAC',
+    country: 'Ghana',
+  };
 
   const selectedTier = DONATION_TIERS.find((t) => t.id === selectedTierId);
   const activeAmount = customAmount
@@ -38,467 +103,511 @@ export const DonatePage: React.FC<DonatePageProps> = ({ currency, onToggleCurren
     ? selectedTier?.amountGHS || 0
     : selectedTier?.amountUSD || 0;
 
-  const handleDonateSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsProcessing(true);
-
-    setTimeout(() => {
-      setIsProcessing(false);
-      const ref = 'FKF-' + Math.floor(100000 + Math.random() * 900000);
-      setReceiptRef(ref);
-      setIsCompleted(true);
-
-      try {
-        confetti({
-          particleCount: 120,
-          spread: 80,
-          origin: { y: 0.6 },
-          colors: ['#000080', '#F5BD02', '#39399D', '#10B981'],
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }, 1500);
-  };
+  const whatsappMessage = encodeURIComponent(
+    `Hello Forster Kwarteng Foundation, I would like to confirm my donation of ${currency === 'GHS' ? `₵${activeAmount}` : `$${activeAmount}`} to support your foundation programs! Please find my payment details here.`
+  );
 
   return (
-    <div className="space-y-0">
-      {/* 1. DONATE HERO */}
-      <section className="bg-gradient-to-b from-[#000080] to-[#0a0a85] text-white py-14 lg:py-20 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <span className="inline-block px-3.5 py-1.5 rounded-full bg-white/10 text-amber-300 font-semibold text-xs border border-white/20 mb-3">
-            Direct Impact Giving
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] tracking-tight">
-            Invest in a Child's Future Today
+    <div className="space-y-0 bg-slate-50 min-h-screen">
+      {/* 1. DONATE HERO SECTION */}
+      <section className="bg-gradient-to-br from-[#000080] via-[#090979] to-[#0a0a85] text-white py-16 sm:py-20 lg:py-24 relative overflow-hidden">
+        {/* Soft Ambient Glow Orbs */}
+        <div className="absolute top-0 right-1/4 w-96 h-96 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-amber-300 shadow-sm">
+            <Heart className="w-3.5 h-3.5 fill-amber-300" />
+            <span>Direct Community Giving</span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12]">
+            Invest in a Child’s Future Today
           </h1>
-          <p className="text-base sm:text-lg text-blue-100 mt-3 leading-relaxed">
-            100% of your gift empowers vulnerable children and youth in Ghana through school scholarships, uniforms, mentorship, and vocational starter kits.
+
+          <p className="text-sm sm:text-lg text-blue-100/90 max-w-2xl mx-auto leading-relaxed font-normal">
+            100% of your donation directly provides school uniforms, textbooks, educational scholarships, youth mentorship, and vocational starter kits across underserved communities in Ghana.
           </p>
+
+          {/* Quick Trust Badges */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-semibold text-blue-200">
+            <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Official Registration: {FOUNDATION_INFO.registrationNo}
+            </span>
+            <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
+              100% Direct Impact
+            </span>
+            <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              Verified Ghanaian Non-Profit
+            </span>
+          </div>
         </div>
 
         {/* Stepped Accent Stripe */}
-        <div className="absolute bottom-0 left-0 right-0 h-1.5 fkf-step-bar"></div>
+        <div className="absolute bottom-0 left-0 right-0 h-1.5 fkf-step-bar" />
       </section>
 
-      {/* 2. MAIN DONATION ENGINE */}
-      <section className="py-16 bg-slate-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
-            <div className="h-2 w-full fkf-step-bar"></div>
-
-            {isCompleted ? (
-              <div className="p-8 sm:p-12 text-center space-y-6">
-                <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto ring-8 ring-emerald-50">
-                  <CheckCircle2 className="w-10 h-10" />
-                </div>
-
+      {/* 2. MAIN GIVING CHANNELS */}
+      <section className="py-12 sm:py-16 -mt-8 relative z-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          {/* Main Card */}
+          <div className="bg-white rounded-3xl shadow-xl border border-slate-200/90 overflow-hidden">
+            {/* Card Header with Tab Switcher */}
+            <div className="bg-[#000080] text-white p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-3xl font-extrabold font-['Outfit'] text-[#000080]">
-                    Medaase! Thank You, {donorName || 'Generous Supporter'}!
-                  </h3>
-                  <p className="text-sm text-slate-600 mt-2 max-w-lg mx-auto">
-                    Your contribution of{' '}
-                    <span className="font-bold text-slate-900">
-                      {currency === 'GHS' ? `₵${activeAmount}` : `$${activeAmount}`}
-                    </span>{' '}
-                    has been recorded. An official receipt has been issued to{' '}
-                    <span className="font-semibold text-slate-900">
-                      {donorEmail || 'your email'}
-                    </span>.
-                  </p>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-amber-300 block font-mono">
+                    CHOOSE YOUR GIVING METHOD
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-white mt-1">
+                    Direct Foundation Channels
+                  </h2>
                 </div>
 
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-left text-xs space-y-2.5 max-w-md mx-auto">
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-slate-500">Official Receipt #</span>
-                    <span className="font-mono font-bold text-slate-900">{receiptRef}</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-slate-500">Beneficiary Foundation</span>
-                    <span className="font-medium text-slate-900">Forster Kwarteng Foundation</span>
-                  </div>
-                  <div className="flex justify-between border-b pb-2">
-                    <span className="text-slate-500">Giving Plan</span>
-                    <span className="capitalize font-medium text-slate-900">
-                      {frequency === 'once' ? 'One-time Donation' : 'Monthly Recurring Partner'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between pt-1">
-                    <span className="text-slate-500">Payment Gateway</span>
-                    <span className="font-medium text-slate-900">
-                      {paymentMethod === 'momo'
-                        ? `Ghana Mobile Money (${momoProvider.toUpperCase()})`
-                        : paymentMethod === 'card'
-                        ? 'Credit / Debit Card'
-                        : 'Accra Bank Transfer'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <button
-                    onClick={() => alert(`Official Receipt ${receiptRef} generated!`)}
-                    className="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 text-slate-700 font-semibold text-xs hover:bg-slate-50 flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <Download className="w-4 h-4 text-slate-500" />
-                    <span>Download PDF Certificate</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsCompleted(false);
-                      setIsProcessing(false);
-                    }}
-                    className="w-full sm:w-auto px-8 py-3 rounded-xl bg-[#000080] hover:bg-[#0a0a85] text-white font-bold text-xs shadow cursor-pointer"
-                  >
-                    Make Another Donation
-                  </button>
+                <div className="inline-flex items-center gap-1.5 text-xs text-blue-100 bg-white/10 px-3 py-1.5 rounded-xl border border-white/20 self-start sm:self-auto">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span>Immediate Mobile Confirmation</span>
                 </div>
               </div>
-            ) : (
-              <form onSubmit={handleDonateSubmit} className="p-6 sm:p-10 space-y-8">
-                {/* 1. Frequency & Currency Bar */}
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-slate-100">
-                  <div className="flex items-center bg-slate-100 p-1 rounded-xl w-full sm:w-auto">
-                    <button
-                      type="button"
-                      onClick={() => setFrequency('once')}
-                      className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        frequency === 'once'
-                          ? 'bg-white text-[#000080] shadow-sm'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      Give One-Time
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setFrequency('monthly')}
-                      className={`flex-1 sm:flex-none px-6 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                        frequency === 'monthly'
-                          ? 'bg-white text-[#000080] shadow-sm'
-                          : 'text-slate-600 hover:text-slate-900'
-                      }`}
-                    >
-                      Monthly Sustainer
-                    </button>
+
+              {/* Tab Selector */}
+              <div className="mt-6 grid grid-cols-2 gap-2 p-1.5 bg-blue-950/60 rounded-2xl border border-white/15">
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('momo')}
+                  className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    activeTab === 'momo'
+                      ? 'bg-[#F5BD02] text-[#000080] shadow-md scale-[1.01]'
+                      : 'text-blue-100 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Smartphone className="w-4 h-4" />
+                  <span>Mobile Money (MoMo)</span>
+                  <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-blue-900/40 text-amber-900 hidden sm:inline">
+                    Easiest
+                  </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('bank')}
+                  className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                    activeTab === 'bank'
+                      ? 'bg-[#F5BD02] text-[#000080] shadow-md scale-[1.01]'
+                      : 'text-blue-100 hover:text-white hover:bg-white/5'
+                  }`}
+                >
+                  <Building2 className="w-4 h-4" />
+                  <span>Bank Transfer</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Card Body */}
+            <div className="p-6 sm:p-10 space-y-8 bg-slate-50/50">
+              {/* TAB 1: MOBILE MONEY */}
+              {activeTab === 'momo' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-extrabold text-slate-900 uppercase tracking-wider text-[11px] font-mono">
+                      Official Mobile Money Accounts
+                    </span>
+                    <span className="text-emerald-700 font-semibold bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 text-xs flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                      Zero Platform Surcharges
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="text-slate-500 font-medium">Currency:</span>
-                    <button
-                      type="button"
-                      onClick={onToggleCurrency}
-                      className="px-3.5 py-1.5 rounded-lg border border-slate-200 font-bold text-[#000080] bg-blue-50/60 hover:bg-blue-100/60 transition-colors cursor-pointer"
-                    >
-                      {currency === 'GHS' ? '₵ GHS (Ghana Cedis)' : '$ USD (US Dollars)'}
-                    </button>
-                  </div>
-                </div>
-
-                {/* 2. Amount Tiers */}
-                <div className="space-y-3">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    Select Contribution Tier
-                  </label>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {DONATION_TIERS.map((tier) => {
-                      const isSelected = selectedTierId === tier.id && !customAmount;
-                      const displayAmount =
-                        currency === 'GHS' ? `₵${tier.amountGHS}` : `$${tier.amountUSD}`;
-
+                  {/* MoMo Account Cards */}
+                  <div className="grid grid-cols-1 gap-4">
+                    {momoAccounts.map((acc, index) => {
+                      const isCopied = copiedField === `momo-${index}`;
                       return (
                         <div
-                          key={tier.id}
-                          onClick={() => {
-                            setSelectedTierId(tier.id);
-                            setCustomAmount('');
-                          }}
-                          className={`p-4 rounded-2xl border-2 transition-all cursor-pointer relative ${
-                            isSelected
-                              ? 'border-[#000080] bg-blue-50/80 shadow-xs ring-2 ring-[#000080]/15'
-                              : 'border-slate-200 hover:border-slate-300 bg-white'
-                          }`}
+                          key={index}
+                          className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-xs hover:border-[#000080]/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                         >
-                          {tier.popular && (
-                            <span className="absolute -top-2.5 right-3 bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase">
-                              Most Popular
-                            </span>
-                          )}
-                          <div className="text-2xl font-black font-['Outfit'] text-[#000080]">
-                            {displayAmount}
+                          <div className="space-y-1.5">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider ${acc.badgeColor}`}
+                              >
+                                {acc.badge}
+                              </span>
+                              <span className="text-xs text-slate-500 font-medium">
+                                {acc.network}
+                              </span>
+                              {acc.isPrimary && (
+                                <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                                  Primary
+                                </span>
+                              )}
+                            </div>
+
+                            <div className="text-2xl sm:text-3xl font-black font-mono tracking-tight text-slate-900">
+                              {acc.formatted}
+                            </div>
+
+                            <div className="text-xs text-slate-600 font-medium">
+                              Account Name:{' '}
+                              <span className="text-[#000080] font-bold">
+                                {acc.accountName}
+                              </span>
+                            </div>
                           </div>
-                          <div className="text-xs font-bold text-slate-800 mt-0.5">
-                            {tier.label}
-                          </div>
-                          <p className="text-[11px] text-slate-600 mt-1 line-clamp-2 leading-tight">
-                            {tier.impactDescription}
-                          </p>
+
+                          <button
+                            type="button"
+                            onClick={() => copyToClipboard(acc.number, `momo-${index}`)}
+                            className={`px-5 py-3 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shrink-0 ${
+                              isCopied
+                                ? 'bg-emerald-600 text-white shadow-sm'
+                                : 'bg-slate-100 hover:bg-[#000080] text-slate-800 hover:text-white border border-slate-200 hover:border-[#000080]'
+                            }`}
+                          >
+                            {isCopied ? (
+                              <>
+                                <Check className="w-4 h-4" />
+                                <span>Copied Number!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-4 h-4" />
+                                <span>Copy Number</span>
+                              </>
+                            )}
+                          </button>
                         </div>
                       );
                     })}
-
-                    {/* Custom Amount Field */}
-                    <div
-                      className={`p-4 rounded-2xl border-2 flex flex-col justify-center transition-all ${
-                        customAmount
-                          ? 'border-[#000080] bg-blue-50/80 ring-2 ring-[#000080]/15'
-                          : 'border-slate-200 bg-white'
-                      }`}
-                    >
-                      <label className="text-[11px] font-semibold text-slate-600 mb-1">
-                        Custom Amount
-                      </label>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-bold text-slate-700">
-                          {currency === 'GHS' ? '₵' : '$'}
-                        </span>
-                        <input
-                          type="number"
-                          min="1"
-                          placeholder="Enter amount"
-                          value={customAmount}
-                          onChange={(e) => setCustomAmount(e.target.value)}
-                          className="w-full text-base font-bold text-[#000080] bg-transparent focus:outline-none"
-                        />
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Impact Explainer */}
-                  <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
-                    <Heart className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 fill-amber-600" />
-                    <span>
-                      <strong className="font-bold">What this achieves: </strong>
-                      {selectedTier?.impactDescription}
-                    </span>
+                  {/* Step-by-Step Dialing Guide */}
+                  <div className="bg-blue-50/80 border border-blue-200/80 rounded-2xl p-5 text-xs text-slate-700 space-y-2">
+                    <div className="font-bold text-[#000080] flex items-center gap-2 text-sm">
+                      <CheckCircle2 className="w-4 h-4 text-[#000080]" />
+                      <span>Easy Steps to Complete Your Donation:</span>
+                    </div>
+                    <ol className="list-decimal list-inside space-y-1.5 text-slate-600 pl-1 leading-relaxed">
+                      <li>
+                        Dial <strong className="text-slate-900 font-mono">*170#</strong> on your phone (or open your MTN/Telecel MoMo app).
+                      </li>
+                      <li>Select <strong>Transfer Money</strong> &gt; <strong>MoMo User</strong>.</li>
+                      <li>Enter either official number: <strong className="text-slate-900 font-mono">054 673 2812</strong> or <strong className="text-slate-900 font-mono">055 672 7083</strong>.</li>
+                      <li>Confirm the recipient name shows: <strong className="text-[#000080]">FORSTER KWARTENG FOUNDATION</strong>.</li>
+                      <li>Enter Reference: <strong className="text-slate-900 font-mono">FKF DONATION</strong> or your name.</li>
+                    </ol>
+                  </div>
+
+                  {/* Action Buttons: WhatsApp Confirmation */}
+                  <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                    <a
+                      href={`https://wa.me/233546732812?text=${whatsappMessage}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer hover:-translate-y-0.5"
+                    >
+                      <MessageCircle className="w-4 h-4 fill-white" />
+                      <span>Confirm on WhatsApp</span>
+                      <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+                    </a>
+
+                    <a
+                      href="tel:+233546732812"
+                      className="py-3.5 px-6 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    >
+                      <PhoneCall className="w-4 h-4 text-[#000080]" />
+                      <span>Call Foundation Secretariat</span>
+                    </a>
                   </div>
                 </div>
+              )}
 
-                {/* 3. Payment Method */}
-                <div className="space-y-3">
-                  <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    Select Payment Method
-                  </label>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('momo')}
-                      className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-1 text-center transition-all cursor-pointer ${
-                        paymentMethod === 'momo'
-                          ? 'border-[#000080] bg-blue-50 text-[#000080] font-bold'
-                          : 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <Smartphone className="w-6 h-6 text-amber-500" />
-                      <span className="text-xs font-bold">Ghana Mobile Money</span>
-                      <span className="text-[10px] text-slate-400">MTN • Telecel • AT</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('card')}
-                      className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-1 text-center transition-all cursor-pointer ${
-                        paymentMethod === 'card'
-                          ? 'border-[#000080] bg-blue-50 text-[#000080] font-bold'
-                          : 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <CreditCard className="w-6 h-6 text-blue-600" />
-                      <span className="text-xs font-bold">Debit / Credit Card</span>
-                      <span className="text-[10px] text-slate-400">Visa • Mastercard</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod('bank')}
-                      className={`p-4 rounded-2xl border-2 flex flex-col items-center gap-1 text-center transition-all cursor-pointer ${
-                        paymentMethod === 'bank'
-                          ? 'border-[#000080] bg-blue-50 text-[#000080] font-bold'
-                          : 'border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <Building2 className="w-6 h-6 text-emerald-600" />
-                      <span className="text-xs font-bold">Official Bank Transfer</span>
-                      <span className="text-[10px] text-slate-400">Accra Ghana Account</span>
-                    </button>
+              {/* TAB 2: BANK TRANSFER */}
+              {activeTab === 'bank' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-extrabold text-slate-900 uppercase tracking-wider text-[11px] font-mono">
+                      Official Corporate Bank Account
+                    </span>
+                    <span className="text-[#000080] font-semibold bg-blue-50 px-2.5 py-1 rounded-full border border-blue-200 text-xs">
+                      Local & International Wire Deposits
+                    </span>
                   </div>
 
-                  {paymentMethod === 'momo' && (
-                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl space-y-3">
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-semibold text-slate-700">MoMo Provider:</span>
-                        <div className="flex gap-2">
+                  {/* Bank Details Table */}
+                  <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4">
+                    <div className="space-y-3.5 text-xs sm:text-sm">
+                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+                        <span className="text-slate-500 font-medium">Bank Name</span>
+                        <span className="font-bold text-slate-900 text-right">
+                          {bankDetails.bankName}
+                        </span>
+                      </div>
+
+                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+                        <span className="text-slate-500 font-medium">Account Name</span>
+                        <span className="font-bold text-[#000080] text-right">
+                          {bankDetails.accountName}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <span className="text-slate-500 font-medium">Account Number</span>
+                        <div className="flex items-center gap-2.5">
+                          <span className="font-mono font-black text-lg text-slate-900">
+                            {bankDetails.accountNumber}
+                          </span>
                           <button
                             type="button"
-                            onClick={() => setMomoProvider('mtn')}
-                            className={`px-3 py-1 rounded-lg text-xs font-bold ${
-                              momoProvider === 'mtn'
-                                ? 'bg-amber-400 text-slate-900 shadow-sm'
-                                : 'bg-white border text-slate-600'
+                            onClick={() =>
+                              copyToClipboard(bankDetails.accountNumber, 'bank-acc')
+                            }
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                              copiedField === 'bank-acc'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                             }`}
+                            title="Copy Account Number"
                           >
-                            MTN MoMo
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setMomoProvider('telecel')}
-                            className={`px-3 py-1 rounded-lg text-xs font-bold ${
-                              momoProvider === 'telecel'
-                                ? 'bg-red-500 text-white shadow-sm'
-                                : 'bg-white border text-slate-600'
-                            }`}
-                          >
-                            Telecel Cash
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setMomoProvider('at')}
-                            className={`px-3 py-1 rounded-lg text-xs font-bold ${
-                              momoProvider === 'at'
-                                ? 'bg-blue-600 text-white shadow-sm'
-                                : 'bg-white border text-slate-600'
-                            }`}
-                          >
-                            AT Money
+                            {copiedField === 'bank-acc' ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                <span>Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5" />
+                                <span>Copy</span>
+                              </>
+                            )}
                           </button>
                         </div>
                       </div>
 
-                      <div>
-                        <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                          Mobile Money Account Number
-                        </label>
-                        <input
-                          type="tel"
-                          required
-                          placeholder="054 673 2812"
-                          value={momoNumber}
-                          onChange={(e) => setMomoNumber(e.target.value)}
-                          className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-[#000080]"
-                        />
+                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+                        <span className="text-slate-500 font-medium">Branch</span>
+                        <span className="font-medium text-slate-800 text-right">
+                          {bankDetails.branch}
+                        </span>
+                      </div>
+
+                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
+                        <span className="text-slate-500 font-medium">SWIFT / BIC Code</span>
+                        <span className="font-mono font-bold text-slate-900 text-right">
+                          {bankDetails.swiftCode}
+                        </span>
+                      </div>
+
+                      <div className="flex items-start justify-between pt-1">
+                        <span className="text-slate-500 font-medium">Country</span>
+                        <span className="font-medium text-slate-800 text-right">
+                          {bankDetails.country}
+                        </span>
                       </div>
                     </div>
-                  )}
-
-                  {paymentMethod === 'bank' && (
-                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs space-y-1.5 text-slate-700">
-                      <p className="font-bold text-[#000080]">
-                        Forster Kwarteng Foundation Corporate Account:
-                      </p>
-                      <p>Bank: GCB Bank PLC / Ecobank Ghana</p>
-                      <p>Account Number: 1041009823420</p>
-                      <p>Branch: High Street, Accra, Ghana</p>
-                      <p>Swift: GCBLGHAC</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* 4. Donor Information */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Full Name / Company
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Ama Osei"
-                      value={donorName}
-                      onChange={(e) => setDonorName(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-[#000080]"
-                    />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
-                      Email Address for Tax Receipt
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="ama@example.com"
-                      value={donorEmail}
-                      onChange={(e) => setDonorEmail(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-[#000080]"
-                    />
+                  {/* Wire Advice */}
+                  <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-5 text-xs text-amber-900 space-y-1.5">
+                    <p className="font-bold flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4 text-amber-600" />
+                      <span>International & Corporate Wire Note:</span>
+                    </p>
+                    <p className="text-amber-800 leading-relaxed">
+                      For corporate partnerships, grants, or wire transfers from abroad, please reference <strong>FKF CHARITY</strong>. Send a copy of your deposit slip to <strong className="text-slate-950 font-mono">info@forsterkwartengfoundation.org</strong> for immediate tax receipt issuance.
+                    </p>
                   </div>
                 </div>
-
-                {/* Submit Action */}
-                <button
-                  type="submit"
-                  disabled={isProcessing || activeAmount <= 0}
-                  className="w-full py-4 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-extrabold text-base rounded-2xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {isProcessing ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-[#000080] border-t-transparent rounded-full animate-spin"></div>
-                      <span>Authorizing Secure Donation...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Heart className="w-5 h-5 fill-[#000080]" />
-                      <span>
-                        Confirm Contribution of{' '}
-                        {currency === 'GHS' ? `₵${activeAmount}` : `$${activeAmount}`}
-                      </span>
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. DONOR FAQ ACCORDION */}
-      <section className="py-16 bg-white border-t border-slate-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-          <div className="text-center">
-            <h3 className="text-2xl font-extrabold font-['Outfit'] text-[#000080]">
-              Frequently Asked Questions
-            </h3>
-            <p className="text-xs text-slate-500 mt-1">
-              Have questions about your donation? We are here to help.
-            </p>
+              )}
+            </div>
           </div>
 
-          <div className="space-y-3">
-            {[
-              {
-                q: 'How does Mobile Money donation work in Ghana?',
-                a: 'When you submit with MTN MoMo, Telecel Cash, or AT Money, you will receive an instant prompt on your phone to approve the transaction with your standard PIN. No extra charges are added.',
-              },
-              {
-                q: 'Can I donate from outside Ghana using an international card?',
-                a: 'Yes. Our card gateway accepts all international Visa, Mastercard, and American Express cards from anywhere in the diaspora with automatic currency conversion.',
-              },
-              {
-                q: 'Will I receive an official tax and accounting receipt?',
-                a: 'Yes. An official electronic tax acknowledgment and transaction receipt with reference number is generated instantly upon confirmation.',
-              },
-              {
-                q: 'Can I designate my donation to a specific program?',
-                a: 'Yes. In the checkout notes or by contacting info@forsterkwartengfoundation.org, you can earmark your gift specifically for Scholarships, Youth Mentorship, or Community Health.',
-              },
-            ].map((faq, idx) => (
-              <div
-                key={idx}
-                className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2"
-              >
-                <div className="flex items-center gap-2 font-bold text-sm text-[#000080] font-['Outfit']">
-                  <HelpCircle className="w-4 h-4 text-amber-500 shrink-0" />
-                  <span>{faq.q}</span>
-                </div>
-                <p className="text-xs text-slate-600 leading-relaxed pl-6">
-                  {faq.a}
-                </p>
+          {/* 3. CONTRIBUTION TIERS & IMPACT OVERVIEW */}
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm space-y-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+              <div>
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#000080] block font-mono">
+                  GIVING IMPACT TIERS
+                </span>
+                <h3 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 mt-0.5">
+                  See What Your Support Accomplishes
+                </h3>
               </div>
-            ))}
+
+              {/* Currency Toggle */}
+              <div className="flex items-center gap-2 text-xs">
+                <span className="text-slate-500 font-medium">Currency:</span>
+                <button
+                  type="button"
+                  onClick={onToggleCurrency}
+                  className="px-3.5 py-1.5 rounded-xl border border-slate-200 font-bold text-[#000080] bg-blue-50/80 hover:bg-blue-100 transition-colors cursor-pointer"
+                >
+                  {currency === 'GHS' ? '₵ GHS (Ghana Cedis)' : '$ USD (US Dollars)'}
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {DONATION_TIERS.map((tier) => {
+                const isSelected = selectedTierId === tier.id && !customAmount;
+                const displayAmount =
+                  currency === 'GHS' ? `₵${tier.amountGHS}` : `$${tier.amountUSD}`;
+
+                return (
+                  <div
+                    key={tier.id}
+                    onClick={() => {
+                      setSelectedTierId(tier.id);
+                      setCustomAmount('');
+                    }}
+                    className={`p-5 rounded-2xl border-2 transition-all cursor-pointer relative flex flex-col justify-between ${
+                      isSelected
+                        ? 'border-[#000080] bg-blue-50/80 shadow-sm ring-2 ring-[#000080]/15'
+                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                    }`}
+                  >
+                    {tier.popular && (
+                      <span className="absolute -top-2.5 right-3 bg-amber-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-xs">
+                        Most Popular
+                      </span>
+                    )}
+                    <div>
+                      <div className="text-2xl font-black font-['Outfit'] text-[#000080]">
+                        {displayAmount}
+                      </div>
+                      <div className="text-xs font-bold text-slate-900 mt-1">
+                        {tier.label}
+                      </div>
+                      <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                        {tier.impactDescription}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-bold text-[#000080] flex items-center justify-between">
+                      <span>Select Tier</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Custom Gift Card */}
+              <div
+                className={`p-5 rounded-2xl border-2 flex flex-col justify-between transition-all ${
+                  customAmount
+                    ? 'border-[#000080] bg-blue-50/80 ring-2 ring-[#000080]/15'
+                    : 'border-slate-200 bg-white'
+                }`}
+              >
+                <div>
+                  <label className="text-xs font-bold text-slate-900 block mb-1">
+                    Custom Contribution
+                  </label>
+                  <p className="text-xs text-slate-500 mb-3">
+                    Give any amount that fits your vision for change.
+                  </p>
+                  <div className="flex items-center gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
+                    <span className="text-base font-bold text-slate-700">
+                      {currency === 'GHS' ? '₵' : '$'}
+                    </span>
+                    <input
+                      type="number"
+                      min="1"
+                      placeholder="e.g. 500"
+                      value={customAmount}
+                      onChange={(e) => setCustomAmount(e.target.value)}
+                      className="w-full text-base font-bold text-[#000080] bg-transparent focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-4 pt-3 border-t border-slate-100 text-[11px] font-semibold text-slate-500">
+                  Every Cedi counts directly.
+                </div>
+              </div>
+            </div>
+
+            {/* Impact Note Banner */}
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/90 text-xs text-amber-900 flex items-start gap-3">
+              <Heart className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 fill-amber-600" />
+              <div>
+                <strong className="font-bold">Chosen Impact Focus: </strong>
+                <span>{selectedTier?.impactDescription}</span>
+              </div>
+            </div>
           </div>
+
+          {/* 4. DONOR FAQ ACCORDION */}
+          <div className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-sm space-y-6">
+            <div className="text-center max-w-xl mx-auto space-y-1">
+              <h3 className="text-2xl font-extrabold font-['Outfit'] text-slate-900">
+                Frequently Asked Giving Questions
+              </h3>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Transparent answers regarding your support and fund governance.
+              </p>
+            </div>
+
+            <div className="space-y-3 pt-2">
+              {[
+                {
+                  q: 'How does Mobile Money giving work in Ghana?',
+                  a: 'You can transfer directly from your MTN MoMo or Telecel Cash wallet to our official lines (054 673 2812 / 055 672 7083). The recipient name will confirm FORSTER KWARTENG FOUNDATION before you approve with your PIN. No extra platform deductions are charged.',
+                },
+                {
+                  q: 'Can international supporters donate via bank wire?',
+                  a: 'Yes. Our GCB Bank / Ecobank corporate accounts accept SWIFT wire transfers from all international banks with full foreign exchange clearing under our official registration.',
+                },
+                {
+                  q: 'How will I receive confirmation of my gift?',
+                  a: 'After completing your transfer, simply click "Confirm on WhatsApp" or send your transaction SMS screenshot to info@forsterkwartengfoundation.org. An official acknowledgment and receipt will be issued to you promptly.',
+                },
+                {
+                  q: 'Can I designate my donation to a specific initiative?',
+                  a: 'Yes. You can indicate your target project (e.g. Basic Education, TVET Toolkits, Youth Mentorship, or Emergency Relief) in your payment reference or via WhatsApp message.',
+                },
+              ].map((faq, idx) => (
+                <div
+                  key={idx}
+                  className="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2 hover:border-slate-300 transition-colors"
+                >
+                  <div className="flex items-center gap-2.5 font-bold text-sm text-[#000080] font-['Outfit']">
+                    <HelpCircle className="w-4 h-4 text-amber-500 shrink-0" />
+                    <span>{faq.q}</span>
+                  </div>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-6.5">
+                    {faq.a}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 5. EXPLORE PROGRAMS CTA */}
+          {onNavigate && (
+            <div className="bg-gradient-to-r from-[#000080] to-[#090979] text-white rounded-3xl p-8 sm:p-10 text-center space-y-4 shadow-lg">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center mx-auto border border-white/20">
+                <Users className="w-6 h-6 text-amber-300" />
+              </div>
+              <h3 className="text-xl sm:text-2xl font-extrabold font-['Outfit']">
+                Want to See Where Your Support Goes?
+              </h3>
+              <p className="text-xs sm:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed">
+                Discover our 4 core pillars and read real beneficiary stories from students and young artisans empowered by our programs.
+              </p>
+              <button
+                type="button"
+                onClick={() => onNavigate('programs')}
+                className="px-6 py-3 rounded-full bg-white text-[#000080] hover:bg-amber-300 hover:text-slate-950 font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
+              >
+                Explore All Programs
+              </button>
+            </div>
+          )}
         </div>
       </section>
     </div>
