@@ -313,7 +313,7 @@ export const OUR_PROGRAMS: FoundationProgram[] = [
   },
   {
     id: 'stem-tvet',
-    title: 'STEM/TVET Programs',
+    title: 'STEM/TVET Projects',
     description:
       'Empowering youth through practical technical, vocational, and scientific training for future-ready careers.',
     image: '/assets/program_stem_tvet.jpg',
@@ -726,7 +726,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
 
   'stem-tvet': {
     id: 'stem-tvet',
-    title: 'STEM/TVET Programs & Digital Literacy',
+    title: 'STEM/TVET Projects & Digital Literacy',
     category: 'Science, Technology & Vocational',
     readTime: '5 min read',
     publishedDate: 'October 2024 Edition',

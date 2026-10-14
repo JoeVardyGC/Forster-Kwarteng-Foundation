@@ -152,7 +152,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
               onClick={() => onNavigate('programs')}
               className="hover:text-[#000080] font-medium transition-colors cursor-pointer"
             >
-              Programs
+              Projects
             </button>
             <span>/</span>
             <span className="text-slate-900 font-semibold truncate max-w-xs">
@@ -165,7 +165,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
             className="inline-flex items-center gap-1.5 text-xs font-bold text-[#000080] hover:text-blue-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3.5 py-1.5 rounded-full transition-all shadow-2xs cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>All Programs</span>
+            <span>All Projects</span>
           </button>
         </div>
       </nav>
@@ -176,14 +176,14 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
         <button
           onClick={() => onNavigate('programs')}
           className="w-10 h-10 rounded-full bg-white shadow-md border border-slate-200/80 flex items-center justify-center text-slate-700 hover:text-[#000080] active:scale-95 transition-all cursor-pointer"
-          aria-label="Back to programs"
+          aria-label="Back to projects"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
 
         {/* Center Category Badge */}
         <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#000080] bg-blue-50/90 px-3 py-1 rounded-full border border-blue-200/60 shadow-2xs">
-          Program Dispatch
+          Project Dispatch
         </span>
 
         {/* Circular Share Button from inspo */}
@@ -210,7 +210,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
             {/* Top Heading outside card matching Desktop Inspo ("Politics" header) */}
             <div className="hidden lg:flex items-center justify-between pb-1">
               <h2 className="text-2xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
-                Programs & Initiatives
+                Projects & Initiatives
               </h2>
             </div>
 
@@ -537,11 +537,11 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
               </div>
             </main>
 
-            {/* MOBILE ONLY: RELATED PROGRAMS STACK (Appears under article on mobile) */}
+            {/* MOBILE ONLY: RELATED PROJECTS STACK (Appears under article on mobile) */}
             <div className="lg:hidden mt-8 space-y-4">
               <div className="flex items-center justify-between pb-1 px-1">
                 <h3 className="text-xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
-                  Related Programs
+                  Related Projects
                 </h3>
                 <button
                   onClick={() => onNavigate('programs')}
@@ -592,10 +592,10 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
           {/* RIGHT COLUMN: RELATED PROGRAMS SIDEBAR (lg:col-span-4)    */}
           {/* ========================================================= */}
           <aside className="hidden lg:block lg:col-span-4 space-y-4 lg:sticky lg:top-24">
-            {/* Header: Related Programs + See All Link (Directly from Desktop Inspo) */}
+            {/* Header: Related Projects + See All Link (Directly from Desktop Inspo) */}
             <div className="flex items-center justify-between pb-1">
               <h3 className="text-2xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight">
-                Related Programs
+                Related Projects
               </h3>
               <button
                 onClick={() => onNavigate('programs')}
@@ -663,7 +663,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                 Direct Grassroots Action
               </span>
               <h4 className="text-base font-bold font-['Outfit']">
-                Help Us Expand These Programs Across Ghana
+                Help Us Expand These Projects Across Ghana
               </h4>
               <p className="text-xs text-blue-100/80 leading-relaxed">
                 Your monthly gift funds school kits, vocational toolkits, and community health screenings.
@@ -692,8 +692,8 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
           <button
             onClick={onOpenDonateModal}
             className="w-9 h-9 rounded-full bg-[#000080] hover:bg-[#0a0a85] text-[#F5BD02] flex items-center justify-center shadow-md active:scale-95 transition-all shrink-0 cursor-pointer"
-            title="Support program"
-            aria-label="Support program"
+            title="Support project"
+            aria-label="Support project"
           >
             <Send className="w-4 h-4" />
           </button>

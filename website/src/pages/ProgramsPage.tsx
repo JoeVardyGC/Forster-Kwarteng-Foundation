@@ -47,7 +47,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
             Targeted Interventions. Sustainable Futures.
           </h1>
           <p className="text-base sm:text-lg text-blue-100 mt-4 leading-relaxed">
-            From basic classroom supplies to digital literacy, youth mentorship, and community healthcare, our programs address the root causes of vulnerability in Ghana.
+            From basic classroom supplies to digital literacy, youth mentorship, and community healthcare, our projects address the root causes of vulnerability in Ghana.
           </p>
         </div>
 
@@ -251,11 +251,11 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
               Field Interventions & Stories
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 mt-3 tracking-tight">
-              Our Core Programs in Detail
+              Our Core Projects in Detail
             </h2>
             <div className="h-1 w-16 bg-[#000080] rounded-full mx-auto my-3" />
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              Explore in-depth field case studies, verified impact statistics, and frontline documentaries from our active community programs.
+              Explore in-depth field case studies, verified impact statistics, and frontline documentaries from our active community projects.
             </p>
           </div>
 

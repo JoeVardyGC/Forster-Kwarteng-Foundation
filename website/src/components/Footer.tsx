@@ -88,7 +88,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
                 className="inline-flex items-center gap-2 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs px-4 py-2 rounded-full transition-all shadow-md cursor-pointer hover:scale-105"
               >
                 <Heart className="w-3.5 h-3.5 fill-[#000080]" />
-                <span>Support Programs</span>
+                <span>Support Our Projects</span>
               </button>
             </div>
           </div>
@@ -102,7 +102,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
               {[
                 { label: 'Home', page: 'home' },
                 { label: 'About Us & Vision', page: 'about' },
-                { label: 'Our 4 Core Pillars', page: 'programs' },
+                { label: 'Our Projects', page: 'programs' },
                 { label: 'Financial Transparency', page: 'transparency' },
                 { label: 'Volunteer & Partner', page: 'get-involved' },
                 { label: 'Contact & Hotlines', page: 'contact' },

@@ -196,43 +196,53 @@ export const HomePage: React.FC<HomePageProps> = ({
                 onClick={handleScrollToPrograms}
                 className="w-auto px-6 py-3 sm:px-8 sm:py-4 bg-white/15 hover:bg-white/25 text-white font-bold text-xs sm:text-base rounded-full border border-white/30 backdrop-blur-md transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Explore Our Programs</span>
+                <span>Explore Our Projects</span>
                 <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Floating Minimal Carousel Controller (Bottom Right) */}
-        <div className="absolute bottom-6 right-4 sm:right-8 z-20 flex items-center gap-2 bg-slate-950/60 hover:bg-slate-950/80 backdrop-blur-md border border-white/20 p-1.5 rounded-full shadow-xl transition-all">
+        {/* Catchy Redesigned Carousel Scroller (Positioned at bottom center space on mobile, right on desktop) */}
+        <div className="absolute bottom-3.5 sm:bottom-6 left-1/2 -translate-x-1/2 sm:left-auto sm:right-8 sm:translate-x-0 z-20 flex items-center gap-2 bg-slate-950/75 hover:bg-slate-950/90 backdrop-blur-xl border border-white/20 px-3 py-1.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.45)] transition-all">
           <button
             onClick={handlePrevSlide}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer"
-            aria-label="Previous image"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/25 active:scale-90 text-white flex items-center justify-center transition-all cursor-pointer"
+            aria-label="Previous slide"
           >
-            <ChevronLeft className="w-4 h-4" />
+            <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
 
-          {/* Slide Dots */}
-          <div className="flex items-center gap-1.5 px-2">
-            {HERO_SLIDES.map((_, idx) => (
+          {/* Dynamic Glowing Indicators */}
+          <div className="flex items-center gap-1.5 px-1.5">
+            {HERO_SLIDES.map((slide, idx) => (
               <button
                 key={idx}
                 onClick={() => setCurrentSlide(idx)}
-                className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  idx === currentSlide ? 'w-6 bg-[#F5BD02]' : 'w-2 bg-white/40 hover:bg-white/70'
+                className={`h-2 rounded-full transition-all duration-400 cursor-pointer ${
+                  idx === currentSlide
+                    ? 'w-7 sm:w-8 bg-gradient-to-r from-[#F5BD02] to-amber-300 shadow-[0_0_12px_rgba(245,189,2,0.85)]'
+                    : 'w-2 bg-white/35 hover:bg-white/60'
                 }`}
-                aria-label={`Slide ${idx + 1}`}
+                aria-label={`Go to slide ${idx + 1}: ${slide.tag}`}
+                title={slide.tag}
               />
             ))}
           </div>
 
+          {/* Bold Mono Counter */}
+          <div className="flex items-center text-[11px] font-mono font-extrabold px-1 tracking-tight text-white/90 select-none">
+            <span className="text-amber-300">0{currentSlide + 1}</span>
+            <span className="text-white/30 mx-0.5">/</span>
+            <span className="text-white/50">0{HERO_SLIDES.length}</span>
+          </div>
+
           <button
             onClick={handleNextSlide}
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer"
-            aria-label="Next image"
+            className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/10 hover:bg-white/25 active:scale-90 text-white flex items-center justify-center transition-all cursor-pointer"
+            aria-label="Next slide"
           >
-            <ChevronRight className="w-4 h-4" />
+            <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         </div>
       </section>
@@ -295,11 +305,11 @@ export const HomePage: React.FC<HomePageProps> = ({
               What We Do
             </span>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 mt-3 tracking-tight">
-              Our Programs
+              Our Projects
             </h2>
             <div className="h-1 w-16 bg-[#000080] rounded-full mx-auto my-3" />
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
-              We offer comprehensive programs designed to address the diverse needs of our communities.
+              We offer comprehensive projects designed to address the diverse needs of our communities.
             </p>
           </div>
 
@@ -455,7 +465,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   onClick={() => onNavigate('programs')}
                   className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
                 >
-                  <span>Explore Our Programs in Detail</span>
+                  <span>Explore Our Projects in Detail</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -538,7 +548,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               onClick={() => onNavigate('programs')}
               className="inline-flex items-center gap-2.5 px-8 py-4 bg-white/90 hover:bg-white text-[#000080] font-bold text-sm rounded-full border border-slate-200/90 shadow-sm hover:shadow-lg hover:border-[#000080]/30 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer group"
             >
-              <span>Explore All Programs in Detail</span>
+              <span>Explore All Projects in Detail</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>

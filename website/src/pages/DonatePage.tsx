@@ -597,14 +597,14 @@ export const DonatePage: React.FC<DonatePageProps> = ({
                 Want to See Where Your Support Goes?
               </h3>
               <p className="text-xs sm:text-sm text-blue-100 max-w-xl mx-auto leading-relaxed">
-                Discover our 4 core pillars and read real beneficiary stories from students and young artisans empowered by our programs.
+                Discover our 4 core pillars and read real beneficiary stories from students and young artisans empowered by our projects.
               </p>
               <button
                 type="button"
                 onClick={() => onNavigate('programs')}
                 className="px-6 py-3 rounded-full bg-white text-[#000080] hover:bg-amber-300 hover:text-slate-950 font-bold text-xs sm:text-sm shadow-md transition-all cursor-pointer"
               >
-                Explore All Programs
+                Explore All Projects
               </button>
             </div>
           )}

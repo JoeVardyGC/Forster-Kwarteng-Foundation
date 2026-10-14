@@ -83,10 +83,10 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
         <div className="text-center max-w-3xl mx-auto mb-14 lg:mb-16">
           <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-blue-50/90 backdrop-blur-md border border-blue-200/70 text-[#000080] tracking-wider shadow-2xs">
             <Calendar className="w-3.5 h-3.5 text-[#000080]" />
-            Upcoming Projects & Field Calendar
+            Our Projects & Field Calendar
           </span>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 mt-3 tracking-tight">
-            Upcoming Projects & Community Initiatives
+            Our Projects & Community Initiatives
           </h2>
           <div className="h-1 w-16 bg-[#000080] rounded-full mx-auto my-3" />
           <p className="text-slate-600 text-sm sm:text-base leading-relaxed">

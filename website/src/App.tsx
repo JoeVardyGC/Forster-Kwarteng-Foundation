@@ -16,9 +16,12 @@ import { PageSkeleton } from './components/PageSkeleton';
 export function App() {
   const getInitialState = () => {
     const hash = window.location.hash.replace('#', '');
-    if (hash.startsWith('program/')) {
-      const progId = hash.replace('program/', '');
+    if (hash.startsWith('program/') || hash.startsWith('project/')) {
+      const progId = hash.replace('program/', '').replace('project/', '');
       return { page: 'program-article' as PageId, programId: progId || 'mental-health' };
+    }
+    if (hash === 'projects') {
+      return { page: 'programs' as PageId, programId: 'mental-health' };
     }
     const validPages: PageId[] = [
       'home',
@@ -54,10 +57,12 @@ export function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash.startsWith('program/')) {
-        const progId = hash.replace('program/', '');
+      if (hash.startsWith('program/') || hash.startsWith('project/')) {
+        const progId = hash.replace('program/', '').replace('project/', '');
         setSelectedProgramId(progId || 'mental-health');
         setCurrentPage('program-article');
+      } else if (hash === 'projects') {
+        setCurrentPage('programs');
       } else {
         const validPages: PageId[] = [
           'home',
