@@ -2,7 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/assets/foster logo main white gold.png" />
+    <!-- Dynamic Favicons for Light and Dark Themes -->
+    <link rel="icon" type="image/png" href="/favicon-light.png" media="(prefers-color-scheme: light)" id="favicon-tag" />
+    <link rel="icon" type="image/png" href="/favicon-dark.png" media="(prefers-color-scheme: dark)" />
+    <link rel="apple-touch-icon" href="/favicon-light.png" />
+    <script>
+      (function() {
+        function setFavicon() {
+          var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var link = document.getElementById('favicon-tag');
+          if (link) {
+            link.href = isDark ? '/favicon-dark.png' : '/favicon-light.png';
+          }
+        }
+        setFavicon();
+        if (window.matchMedia) {
+          window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setFavicon);
+        }
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Forster Kwarteng Foundation | Empowering Lives, Building Futures</title>
     <meta name="description" content="FORSTER KWARTENG FOUNDATION is a non profit organization established to empower individuals and communities through education, mentorship, skills development and sustainable social interventions across Ghana." />
