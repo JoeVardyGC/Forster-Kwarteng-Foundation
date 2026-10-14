@@ -111,7 +111,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Based on Reference Structure) */}
       <section
-        className="relative min-h-[560px] sm:min-h-[620px] lg:min-h-[660px] flex items-center text-white overflow-hidden"
+        className="relative min-h-[600px] sm:min-h-[620px] lg:min-h-[660px] flex items-center text-white overflow-hidden"
       >
         {/* Full-Bleed Background Carousel Images */}
         <div className="absolute inset-0 z-0">
@@ -139,7 +139,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
 
         {/* Content Container - Left Aligned exactly like Reference */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 sm:pt-8 sm:pb-18 lg:pt-8 lg:pb-20 relative z-20 w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 sm:pt-12 sm:pb-18 lg:pt-8 lg:pb-20 relative z-20 w-full">
           <div className="max-w-xl lg:max-w-2xl space-y-6">
             {/* Dynamic Storytelling Text with Smooth Cross-Fade & Zero Layout Shift */}
             <div className="relative min-h-[220px] sm:min-h-[235px] lg:min-h-[250px]">
