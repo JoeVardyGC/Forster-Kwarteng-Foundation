@@ -41,12 +41,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
     ],
     quote:
       '“Empowering lives and building futures is not merely our motto—it is our daily promise to every community and young person we serve.”',
-    initiatives: [
-      'Quality Basic Education',
-      'Youth Mentorship & Literacy',
-      'TVET Skills & Toolkits',
-      'Sustainable Community Impact',
-    ],
   };
 
   const strategicGoals = [
@@ -353,24 +347,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
               <div className="border-l-4 border-[#000080] pl-4 py-2 italic font-medium text-[#000080] text-xs sm:text-sm bg-blue-50/50 rounded-r-xl">
                 {founderInfo.quote}
               </div>
-
-              {/* Focus Areas Chips */}
-              <div className="pt-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 block mb-2 font-mono">
-                  Core Strategic Pillars
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {founderInfo.initiatives.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-[#000080]" />
-                      <span>{tag}</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -413,10 +389,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
 
           {/* Status Pills */}
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-500 font-semibold pt-1">
-            <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#000080] px-3.5 py-1.5 rounded-full border border-blue-200/60 shadow-2xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              Official Registration: {FOUNDATION_INFO.registrationNo}
-            </span>
             <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#000080] px-3.5 py-1.5 rounded-full border border-blue-200/60 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#000080]" />
               Non-Profit & Charitable Status
