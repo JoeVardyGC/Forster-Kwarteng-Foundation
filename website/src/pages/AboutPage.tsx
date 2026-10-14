@@ -246,9 +246,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
               <div className="lg:col-span-5 flex justify-center">
                 <div className="relative rounded-3xl overflow-hidden shadow-md border border-slate-200/80 max-w-sm w-full aspect-[4/5] bg-slate-100">
                   <img
-                    src="/assets/about_story_photo.png"
-                    alt="FKF team and volunteers in field action"
-                    className="w-full h-full object-cover"
+                    src="/assets/fkf_mockup_1.png"
+                    alt="FORSTER KWARTENG FOUNDATION children and youth"
+                    className="w-full h-full object-cover object-center"
                   />
                 </div>
               </div>
