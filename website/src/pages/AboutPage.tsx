@@ -115,7 +115,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 sm:-mt-16 relative z-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
             {/* Our Mission Card */}
-            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-slate-200/80 border-t-4 border-t-[#000080] flex flex-col justify-between">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between overflow-hidden">
               <div>
                 <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 mb-3">
                   Our Mission
@@ -132,7 +132,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
             </div>
 
             {/* Our Vision Card */}
-            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-slate-200/80 border-t-4 border-t-[#000080] flex flex-col justify-between">
+            <div className="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200/90 flex flex-col justify-between overflow-hidden">
               <div>
                 <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 mb-3">
                   Our Vision
