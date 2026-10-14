@@ -73,30 +73,30 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
   const featuredTime = featuredProject ? times[featuredProject.id] : null;
 
   return (
-    <section className="relative py-20 lg:py-28 bg-gradient-to-b from-white via-slate-50 to-white overflow-hidden border-b border-slate-200">
+    <section className="relative py-20 lg:py-28 bg-gradient-to-b from-[#000066] via-[#000080] to-[#000059] text-white overflow-hidden border-y border-blue-900/60">
       {/* Ambient Lighting Orbs */}
-      <div className="absolute top-10 left-10 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-10 left-10 w-96 h-96 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 lg:mb-16">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-blue-50/90 backdrop-blur-md border border-blue-200/70 text-[#000080] tracking-wider shadow-2xs">
-            <Calendar className="w-3.5 h-3.5 text-[#000080]" />
+          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold bg-white/10 backdrop-blur-md border border-white/20 text-amber-300 tracking-wider shadow-xs">
+            <Calendar className="w-3.5 h-3.5 text-amber-400" />
             Our Projects & Field Calendar
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 mt-3 tracking-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-white mt-3 tracking-tight">
             Our Projects & Community Initiatives
           </h2>
-          <div className="h-1 w-16 bg-[#000080] rounded-full mx-auto my-3" />
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed">
+          <div className="h-1 w-16 bg-[#F5BD02] rounded-full mx-auto my-3" />
+          <p className="text-blue-100/85 text-sm sm:text-base leading-relaxed">
             Follow our upcoming field missions, community outreaches, and youth empowerment summits across Ghana. Mark your calendar and partner with us.
           </p>
         </div>
 
         {/* FEATURED UPCOMING PROJECT (Showcase Hero Card) */}
         {featuredProject && (
-          <div className="mb-12 bg-white rounded-3xl lg:rounded-[36px] border border-slate-200/90 shadow-[0_12px_44px_rgba(0,0,128,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,128,0.12)] transition-all duration-500 overflow-hidden group">
+          <div className="mb-12 bg-white rounded-3xl lg:rounded-[36px] border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.28)] hover:shadow-[0_24px_60px_rgba(0,0,0,0.38)] transition-all duration-500 overflow-hidden group">
             <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
               {/* Photo Box */}
               <div className="lg:col-span-5 relative min-h-[280px] sm:min-h-[340px] lg:min-h-[460px] overflow-hidden bg-slate-100">
@@ -242,7 +242,7 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
               return (
                 <div
                   key={project.id}
-                  className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_44px_rgba(0,0,128,0.1)] hover:border-[#000080]/30 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between overflow-hidden group"
+                  className="bg-white rounded-3xl border border-white/20 shadow-[0_12px_36px_rgba(0,0,0,0.22)] hover:shadow-[0_24px_50px_rgba(0,0,0,0.35)] hover:border-amber-400/50 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between overflow-hidden group"
                 >
                   <div>
                     {/* Image Banner */}
@@ -342,18 +342,22 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
         )}
 
         {/* Bottom Partnership Callout Bar */}
-        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-blue-900 to-[#000080] text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-          <div className="space-y-1 text-center sm:text-left">
+        <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-white/[0.08] backdrop-blur-xl border border-white/20 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
+          {/* Ambient warm glow inside banner */}
+          <div className="absolute -right-20 -top-20 w-60 h-60 bg-amber-400/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -left-20 -bottom-20 w-60 h-60 bg-blue-400/15 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="space-y-1 text-center sm:text-left relative z-10">
             <h4 className="text-lg sm:text-xl font-bold font-['Outfit'] text-white">
               Have a Project Idea or Want to Partner for an Outreach?
             </h4>
-            <p className="text-xs sm:text-sm text-blue-200/90 font-normal">
+            <p className="text-xs sm:text-sm text-blue-100/90 font-normal">
               We collaborate with schools, clinics, corporate donors, and community leaders across Ghana.
             </p>
           </div>
           <button
             onClick={() => onNavigate('contact')}
-            className="px-6 py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs sm:text-sm rounded-full shrink-0 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 cursor-pointer"
+            className="px-6 py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs sm:text-sm rounded-full shrink-0 shadow-md hover:shadow-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 cursor-pointer relative z-10"
           >
             <span>Propose a Project</span>
             <ArrowRight className="w-4 h-4" />
