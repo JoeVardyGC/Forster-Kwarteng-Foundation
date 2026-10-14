@@ -336,7 +336,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     publishedDate: 'October 2024 Edition',
     location: 'Greater Accra & Eastern Regions',
     summary:
-      'Breaking deep-rooted societal stigma, delivering school-based mental wellness education, and providing accessible, confidential counseling safe spaces for vulnerable adolescents and young caregivers across Ghana.',
+      'The Mental Health Awareness and Psycho-Social Support project is a pioneering grassroots initiative dedicated to breaking deep-rooted cultural stigma surrounding psychological wellbeing across Ghanaian basic schools and community hubs. By integrating trauma-informed psycho-educational workshops into local schools and youth groups, we equip adolescents, teachers, and young caregivers with practical emotional resilience tools and stress-coping strategies. The program establishes confidential safe-space counseling centers staffed by licensed psychological practitioners and trained peer counselors, offering free one-on-one therapy sessions, peer debriefing circles, and early crisis intervention. Through community-wide town hall forums, community radio broadcasts, and youth-led awareness rallies, we are actively shifting community mindsets from isolation to empathy, ensuring every young person has access to compassionate mental healthcare without fear of judgment.',
     coverImage: '/assets/program_mental_health.jpg',
     coverImageCaption: 'FKF peer counselors facilitating a youth emotional wellness circle in Kasoa.',
     impactStats: [
@@ -468,7 +468,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     publishedDate: 'September 2024 Edition',
     location: 'Ashanti & Greater Accra Regions',
     summary:
-      'Equipping out-of-school youth, young mothers, and vulnerable school-leavers with in-demand vocational craftsmanship, financial literacy, and starter toolkits for sustainable self-employment.',
+      'Our Skills Training and Economic Empowerment initiative is engineered to break chronic cycles of poverty by equipping out-of-school youth, young mothers, and vulnerable school-leavers with practical, market-aligned vocational craftsmanship. Operating across peri-urban communities in Accra and the Ashanti Region, the program provides comprehensive hands-on training in high-demand trades—including fashion design, precision carpentry, cosmetic technology, and electronics servicing—under the guidance of certified master artisans. Beyond technical competence, trainees complete rigorous modules in financial literacy, digital commerce, bookkeeping, and customer relations. Upon graduation, each participant receives an industrial-grade starter toolkit and six months of dedicated commercial mentorship, transforming vulnerable job-seekers into confident micro-enterprise owners who generate sustainable household incomes and create employment opportunities for others in their neighborhoods.',
     coverImage: '/assets/program_skills_training.jpg',
     coverImageCaption: 'Trainees in an intensive fashion craftsmanship and garment technology masterclass.',
     impactStats: [
@@ -600,7 +600,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     publishedDate: 'August 2024 Edition',
     location: 'National Reach (Ghana)',
     summary:
-      'Strengthening community leadership structures, civil society networks, and grassroots educators to foster self-sustaining developmental ecosystems that thrive for generations.',
+      'Our Capacity Building and Community Resilience initiative focuses on institutional strengthening, civic empowerment, and sustainable local leadership across peri-urban settlements in Ghana. Recognizing that enduring progress must be community-driven, this program conducts intensive governance masterclasses, project management bootcamps, and grassroots leadership workshops for local youth organizers, assembly members, and non-profit volunteers. Participants learn transparent resource allocation, grant accountability, participatory community needs assessment, and ethical public administration. By establishing neighborhood monitoring committees and collaborative action taskforces, we empower community members to take collective ownership of their local schools, sanitation infrastructure, and social amenities, fostering self-reliance and ensuring development interventions deliver transparent, measurable, and lasting results for generations to come.',
     coverImage: '/assets/program_capacity_building.jpg',
     coverImageCaption: 'Community leaders and grassroots volunteers participating in strategic planning.',
     impactStats: [
@@ -732,7 +732,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     publishedDate: 'October 2024 Edition',
     location: 'Greater Accra, Central & Volta Regions',
     summary:
-      'Unlocking 21st-century technological fluency for underserved youth through coding bootcamps, hands-on robotics, technical prototyping, and vocational engineering.',
+      'The STEM & TVET Innovation Labs program bridges the widening digital divide by democratizing access to high-impact science, technology, engineering, and vocational apprenticeship for underprivileged basic and junior high students across underserved Ghanaian districts. Through mobile experiential tech labs and subsidized weekend masterclasses, students gain direct hands-on immersion in block and text coding, algorithmic logic, renewable solar installation, and interactive robotics problem-solving. We partner with local schools to establish maker-spaces equipped with laptop workstations, microcontroller kits, and electronics testing gear, breaking theoretical educational barriers. By pairing students with industry mentors in computing and engineering, the program sparks technological curiosity, equips teenagers with future-ready skills, and prepares them to build home-grown solutions to pressing national infrastructure and environmental challenges.',
     coverImage: '/assets/program_stem_tvet.jpg',
     coverImageCaption: 'Students collaborating on electronic circuit design and robotics programming.',
     impactStats: [
@@ -864,7 +864,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     publishedDate: 'October 2024 Edition',
     location: 'Greater Accra, Central & Eastern Regions',
     summary:
-      'Providing emergency relief packages, subsidized nutrition, clean water interventions, and back-to-school welfare kits to protect children from vulnerability and school dropout.',
+      'Our Grassroots Community Care and Relief outreach serves as a rapid-response humanitarian lifeline for vulnerable families, orphans, and single mothers living in underserved informal settlements throughout Ghana. During seasonal floods, socio-economic crises, and back-to-school enrollment periods, our volunteer field teams mobilize door-to-door to deliver targeted social safety nets—including emergency dry food baskets, water purification supplies, infant nutritional packs, and fully furnished educational backpacks. Working alongside trusted community elders and faith leaders, we conduct household vulnerability verifications to ensure direct, dignified aid delivery to those most at risk. Beyond emergency relief, our outreach teams facilitate medical screening referrals, welfare support case management, and family livelihood assistance, restoring dignity, safeguarding child education, and bringing tangible hope directly to the doorsteps of those who need it most.',
     coverImage: '/assets/program_community_outreach.jpg',
     coverImageCaption: 'Volunteers distributing essential nutritional supplies and school hampers.',
     impactStats: [
@@ -999,7 +999,7 @@ export const UPCOMING_PROJECTS: UpcomingProjectEvent[] = [
     time: '9:00 AM – 3:00 PM GMT',
     location: 'Prampram & Kpone Basic Schools, Greater Accra',
     summary:
-      'Equipping over 500 orphaned and economically vulnerable primary pupils with essential syllabus textbooks, tailored school uniforms, backpacks, and geometry sets for the new academic term.',
+      'Our flagship annual educational distribution mobilizes field educators and volunteer teams to equip over 500 orphaned and economically vulnerable primary pupils across peri-urban Prampram and Kpone with comprehensive educational packages. Each child receives government-approved syllabus textbooks, custom-tailored school uniforms, sturdy backpacks, mathematical geometry instruments, and essential writing stationery, removing economic barriers to classroom attendance and giving every child the confidence to thrive throughout the academic year.',
     image: '/assets/orphan_boy_classroom.jpg',
     status: 'Featured',
     highlightMetric: {
@@ -1017,7 +1017,7 @@ export const UPCOMING_PROJECTS: UpcomingProjectEvent[] = [
     time: '10:00 AM – 4:30 PM GMT',
     location: 'Madina Community Center, Greater Accra',
     summary:
-      'Connecting out-of-school youth with certified artisan master trainers in electrical installation, fashion design, and digital literacy with sponsored starter toolkits upon graduation.',
+      'A full-day intensive skills exhibition and apprenticeship matching summit bringing together over 120 out-of-school youth, vocational educators, and certified commercial master artisans. Participants engage in interactive live masterclasses across electrical wiring, solar repair, garment construction, and mobile money bookkeeping, culminating in direct enrollment into subsidized six-month apprenticeship programs equipped with commercial starter toolkits upon certification.',
     image: '/assets/program_skills_training.jpg',
     status: 'Upcoming',
     highlightMetric: {
@@ -1035,7 +1035,7 @@ export const UPCOMING_PROJECTS: UpcomingProjectEvent[] = [
     time: '8:30 AM – 4:00 PM GMT',
     location: 'Pokuase Community Clinic, Greater Accra',
     summary:
-      'Delivering free primary medical checkups, diagnostic eye screenings, and confidential psychological counseling led by licensed psychiatric nurses and volunteer medical practitioners.',
+      'A community-wide wellness outreach providing comprehensive, zero-cost preventive healthcare and psychological support to over 800 underserved residents. Licensed medical practitioners deliver diagnostic vital screenings, optical examinations, and malaria tests alongside confidential one-on-one psycho-social counseling sessions led by mental health specialists to address stress, depression, and family trauma in a safe, compassionate environment.',
     image: '/assets/program_community_outreach.jpg',
     status: 'Upcoming',
     highlightMetric: {
