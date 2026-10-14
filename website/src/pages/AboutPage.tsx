@@ -155,9 +155,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
         <div className="rounded-3xl overflow-hidden shadow-sm border border-slate-200/80 bg-white">
           {/* Header Bar */}
           <div className="bg-[#000080] text-white px-6 sm:px-10 py-5 sm:py-6">
-            <span className="text-[11px] font-extrabold uppercase tracking-widest text-amber-300 block mb-0.5 font-mono">
-              WHERE IT ALL BEGAN
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit']">
               Our Story
             </h2>
