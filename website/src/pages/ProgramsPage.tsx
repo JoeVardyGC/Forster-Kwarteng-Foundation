@@ -388,24 +388,14 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
                             </button>
                           </>
                         ) : (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => onNavigate('contact')}
-                              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#000080] group-hover:gap-2 transition-all cursor-pointer"
-                            >
-                              <span>Volunteer / Partner</span>
-                              <ArrowRight className="w-3.5 h-3.5 text-[#000080]" />
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={onOpenDonateModal}
-                              className="text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-full border border-amber-200 transition-colors cursor-pointer"
-                            >
-                              Sponsor
-                            </button>
-                          </>
+                          <button
+                            type="button"
+                            onClick={() => onNavigate('contact')}
+                            className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#000080] group-hover:gap-2 transition-all cursor-pointer"
+                          >
+                            <span>Volunteer / Partner</span>
+                            <ArrowRight className="w-3.5 h-3.5 text-[#000080]" />
+                          </button>
                         )}
                       </div>
                     </div>
