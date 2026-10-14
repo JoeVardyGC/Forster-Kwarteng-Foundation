@@ -402,7 +402,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     Our Vision
                   </h3>
 
-                  <blockquote className="text-base sm:text-lg font-bold font-['Outfit'] text-[#000080] leading-snug mb-3">
+                  <blockquote className="text-base sm:text-lg font-medium text-slate-700 leading-relaxed mb-3">
                     "{FOUNDATION_INFO.vision}"
                   </blockquote>
 
@@ -448,7 +448,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     Our Mission
                   </h3>
 
-                  <blockquote className="text-base sm:text-lg font-bold font-['Outfit'] text-[#000080] leading-snug mb-3">
+                  <blockquote className="text-base sm:text-lg font-medium text-slate-700 leading-relaxed mb-3">
                     "{FOUNDATION_INFO.mission}"
                   </blockquote>
 
