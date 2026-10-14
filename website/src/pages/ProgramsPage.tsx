@@ -11,6 +11,7 @@ import {
   Target,
   ArrowRight,
   ChevronRight,
+  FolderOpen,
 } from 'lucide-react';
 
 interface ProgramsPageProps {
@@ -259,57 +260,82 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {OUR_PROGRAMS.map((prog) => (
-              <div
-                key={prog.id}
-                className="bg-white/85 backdrop-blur-md rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_rgba(0,0,128,0.12)] hover:border-[#000080]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group"
-              >
+          {OUR_PROGRAMS.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {OUR_PROGRAMS.map((prog) => (
                 <div
-                  onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
-                  className="relative h-48 sm:h-52 overflow-hidden bg-slate-100 cursor-pointer"
+                  key={prog.id}
+                  className="bg-white/85 backdrop-blur-md rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_rgba(0,0,128,0.12)] hover:border-[#000080]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group"
                 >
-                  <img
-                    src={prog.image}
-                    alt={prog.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div
+                    onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                    className="relative h-48 sm:h-52 overflow-hidden bg-slate-100 cursor-pointer"
+                  >
+                    <img
+                      src={prog.image}
+                      alt={prog.title}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                  {/* Frosted Glass Badge */}
-                  <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-[11px] font-semibold border border-white/20 shadow-sm flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    <span>Active Initiative</span>
+                    {/* Frosted Glass Badge */}
+                    <div className="absolute top-3.5 left-3.5 px-3 py-1 rounded-full bg-slate-950/60 backdrop-blur-md text-white text-[11px] font-semibold border border-white/20 shadow-sm flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                      <span>Active Initiative</span>
+                    </div>
+                  </div>
+
+                  <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
+                    <div>
+                      <h3
+                        onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                        className="text-lg sm:text-xl font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2.5 cursor-pointer"
+                      >
+                        {prog.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
+                        {prog.description}
+                      </p>
+                    </div>
+
+                    {/* Action Bar embedded in card */}
+                    <div className="flex items-center justify-between pt-4 border-t border-slate-100">
+                      <button
+                        onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
+                        className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer"
+                      >
+                        <span>Read More</span>
+                        <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-
-                <div className="p-6 sm:p-7 flex flex-col justify-between flex-1">
-                  <div>
-                    <h3
-                      onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
-                      className="text-lg sm:text-xl font-bold font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors mb-2.5 cursor-pointer"
-                    >
-                      {prog.title}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">
-                      {prog.description}
-                    </p>
-                  </div>
-
-                  {/* Action Bar embedded in card */}
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100">
-                    <button
-                      onClick={() => onSelectProgram ? onSelectProgram(prog.id) : onNavigate('programs')}
-                      className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-blue-600 group-hover:text-[#000080] group-hover:gap-2.5 transition-all cursor-pointer"
-                    >
-                      <span>Read More</span>
-                      <ChevronRight className="w-4 h-4 text-blue-600 group-hover:text-[#000080] transition-colors" />
-                    </button>
-                  </div>
-                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="max-w-xl mx-auto text-center py-12 px-6 sm:px-8 rounded-3xl bg-white border border-slate-200/80 shadow-[0_8px_30px_rgba(0,0,128,0.04)] space-y-4">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#000080] flex items-center justify-center mx-auto shadow-2xs border border-blue-100">
+                <FolderOpen className="w-8 h-8 text-[#000080]" />
               </div>
-            ))}
-          </div>
+              <div className="space-y-2">
+                <h3 className="text-xl sm:text-2xl font-bold font-['Outfit'] text-slate-900">
+                  No Active Projects Right Now
+                </h3>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-md mx-auto">
+                  We are currently preparing our next round of community development programs. Check back soon for announcements on new deployments.
+                </p>
+              </div>
+              <div className="pt-2 flex items-center justify-center gap-3">
+                <button
+                  onClick={() => onNavigate('contact')}
+                  className="px-6 py-3 rounded-full bg-[#000080] hover:bg-[#0a0a85] text-white text-xs sm:text-sm font-bold shadow-md transition-all cursor-pointer flex items-center gap-2"
+                >
+                  <span>Propose a Project</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>
