@@ -64,10 +64,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
 
   const leadershipTeam = [
     {
+      name: 'Mr. Forster Kwarteng',
+      role: 'Founder & Chief Executive Officer',
+      image: '/assets/founder.png',
+      description: 'Visionary social entrepreneur championing grassroots empowerment, youth agency, and educational equity across Ghana.',
+    },
+    {
       name: 'Ahmed Akusie Osei',
-      role: 'Executive Director & Founder',
+      role: 'Executive Director',
       image: '/assets/leader_ahmed.png',
-      description: 'Passionate about grassroots community agency and educational equity in Ghana.',
+      description: 'Leading strategic partnerships, institutional operations, and organizational governance.',
     },
     {
       name: 'Paul Terku Lawer',

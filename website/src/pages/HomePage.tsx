@@ -588,50 +588,75 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 7. BENEFICIARY STORY SPOTLIGHT (Frosted Glass Card) */}
-      <section className="py-16 lg:py-24 bg-white">
+      {/* 7. MESSAGE FROM OUR FOUNDER & CEO (Executive Showcase Card) */}
+      <section className="py-16 lg:py-24 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-white/95 via-slate-50/90 to-blue-50/40 backdrop-blur-md rounded-3xl border border-slate-200/80 p-8 sm:p-12 lg:p-14 overflow-hidden relative shadow-sm">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="bg-gradient-to-br from-white via-slate-50/90 to-blue-50/30 backdrop-blur-xl rounded-3xl lg:rounded-[36px] border border-slate-200/90 p-8 sm:p-12 lg:p-14 overflow-hidden relative shadow-[0_16px_48px_rgba(0,0,128,0.06)]">
+            {/* Ambient Corner Light */}
+            <div className="absolute -top-16 -right-16 w-80 h-80 bg-amber-200/20 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-16 -left-16 w-80 h-80 bg-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
+              {/* Left Column: Founder Photo Box */}
               <div className="lg:col-span-5 relative">
-                <div className="rounded-2xl overflow-hidden shadow-lg border-4 border-white aspect-4/3">
+                <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 aspect-[3/4] sm:aspect-[4/5] max-w-sm sm:max-w-md mx-auto lg:max-w-none w-full">
                   <img
-                    src={BENEFICIARY_STORIES[0].image}
-                    alt={BENEFICIARY_STORIES[0].name}
-                    className="w-full h-full object-cover"
+                    src="/assets/founder.png"
+                    alt="Mr. Forster Kwarteng — Founder & CEO of Forster Kwarteng Foundation"
+                    className="w-full h-full object-cover object-[center_10%] hover:scale-102 transition-transform duration-700 ease-out"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Subtle Founder Identification Pill at Bottom of Photo */}
+                  <div className="absolute bottom-4 left-4 right-4 p-3.5 rounded-2xl bg-slate-950/75 backdrop-blur-md border border-white/20 text-white shadow-lg flex items-center justify-between">
+                    <div>
+                      <div className="text-xs sm:text-sm font-extrabold font-['Outfit'] tracking-wide text-white">
+                        Mr. Forster Kwarteng
+                      </div>
+                      <div className="text-[11px] font-medium text-amber-300">
+                        Founder & Chief Executive Officer
+                      </div>
+                    </div>
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 shadow-xs animate-pulse" />
+                  </div>
                 </div>
               </div>
 
-              <div className="lg:col-span-7 space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-[#000080]">
-                  <Quote className="w-3.5 h-3.5 text-[#000080]" />
-                  <span>Story of Transformation</span>
+              {/* Right Column: Founder Message */}
+              <div className="lg:col-span-7 space-y-5">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 border border-amber-200/80 text-amber-900 shadow-2xs">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                  <span>A Message from Our CEO</span>
                 </div>
 
-                <blockquote className="text-xl sm:text-2xl font-bold font-['Outfit'] text-[#000080] leading-snug">
-                  {BENEFICIARY_STORIES[0].quote}
+                <blockquote className="text-xl sm:text-2xl lg:text-3xl font-extrabold font-['Outfit'] text-[#000080] leading-snug tracking-tight">
+                  “Lasting transformation begins when we empower our youth with dignity, skills, and unwavering community support.”
                 </blockquote>
 
-                <p className="text-sm text-slate-700 leading-relaxed">
-                  {BENEFICIARY_STORIES[0].story}
-                </p>
+                <div className="space-y-3.5 text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
+                  <p>
+                    When we established the Forster Kwarteng Foundation, it was anchored in a single, deeply personal conviction: no young person in Ghana should ever have their destiny defined by poverty or lack of educational resources.
+                  </p>
+                  <p>
+                    Every school desk filled, every scholarship awarded, every vocational starter kit provided, and every mentor assigned is more than an act of charity — it is an investment in the generational future of our homeland. Together with our partners, we are proving that grassroots agency creates self-reliant communities.
+                  </p>
+                </div>
 
-                <div className="pt-2 border-t border-slate-200 flex items-center justify-between">
+                <div className="pt-4 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-4">
                   <div>
-                    <h4 className="font-bold text-sm text-slate-900">
-                      {BENEFICIARY_STORIES[0].name}
+                    <h4 className="font-extrabold text-base sm:text-lg font-['Outfit'] text-slate-900">
+                      Mr. Forster Kwarteng
                     </h4>
-                    <p className="text-xs text-slate-500">
-                      {BENEFICIARY_STORIES[0].role} • {BENEFICIARY_STORIES[0].location}
+                    <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                      Founder & Chief Executive Officer • Forster Kwarteng Foundation
                     </p>
                   </div>
                   <button
-                    onClick={() => onNavigate('programs')}
-                    className="text-xs font-bold text-[#000080] hover:text-amber-600 transition-colors flex items-center gap-1 cursor-pointer"
+                    onClick={() => onNavigate('about')}
+                    className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#000080] hover:text-[#0a0a85] bg-blue-50/80 hover:bg-blue-100/90 px-4 py-2.5 rounded-full border border-blue-200/60 transition-all cursor-pointer group"
                   >
-                    <span>Read More Stories</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>Read Our Full Story</span>
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
