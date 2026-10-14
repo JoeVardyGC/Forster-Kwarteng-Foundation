@@ -380,23 +380,18 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                         <figure
                           key={idx}
                           onClick={() => setActiveLightboxIndex(idx)}
-                          className="rounded-2xl overflow-hidden border border-slate-200 shadow-xs bg-slate-900 group cursor-pointer hover:shadow-md transition-all flex flex-col justify-between"
+                          className="rounded-2xl overflow-hidden border border-slate-200 shadow-xs bg-slate-900 group cursor-pointer hover:shadow-md transition-all relative aspect-[16/10]"
                         >
-                          <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-                            <img
-                              src={img.url}
-                              alt={img.caption}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
-                              <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-xs text-white text-xs px-3 py-1.5 rounded-full font-medium">
-                                View Full Size ↗
-                              </span>
-                            </div>
+                          <img
+                            src={img.url}
+                            alt={img.caption}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors flex items-center justify-center">
+                            <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-xs text-white text-xs px-3 py-1.5 rounded-full font-medium">
+                              View Full Size ↗
+                            </span>
                           </div>
-                          <figcaption className="p-3 bg-slate-50 border-t border-slate-200 text-[11px] sm:text-xs text-slate-600 leading-relaxed">
-                            📸 {img.caption}
-                          </figcaption>
                         </figure>
                       ))}
                     </div>
