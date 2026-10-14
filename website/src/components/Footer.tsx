@@ -1,7 +1,7 @@
 import React from 'react';
 import type { PageId } from '../types';
 import { FOUNDATION_INFO, CORE_VALUES } from '../data/foundationData';
-import { Phone, Mail, MapPin, Heart, ArrowUp, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Heart, ArrowUp, ShieldCheck } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (page: PageId) => void;
@@ -83,10 +83,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
             </p>
 
             <div className="pt-1 flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-blue-200/90 backdrop-blur-xs">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Reg: {FOUNDATION_INFO.registrationNo}</span>
-              </div>
               <button
                 onClick={onOpenDonateModal}
                 className="inline-flex items-center gap-2 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs px-4 py-2 rounded-full transition-all shadow-md cursor-pointer hover:scale-105"
