@@ -74,10 +74,10 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
   const featuredTime = featuredProject ? times[featuredProject.id] : null;
 
   return (
-    <section className="relative py-20 lg:py-28 bg-gradient-to-b from-white via-slate-50 to-white overflow-hidden border-b border-slate-200">
+    <section className="relative py-20 lg:py-28 bg-white overflow-hidden">
       {/* Ambient Lighting Orbs */}
-      <div className="absolute top-10 left-10 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-100/35 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-10 left-10 w-96 h-96 bg-blue-100/30 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 right-10 w-96 h-96 bg-amber-100/25 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
@@ -123,7 +123,7 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
           <>
             {/* FEATURED UPCOMING PROJECT (Showcase Hero Card) */}
             {featuredProject && (
-              <div className="mb-12 bg-white rounded-3xl lg:rounded-[36px] border border-slate-200/90 shadow-[0_12px_44px_rgba(0,0,128,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,128,0.12)] transition-all duration-500 overflow-hidden group">
+              <div className="mb-12 bg-white rounded-3xl lg:rounded-[36px] border border-slate-200 shadow-[0_12px_44px_rgba(0,0,128,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,128,0.12)] transition-all duration-500 overflow-hidden group">
             <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch">
               {/* Photo Box */}
               <div className="lg:col-span-5 relative min-h-[280px] sm:min-h-[340px] lg:min-h-[460px] overflow-hidden bg-slate-100">
@@ -269,7 +269,7 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
               return (
                 <div
                   key={project.id}
-                  className="bg-white rounded-3xl border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_44px_rgba(0,0,128,0.1)] hover:border-[#000080]/30 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between overflow-hidden group"
+                  className="bg-white rounded-3xl border border-slate-200 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_20px_44px_rgba(0,0,128,0.1)] hover:border-[#000080]/30 hover:-translate-y-1.5 transition-all duration-500 flex flex-col justify-between overflow-hidden group"
                 >
                   <div>
                     {/* Image Banner */}
