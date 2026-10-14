@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Arranged like Reference Screenshot) */}
       <section
-        className="relative min-h-[560px] sm:min-h-[580px] lg:min-h-[640px] flex flex-col justify-end sm:justify-start text-white overflow-hidden pb-8 sm:pb-16"
+        className="relative min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] flex flex-col justify-center text-white overflow-hidden py-8 sm:py-12"
       >
         {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
@@ -168,8 +168,8 @@ export const HomePage: React.FC<HomePageProps> = ({
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        {/* Content Container - Brought down together above description near bottom on mobile, top-anchored on desktop */}
-        <div className="max-w-7xl mx-auto px-6 sm:px-14 lg:px-16 pt-0 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
+        {/* Content Container - Vertically centered as a unified block between top header and bottom card */}
+        <div className="max-w-7xl mx-auto px-6 sm:px-14 lg:px-16 py-2 sm:py-4 relative z-20 w-full">
           <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3.5 sm:space-y-4">
             {/* Dynamic Storytelling Text */}
             <div className="relative min-h-[190px] sm:min-h-[220px] lg:min-h-[245px]">
