@@ -121,10 +121,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
       {/* 1. HERO SECTION */}
       <section className="bg-gradient-to-b from-[#000080] via-[#090979] to-[#000052] text-white py-16 lg:py-24 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/10 text-amber-300 font-semibold text-xs border border-white/20 mb-4 backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            Field Programs & Community Initiatives
-          </span>
+
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] tracking-tight">
             Our Projects & Initiatives
           </h1>
