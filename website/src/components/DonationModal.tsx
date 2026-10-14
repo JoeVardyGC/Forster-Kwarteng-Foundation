@@ -9,11 +9,11 @@ import {
   Copy,
   Check,
   ShieldCheck,
-  MessageCircle,
   ExternalLink,
   PhoneCall,
   CheckCircle2,
 } from 'lucide-react';
+import { WhatsAppLogo } from './WhatsAppLogo';
 
 interface DonationModalProps {
   isOpen: boolean;
@@ -284,7 +284,7 @@ export const DonationModal: React.FC<DonationModalProps> = ({
                   rel="noopener noreferrer"
                   className="flex-1 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
                 >
-                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <WhatsAppLogo className="w-4.5 h-4.5" />
                   <span>Confirm on WhatsApp</span>
                   <ExternalLink className="w-3.5 h-3.5 opacity-80" />
                 </a>
@@ -448,7 +448,7 @@ export const DonationModal: React.FC<DonationModalProps> = ({
                   rel="noopener noreferrer"
                   className="py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
                 >
-                  <MessageCircle className="w-4 h-4 fill-white" />
+                  <WhatsAppLogo className="w-4.5 h-4.5" />
                   <span>Confirm via WhatsApp</span>
                 </a>
               </div>

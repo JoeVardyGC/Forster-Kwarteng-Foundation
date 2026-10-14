@@ -8,7 +8,6 @@ import {
   Building2,
   Copy,
   Check,
-  MessageCircle,
   ExternalLink,
   PhoneCall,
   CheckCircle2,
@@ -16,6 +15,7 @@ import {
   Sparkles,
   Users,
 } from 'lucide-react';
+import { WhatsAppLogo } from '../components/WhatsAppLogo';
 
 interface DonatePageProps {
   currency: Currency;
@@ -309,7 +309,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({
                       rel="noopener noreferrer"
                       className="flex-1 py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer hover:-translate-y-0.5"
                     >
-                      <MessageCircle className="w-4 h-4 fill-white" />
+                      <WhatsAppLogo className="w-5 h-5" />
                       <span>Confirm on WhatsApp</span>
                       <ExternalLink className="w-3.5 h-3.5 opacity-80" />
                     </a>
