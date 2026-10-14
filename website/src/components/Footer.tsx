@@ -194,8 +194,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
         </div>
 
         {/* 3. Sub-Footer Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-200/70">
-          <p>
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-200/70 font-montserrat font-normal">
+          <p className="font-montserrat font-normal">
             © {new Date().getFullYear()} {FOUNDATION_INFO.name}. All rights reserved.
           </p>
 
