@@ -377,108 +377,81 @@ export const HomePage: React.FC<HomePageProps> = ({
           {/* Dual Showcase Cards */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-stretch">
             {/* LEFT CARD: OUR VISION */}
-            <div className="bg-[#000080] text-white rounded-3xl lg:rounded-[36px] border border-blue-950/80 shadow-[0_16px_48px_rgba(0,0,128,0.18)] overflow-hidden flex flex-col justify-between group relative">
-              {/* Top Photo Banner */}
-              <div className="relative h-60 sm:h-72 lg:h-80 overflow-hidden bg-slate-900">
-                <img
-                  src="/assets/hero_girls_right.jpg"
-                  alt="Our Vision — Educating and Empowering Youth in Ghana"
-                  className="w-full h-full object-cover object-[80%_center] group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#000080] via-[#000080]/20 to-transparent" />
+            <div className="bg-[#000080] text-white rounded-3xl lg:rounded-[36px] border border-blue-950/80 shadow-[0_16px_48px_rgba(0,0,128,0.18)] p-8 sm:p-10 lg:p-12 flex flex-col justify-between group relative overflow-hidden">
+              {/* Subtle ambient blur glow in card corner */}
+              <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10">
+                {/* Triangular Brand Accent (From Inspo) */}
+                <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-5" />
+
+                <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-white tracking-tight mb-4">
+                  Our Vision
+                </h3>
+
+                <blockquote className="text-base sm:text-lg font-medium text-blue-50 leading-relaxed mb-4">
+                  "{FOUNDATION_INFO.vision}"
+                </blockquote>
+
+                <p className="text-xs sm:text-sm text-blue-100/80 leading-relaxed font-normal mb-8">
+                  We envision a resilient Ghana where poverty and lack of resources never limit human potential, and where young people possess the skills and agency to lead.
+                </p>
               </div>
 
-              {/* Content Area */}
-              <div className="p-8 sm:p-10 lg:p-12 flex flex-col justify-between flex-1 bg-[#000080] relative">
-                {/* Subtle ambient blur glow in card corner */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
-
-                <div className="relative z-10">
-                  {/* Triangular Brand Accent (From Inspo) */}
-                  <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-4" />
-
-                  <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-white tracking-tight mb-4">
-                    Our Vision
-                  </h3>
-
-                  <blockquote className="text-base sm:text-lg font-medium text-blue-50 leading-relaxed mb-3">
-                    "{FOUNDATION_INFO.vision}"
-                  </blockquote>
-
-                  <p className="text-xs sm:text-sm text-blue-100/80 leading-relaxed font-normal mb-6">
-                    We envision a resilient Ghana where poverty and lack of resources never limit human potential, and where young people possess the skills and agency to lead.
-                  </p>
-                </div>
-
-                {/* Bottom Indicator */}
-                <div className="relative z-10 pt-6 border-t border-white/15 mt-6 flex items-center justify-between text-xs">
-                  <span className="flex items-center gap-2 font-medium text-blue-100">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    Building sustainable community agency across Ghana
-                  </span>
-                  <span className="text-[#F5BD02] font-bold hidden sm:inline-block">Long-Term Impact</span>
-                </div>
+              {/* Bottom Indicator */}
+              <div className="relative z-10 pt-6 border-t border-white/15 mt-auto flex items-center justify-between text-xs">
+                <span className="flex items-center gap-2 font-medium text-blue-100">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Building sustainable community agency across Ghana
+                </span>
+                <span className="text-[#F5BD02] font-bold hidden sm:inline-block">Long-Term Impact</span>
               </div>
             </div>
 
             {/* RIGHT CARD: OUR MISSION */}
-            <div className="bg-white/95 backdrop-blur-xl rounded-3xl lg:rounded-[36px] border border-slate-200/90 shadow-[0_12px_44px_rgba(0,0,128,0.06)] overflow-hidden flex flex-col justify-between group relative">
-              {/* Top Photo Banner */}
-              <div className="relative h-60 sm:h-72 lg:h-80 overflow-hidden bg-slate-100">
-                <img
-                  src="/assets/hero_outreach_right.jpg"
-                  alt="Our Mission — Community Outreach and Support"
-                  className="w-full h-full object-cover object-[80%_center] group-hover:scale-105 transition-transform duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl lg:rounded-[36px] border border-slate-200/90 shadow-[0_12px_44px_rgba(0,0,128,0.06)] p-8 sm:p-10 lg:p-12 flex flex-col justify-between group relative overflow-hidden">
+              <div>
+                {/* Triangular Brand Accent (From Inspo) */}
+                <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-5" />
 
-              </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight mb-4">
+                  Our Mission
+                </h3>
 
-              {/* Content Area */}
-              <div className="p-8 sm:p-10 lg:p-12 flex flex-col justify-between flex-1">
-                <div>
-                  {/* Triangular Brand Accent (From Inspo) */}
-                  <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-4" />
+                <blockquote className="text-base sm:text-lg font-medium text-slate-700 leading-relaxed mb-4">
+                  "{FOUNDATION_INFO.mission}"
+                </blockquote>
 
-                  <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight mb-4">
-                    Our Mission
-                  </h3>
-
-                  <blockquote className="text-base sm:text-lg font-medium text-slate-700 leading-relaxed mb-3">
-                    "{FOUNDATION_INFO.mission}"
-                  </blockquote>
-
-                  {/* The 4 Tactical Action Chips */}
-                  <div className="grid grid-cols-2 gap-2.5 my-4">
-                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                      <GraduationCap className="w-4 h-4 text-[#000080] shrink-0" />
-                      <span>Education Sponsorship</span>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                      <Compass className="w-4 h-4 text-amber-600 shrink-0" />
-                      <span>Youth Mentorship</span>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                      <Wrench className="w-4 h-4 text-[#000080] shrink-0" />
-                      <span>Vocational Training</span>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
-                      <Heart className="w-4 h-4 text-rose-500 shrink-0 fill-rose-500" />
-                      <span>Social Interventions</span>
-                    </div>
+                {/* The 4 Tactical Action Chips */}
+                <div className="grid grid-cols-2 gap-2.5 my-6">
+                  <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4 text-[#000080] shrink-0" />
+                    <span>Education Sponsorship</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <Compass className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span>Youth Mentorship</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <Wrench className="w-4 h-4 text-[#000080] shrink-0" />
+                    <span>Vocational Training</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-slate-50/90 border border-slate-200/70 text-xs font-semibold text-slate-800 flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-rose-500 shrink-0 fill-rose-500" />
+                    <span>Social Interventions</span>
                   </div>
                 </div>
+              </div>
 
-                {/* Bottom Action Link */}
-                <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs">
-                  <button
-                    onClick={() => onNavigate('programs')}
-                    className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
-                  >
-                    <span>Explore the 4 Pillars in Detail</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+              {/* Bottom Action Link */}
+              <div className="pt-6 border-t border-slate-100 mt-auto flex items-center justify-between text-xs">
+                <button
+                  onClick={() => onNavigate('programs')}
+                  className="text-xs font-bold text-[#000080] hover:text-[#0a0a85] flex items-center gap-1.5 group-hover:gap-2.5 transition-all cursor-pointer"
+                >
+                  <span>Explore the 4 Pillars in Detail</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
           </div>
