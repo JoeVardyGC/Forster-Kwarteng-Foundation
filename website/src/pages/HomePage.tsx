@@ -250,23 +250,10 @@ export const HomePage: React.FC<HomePageProps> = ({
         {/* The Elevated Floating Transition Card covering the Hero-to-Next Section boundary */}
         <div className="relative z-30 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -translate-y-8 sm:-translate-y-12">
           <div className="bg-white text-slate-900 rounded-3xl border border-slate-200/90 shadow-[0_24px_50px_rgba(0,0,80,0.22)] p-5 sm:p-7 backdrop-blur-xl">
-            {/* Card Header Badge (Adds prestige & life, removing plainness) */}
-            <div className="flex items-center justify-between pb-3.5 mb-2 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
-                <span className="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-[#000080]">
-                  Verified Community Impact • Accra, Ghana
-                </span>
-              </div>
-              <span className="inline-flex items-center text-[10px] sm:text-[11px] font-bold text-amber-800 bg-amber-100/80 border border-amber-200/60 px-2.5 py-0.5 rounded-full">
-                Annual Metrics
-              </span>
-            </div>
-
             {/* 3 Metric Rows (Stacked on Mobile, 3 Columns on Desktop) */}
             <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
               {/* Stat 1: Education */}
-              <div className="py-3.5 md:py-2 md:px-5 flex items-center gap-4 first:pt-2 md:first:pl-0">
+              <div className="py-3 md:py-2 md:px-5 flex items-center gap-4 first:pt-0 md:first:pl-0">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-[#F5BD02] text-[#000080] flex items-center justify-center shadow-md shadow-amber-500/25 shrink-0">
                   <GraduationCap className="w-6 h-6" />
                 </div>
@@ -302,7 +289,7 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
 
               {/* Stat 3: Transparency */}
-              <div className="py-3.5 md:py-2 md:px-5 flex items-center gap-4 last:pb-2 md:last:pr-0">
+              <div className="py-3 md:py-2 md:px-5 flex items-center gap-4 last:pb-0 md:last:pr-0">
                 <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center shadow-md shadow-emerald-500/25 shrink-0">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
