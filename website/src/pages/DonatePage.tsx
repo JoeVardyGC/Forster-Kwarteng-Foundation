@@ -8,7 +8,6 @@ import {
   Smartphone,
   CreditCard,
   Building2,
-  Sparkles,
   Download,
   HelpCircle,
 } from 'lucide-react';
@@ -91,7 +90,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({ currency, onToggleCurren
             {isCompleted ? (
               <div className="p-8 sm:p-12 text-center space-y-6">
                 <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto ring-8 ring-emerald-50">
-                  <Sparkles className="w-10 h-10" />
+                  <CheckCircle2 className="w-10 h-10" />
                 </div>
 
                 <div>
@@ -269,7 +268,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({ currency, onToggleCurren
 
                   {/* Impact Explainer */}
                   <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-start gap-2.5">
-                    <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <Heart className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 fill-amber-600" />
                     <span>
                       <strong className="font-bold">What this achieves: </strong>
                       {selectedTier?.impactDescription}

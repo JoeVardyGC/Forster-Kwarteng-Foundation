@@ -6,7 +6,7 @@ import {
   CheckCircle2,
   Heart,
   ShieldCheck,
-  Sparkles,
+  Zap,
   Award,
   ChevronRight,
   ArrowRight,
@@ -28,7 +28,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
   const valueIcons: Record<string, React.ReactNode> = {
     ShieldCheck: <ShieldCheck className="w-5 h-5 text-[#000080]" />,
     HeartHandshake: <HeartHandshake className="w-5 h-5 text-rose-500" />,
-    Sparkles: <Sparkles className="w-5 h-5 text-amber-500" />,
+    Zap: <Zap className="w-5 h-5 text-amber-500" />,
     Award: <Award className="w-5 h-5 text-[#000080]" />,
     FileText: <FileText className="w-5 h-5 text-blue-600" />,
     Users: <Users className="w-5 h-5 text-indigo-600" />,
@@ -105,8 +105,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
           <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-blue-400/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 px-4 max-w-4xl mx-auto space-y-4 py-16">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 fill-amber-300" />
+            <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 shadow-sm">
               <span>{FOUNDATION_INFO.motto}</span>
             </span>
 
@@ -286,7 +285,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
                     0{val.id}
                   </span>
                   <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-center group-hover:bg-blue-50 group-hover:scale-105 transition-all">
-                    {valueIcons[val.iconName] || <Sparkles className="w-5 h-5 text-amber-500" />}
+                    {valueIcons[val.iconName] || <Award className="w-5 h-5 text-[#000080]" />}
                   </div>
                 </div>
 

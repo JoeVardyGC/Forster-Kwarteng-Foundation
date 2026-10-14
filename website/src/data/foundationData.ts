@@ -43,7 +43,7 @@ export const CORE_VALUES: CoreValue[] = [
     tagline: 'Igniting Self-Reliance',
     description:
       'We do not simply offer temporary relief; we unlock inherent human agency by providing tools, knowledge, and confidence to build self-sustaining futures.',
-    iconName: 'Sparkles',
+    iconName: 'Zap',
   },
   {
     id: 4,

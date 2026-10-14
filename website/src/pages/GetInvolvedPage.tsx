@@ -5,7 +5,6 @@ import {
   Briefcase,
   HeartHandshake,
   CheckCircle2,
-  Sparkles,
   ArrowRight,
   GraduationCap,
   Camera,

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Currency } from '../types';
 import { DONATION_TIERS, FOUNDATION_INFO } from '../data/foundationData';
-import { X, Heart, ShieldCheck, Check, Smartphone, CreditCard, Building2, Sparkles, Download } from 'lucide-react';
+import { X, Heart, ShieldCheck, Check, Smartphone, CreditCard, Building2, CheckCircle2, Download } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 interface DonationModalProps {
@@ -97,7 +97,7 @@ export const DonationModal: React.FC<DonationModalProps> = ({
           /* Success Screen */
           <div className="p-8 text-center space-y-6">
             <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto ring-8 ring-emerald-50">
-              <Sparkles className="w-8 h-8" />
+              <CheckCircle2 className="w-8 h-8" />
             </div>
 
             <div>
@@ -273,7 +273,7 @@ export const DonationModal: React.FC<DonationModalProps> = ({
 
               {/* Dynamic Impact Statement */}
               <div className="mt-3 p-3 rounded-xl bg-amber-50/80 border border-amber-200/60 text-xs text-amber-900 flex items-start gap-2">
-                <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <Heart className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 fill-amber-600" />
                 <p>
                   <span className="font-bold">Real-World Impact: </span>
                   {selectedTier?.impactDescription}

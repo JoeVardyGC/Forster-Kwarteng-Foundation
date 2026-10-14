@@ -18,7 +18,6 @@ import {
   Wrench,
   HeartHandshake,
   CheckCircle2,
-  Sparkles,
   Quote,
   ShieldCheck,
   Users,
@@ -631,7 +630,6 @@ export const HomePage: React.FC<HomePageProps> = ({
               {/* Right Column: Founder Message */}
               <div className="lg:col-span-7 space-y-5">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 border border-amber-200/80 text-amber-900 shadow-2xs">
-                  <Sparkles className="w-3.5 h-3.5 text-amber-600" />
                   <span>A Message from Our CEO</span>
                 </div>
 
