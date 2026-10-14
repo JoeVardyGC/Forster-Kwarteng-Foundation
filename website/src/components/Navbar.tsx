@@ -46,26 +46,26 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header
         className={`sticky top-0 z-40 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,128,0.06)] border-b border-slate-200/80 py-3 sm:py-3.5'
-            : 'bg-white/85 backdrop-blur-lg border-b border-slate-200/60 shadow-[0_4px_20px_rgba(0,0,0,0.02)] py-4 sm:py-5'
+            ? 'bg-white/85 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,128,0.06)] border-b border-slate-200/80 py-2.5'
+            : 'bg-white/80 backdrop-blur-lg border-b border-slate-200/60 shadow-[0_4px_20px_rgba(0,0,0,0.02)] py-3'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Brand Logo - Sleek, Balanced & Sharp */}
           <button
             onClick={() => handleLinkClick('home')}
-            className="flex items-center text-left focus:outline-none group cursor-pointer py-1"
+            className="flex items-center text-left focus:outline-none group cursor-pointer py-0.5"
             aria-label="Forster Kwarteng Foundation Home"
           >
             <img
               src="/assets/fkf-logo-horizontal.png"
               alt="Forster Kwarteng Foundation — Empowering Lives, Building Futures"
-              className="h-12 sm:h-14 md:h-16 lg:h-17 w-auto max-w-[220px] sm:max-w-[270px] md:max-w-[320px] lg:max-w-[350px] object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+              className="h-10 sm:h-11 md:h-12 w-auto max-w-[200px] sm:max-w-[240px] md:max-w-[260px] object-contain transition-transform duration-200 group-hover:scale-[1.02]"
             />
           </button>
 
           {/* Desktop Navigation Links (Frosted Glass Capsule Track) */}
-          <nav className="hidden lg:flex items-center p-1.5 rounded-full bg-slate-100/75 backdrop-blur-md border border-slate-200/70 shadow-2xs">
+          <nav className="hidden lg:flex items-center p-1 rounded-full bg-slate-100/75 backdrop-blur-md border border-slate-200/70 shadow-2xs">
             {navLinks.map((link) => {
               const isActive =
                 currentPage === link.id ||
@@ -74,7 +74,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <button
                   key={link.id}
                   onClick={() => handleLinkClick(link.id)}
-                  className={`px-4.5 py-2 text-xs sm:text-sm font-bold rounded-full transition-all duration-200 cursor-pointer ${
+                  className={`px-4 py-1.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
                     isActive
                       ? 'bg-white text-[#000080] shadow-sm border border-slate-200/80 font-black scale-[1.02]'
                       : 'text-slate-600 hover:text-[#000080] hover:bg-white/50'
@@ -90,9 +90,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden lg:flex items-center gap-3">
             <button
               onClick={onOpenDonateModal}
-              className="flex items-center gap-2 bg-gradient-to-r from-[#F5BD02] to-[#e5ae00] hover:from-[#e5ae00] hover:to-[#d49e00] text-[#000080] font-black text-sm sm:text-base px-6 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-md shadow-amber-500/25 border border-amber-300/70 hover:shadow-xl hover:shadow-amber-500/35 transition-all duration-300 hover:scale-105 active:scale-100 cursor-pointer"
+              className="flex items-center gap-2 bg-gradient-to-r from-[#F5BD02] to-[#e5ae00] hover:from-[#e5ae00] hover:to-[#d49e00] text-[#000080] font-black text-sm px-6 py-2.5 rounded-full shadow-md shadow-amber-500/25 border border-amber-300/70 hover:shadow-xl hover:shadow-amber-500/35 transition-all duration-300 hover:scale-105 active:scale-100 cursor-pointer"
             >
-              <Heart className="w-4.5 h-4.5 fill-[#000080]" />
+              <Heart className="w-4 h-4 fill-[#000080]" />
               <span>Donate Now</span>
             </button>
           </div>
@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex items-center gap-2 lg:hidden">
             <button
               onClick={onOpenDonateModal}
-              className="flex items-center gap-1.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] text-xs sm:text-sm font-black px-4.5 py-2.5 rounded-full shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] text-xs font-black px-4 py-2 rounded-full shadow-sm cursor-pointer"
             >
               <Heart className="w-3.5 h-3.5 fill-[#000080]" />
               <span>Donate</span>

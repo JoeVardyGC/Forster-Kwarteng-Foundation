@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Arranged like Reference Screenshot) */}
       <section
-        className="relative min-h-[580px] sm:min-h-[660px] lg:min-h-[720px] flex items-start text-white overflow-hidden pb-14 sm:pb-20"
+        className="relative min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] flex items-start text-white overflow-hidden pb-12 sm:pb-16"
       >
         {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
@@ -168,26 +168,26 @@ export const HomePage: React.FC<HomePageProps> = ({
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        {/* Content Container - Anchored at the top so any header size expansion moves strictly downwards */}
-        <div className="max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-12 pb-6 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-12 relative z-20 w-full">
-          <div className="max-w-md sm:max-w-xl lg:max-w-2xl space-y-4 sm:space-y-5">
+        {/* Content Container - Anchored at the top so text flows cleanly downwards */}
+        <div className="max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-8 pb-4 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
+          <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3.5 sm:space-y-4">
             {/* Dynamic Storytelling Text */}
-            <div className="relative min-h-[210px] sm:min-h-[260px] lg:min-h-[295px]">
+            <div className="relative min-h-[190px] sm:min-h-[220px] lg:min-h-[245px]">
               {HERO_SLIDES.map((slide, idx) => {
                 if (idx !== currentSlide) return null;
                 return (
                   <div
                     key={slide.id}
-                    className="space-y-3 sm:space-y-3.5"
+                    className="space-y-2.5 sm:space-y-3"
                     style={{ animation: 'heroFadeIn 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
                   >
                     {/* Non-Profit & Pillar Badge */}
-                    <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs sm:text-sm font-semibold text-amber-300 shadow-sm">
+                    <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold text-amber-300 shadow-sm">
                       <span>{slide.pillar}</span>
                     </div>
 
-                    {/* Bold Headline - Increased size, anchored to move downwards */}
-                    <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)]">
+                    {/* Bold Headline - Bigger on mobile (text-3xl), reverted to original on desktop (lg:text-5xl xl:text-6xl) */}
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.14] drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)]">
                       {slide.headlinePrefix}{' '}
                       <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
                         {slide.headlineHighlight}
@@ -195,7 +195,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     </h1>
 
                     {/* Description Text - Focused max-width for clean reading */}
-                    <p className="text-sm sm:text-base lg:text-lg text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-lg drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
+                    <p className="text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
                       {slide.description}
                     </p>
                   </div>
