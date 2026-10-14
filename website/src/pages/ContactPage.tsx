@@ -7,7 +7,6 @@ import {
   Clock,
   Send,
   CheckCircle2,
-  FileDown,
   Globe,
   MessageSquare,
 } from 'lucide-react';
@@ -135,24 +134,7 @@ export const ContactPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Press Kit Download Box */}
-              <div className="p-5 rounded-2xl bg-[#000080] text-white flex items-center justify-between">
-                <div>
-                  <h4 className="font-bold text-xs uppercase tracking-wider text-amber-300">
-                    Official Media Kit
-                  </h4>
-                  <p className="text-xs text-blue-200">
-                    Logos, Brand Guidelines & Executive Summary
-                  </p>
-                </div>
-                <button
-                  onClick={() => alert('Official FKF Brand Asset Pack downloaded!')}
-                  className="px-4 py-2 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
-                >
-                  <FileDown className="w-4 h-4" />
-                  <span>Download</span>
-                </button>
-              </div>
+
             </div>
 
             {/* Right: Message Form */}
