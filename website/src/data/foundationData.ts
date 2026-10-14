@@ -295,35 +295,35 @@ export const OUR_PROGRAMS: FoundationProgram[] = [
     title: 'Mental Health Awareness',
     description:
       'Providing education, resources, and support to promote mental wellness and break down stigmas surrounding mental health issues.',
-    image: '/assets/program_mental_health.jpg',
+    image: '/assets/project_mental_health_new.jpg',
   },
   {
     id: 'skills-training',
     title: 'Skills Training & Empowerment',
     description:
       'Equipping individuals with practical skills and knowledge to improve their livelihoods and achieve economic independence.',
-    image: '/assets/program_skills_training.jpg',
+    image: '/assets/project_skills_training_new.jpg',
   },
   {
     id: 'capacity-building',
     title: 'Capacity Building',
     description:
       'Strengthening organizational capabilities and community infrastructure to create sustainable, long-term impact.',
-    image: '/assets/program_capacity_building.jpg',
+    image: '/assets/project_capacity_building_new.jpg',
   },
   {
     id: 'stem-tvet',
     title: 'STEM/TVET Projects',
     description:
       'Empowering youth through practical technical, vocational, and scientific training for future-ready careers.',
-    image: '/assets/program_stem_tvet.jpg',
+    image: '/assets/project_stem_tvet_new.jpg',
   },
   {
     id: 'community-outreach',
     title: 'Community Outreach & Charity',
     description:
       'Providing essential welfare support, nutritional aid, and emergency relief packages to vulnerable families.',
-    image: '/assets/program_community_outreach.jpg',
+    image: '/assets/project_community_outreach_new.jpg',
   },
 ];
 
@@ -337,7 +337,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     location: 'Greater Accra & Eastern Regions',
     summary:
       'The Mental Health Awareness and Psycho-Social Support project is a pioneering grassroots initiative dedicated to breaking deep-rooted cultural stigma surrounding psychological wellbeing across Ghanaian basic schools and community hubs. By integrating trauma-informed psycho-educational workshops into local schools and youth groups, we equip adolescents, teachers, and young caregivers with practical emotional resilience tools and stress-coping strategies. The program establishes confidential safe-space counseling centers staffed by licensed psychological practitioners and trained peer counselors, offering free one-on-one therapy sessions, peer debriefing circles, and early crisis intervention. Through community-wide town hall forums, community radio broadcasts, and youth-led awareness rallies, we are actively shifting community mindsets from isolation to empathy, ensuring every young person has access to compassionate mental healthcare without fear of judgment.',
-    coverImage: '/assets/program_mental_health.jpg',
+    coverImage: '/assets/project_mental_health_new.jpg',
     coverImageCaption: 'FKF peer counselors facilitating a youth emotional wellness circle in Kasoa.',
     impactStats: [
       {
@@ -409,7 +409,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     video: {
       title: 'Inside Our Youth Wellness Circles: Breaking the Stigma in Accra',
       duration: '3:45 mins',
-      thumbnail: '/assets/program_mental_health.jpg',
+      thumbnail: '/assets/project_mental_health_new.jpg',
       description:
         'Step inside an FKF school outreach session and witness students breaking the silence around mental health and discovering hope together.',
     },
@@ -451,7 +451,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     location: 'Ashanti & Greater Accra Regions',
     summary:
       'Our Skills Training and Economic Empowerment initiative is engineered to break chronic cycles of poverty by equipping out-of-school youth, young mothers, and vulnerable school-leavers with practical, market-aligned vocational craftsmanship. Operating across peri-urban communities in Accra and the Ashanti Region, the program provides comprehensive hands-on training in high-demand trades—including fashion design, precision carpentry, cosmetic technology, and electronics servicing—under the guidance of certified master artisans. Beyond technical competence, trainees complete rigorous modules in financial literacy, digital commerce, bookkeeping, and customer relations. Upon graduation, each participant receives an industrial-grade starter toolkit and six months of dedicated commercial mentorship, transforming vulnerable job-seekers into confident micro-enterprise owners who generate sustainable household incomes and create employment opportunities for others in their neighborhoods.',
-    coverImage: '/assets/program_skills_training.jpg',
+    coverImage: '/assets/project_skills_training_new.jpg',
     coverImageCaption: 'Trainees in an intensive fashion craftsmanship and garment technology masterclass.',
     impactStats: [
       {
@@ -523,13 +523,13 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     video: {
       title: 'From Trainees to Business Owners: The 2024 Vocational Showcase',
       duration: '4:10 mins',
-      thumbnail: '/assets/program_skills_training.jpg',
+      thumbnail: '/assets/project_skills_training_new.jpg',
       description:
         'Step inside our training workshops and hear direct testimonies from young women and men reclaiming their economic futures.',
     },
     gallery: [
       {
-        url: '/assets/program_skills_training.jpg',
+        url: '/assets/project_skills_training_new.jpg',
         caption: 'Apprentices mastering precision pattern cutting and industrial sewing.',
       },
       {
@@ -583,7 +583,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     location: 'National Reach (Ghana)',
     summary:
       'Our Capacity Building and Community Resilience initiative focuses on institutional strengthening, civic empowerment, and sustainable local leadership across peri-urban settlements in Ghana. Recognizing that enduring progress must be community-driven, this program conducts intensive governance masterclasses, project management bootcamps, and grassroots leadership workshops for local youth organizers, assembly members, and non-profit volunteers. Participants learn transparent resource allocation, grant accountability, participatory community needs assessment, and ethical public administration. By establishing neighborhood monitoring committees and collaborative action taskforces, we empower community members to take collective ownership of their local schools, sanitation infrastructure, and social amenities, fostering self-reliance and ensuring development interventions deliver transparent, measurable, and lasting results for generations to come.',
-    coverImage: '/assets/program_capacity_building.jpg',
+    coverImage: '/assets/project_capacity_building_new.jpg',
     coverImageCaption: 'Community leaders and grassroots volunteers participating in strategic planning.',
     impactStats: [
       {
@@ -654,7 +654,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     },
     gallery: [
       {
-        url: '/assets/program_capacity_building.jpg',
+        url: '/assets/project_capacity_building_new.jpg',
         caption: 'Leadership workshop on transparent budget allocation and grant compliance.',
       },
       {
@@ -708,7 +708,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     location: 'Greater Accra, Central & Volta Regions',
     summary:
       'The STEM & TVET Innovation Labs program bridges the widening digital divide by democratizing access to high-impact science, technology, engineering, and vocational apprenticeship for underprivileged basic and junior high students across underserved Ghanaian districts. Through mobile experiential tech labs and subsidized weekend masterclasses, students gain direct hands-on immersion in block and text coding, algorithmic logic, renewable solar installation, and interactive robotics problem-solving. We partner with local schools to establish maker-spaces equipped with laptop workstations, microcontroller kits, and electronics testing gear, breaking theoretical educational barriers. By pairing students with industry mentors in computing and engineering, the program sparks technological curiosity, equips teenagers with future-ready skills, and prepares them to build home-grown solutions to pressing national infrastructure and environmental challenges.',
-    coverImage: '/assets/program_stem_tvet.jpg',
+    coverImage: '/assets/project_stem_tvet_new.jpg',
     coverImageCaption: 'Students collaborating on electronic circuit design and robotics programming.',
     impactStats: [
       {
@@ -780,13 +780,13 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     video: {
       title: 'Igniting the Spark: The Next Generation of Ghanaian Inventors',
       duration: '4:02 mins',
-      thumbnail: '/assets/program_stem_tvet.jpg',
+      thumbnail: '/assets/project_stem_tvet_new.jpg',
       description:
         'See primary and junior high school students code their first robots and build clean energy prototypes.',
     },
     gallery: [
       {
-        url: '/assets/program_stem_tvet.jpg',
+        url: '/assets/project_stem_tvet_new.jpg',
         caption: 'Young coders building sensor-driven robotics prototypes.',
       },
       {
@@ -840,7 +840,7 @@ export const PROGRAM_ARTICLES: Record<string, ProgramArticle> = {
     location: 'Greater Accra, Central & Eastern Regions',
     summary:
       'Our Grassroots Community Care and Relief outreach serves as a rapid-response humanitarian lifeline for vulnerable families, orphans, and single mothers living in underserved informal settlements throughout Ghana. During seasonal floods, socio-economic crises, and back-to-school enrollment periods, our volunteer field teams mobilize door-to-door to deliver targeted social safety nets—including emergency dry food baskets, water purification supplies, infant nutritional packs, and fully furnished educational backpacks. Working alongside trusted community elders and faith leaders, we conduct household vulnerability verifications to ensure direct, dignified aid delivery to those most at risk. Beyond emergency relief, our outreach teams facilitate medical screening referrals, welfare support case management, and family livelihood assistance, restoring dignity, safeguarding child education, and bringing tangible hope directly to the doorsteps of those who need it most.',
-    coverImage: '/assets/program_community_outreach.jpg',
+    coverImage: '/assets/project_community_outreach_new.jpg',
     coverImageCaption: 'Volunteers distributing essential nutritional supplies and school hampers.',
     impactStats: [
       {
@@ -968,7 +968,7 @@ export const UPCOMING_PROJECTS: UpcomingProjectEvent[] = [
     location: 'Madina Community Center, Greater Accra',
     summary:
       'A full-day intensive skills exhibition and apprenticeship matching summit bringing together over 120 out-of-school youth, vocational educators, and certified commercial master artisans. Participants engage in interactive live masterclasses across electrical wiring, solar repair, garment construction, and mobile money bookkeeping, culminating in direct enrollment into subsidized six-month apprenticeship programs equipped with commercial starter toolkits upon certification.',
-    image: '/assets/program_skills_training.jpg',
+    image: '/assets/event_tvet_summit_new.jpg',
     status: 'Upcoming',
     highlightMetric: {
       value: '120 Youth',
@@ -986,7 +986,7 @@ export const UPCOMING_PROJECTS: UpcomingProjectEvent[] = [
     location: 'Pokuase Community Clinic, Greater Accra',
     summary:
       'A community-wide wellness outreach providing comprehensive, zero-cost preventive healthcare and psychological support to over 800 underserved residents. Licensed medical practitioners deliver diagnostic vital screenings, optical examinations, and malaria tests alongside confidential one-on-one psycho-social counseling sessions led by mental health specialists to address stress, depression, and family trauma in a safe, compassionate environment.',
-    image: '/assets/program_community_outreach.jpg',
+    image: '/assets/event_health_camp_new.jpg',
     status: 'Upcoming',
     highlightMetric: {
       value: '800+ Care Sessions',

@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Arranged like Reference Screenshot) */}
       <section
-        className="relative min-h-[520px] sm:min-h-[600px] lg:min-h-[660px] flex items-center text-white overflow-hidden pb-12 sm:pb-16"
+        className="relative min-h-[580px] sm:min-h-[660px] lg:min-h-[720px] flex items-start text-white overflow-hidden pb-14 sm:pb-20"
       >
         {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
@@ -141,8 +141,8 @@ export const HomePage: React.FC<HomePageProps> = ({
           ))}
 
           {/* Directional Cinematic Gradient & Vignette for maximum text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 via-45% to-transparent z-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-black/30 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 via-55% to-slate-950/20 z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/40 z-10"></div>
 
           {/* Smooth Bottom Fade to seamlessly merge with the next section */}
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#000080] to-transparent z-10 pointer-events-none"></div>
@@ -168,39 +168,39 @@ export const HomePage: React.FC<HomePageProps> = ({
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        {/* Content Container - Compact width with reference layout & clearance from side chevrons */}
-        <div className="max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-8 pb-4 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
-          <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3.5 sm:space-y-4">
+        {/* Content Container - Anchored at the top so any header size expansion moves strictly downwards */}
+        <div className="max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-12 pb-6 sm:pt-20 sm:pb-10 lg:pt-24 lg:pb-12 relative z-20 w-full">
+          <div className="max-w-md sm:max-w-xl lg:max-w-2xl space-y-4 sm:space-y-5">
             {/* Dynamic Storytelling Text */}
-            <div className="relative min-h-[170px] sm:min-h-[210px] lg:min-h-[235px]">
-              {HERO_SLIDES.map((slide, idx) => (
-                <div
-                  key={slide.id}
-                  className={`space-y-2.5 sm:space-y-3 transition-all duration-700 ease-out ${
-                    idx === currentSlide
-                      ? 'opacity-100 translate-y-0 relative z-10'
-                      : 'opacity-0 translate-y-2 pointer-events-none absolute inset-0 z-0'
-                  }`}
-                >
-                  {/* Non-Profit & Pillar Badge */}
-                  <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold text-amber-300 shadow-sm">
-                    <span>{slide.pillar}</span>
+            <div className="relative min-h-[210px] sm:min-h-[260px] lg:min-h-[295px]">
+              {HERO_SLIDES.map((slide, idx) => {
+                if (idx !== currentSlide) return null;
+                return (
+                  <div
+                    key={slide.id}
+                    className="space-y-3 sm:space-y-3.5"
+                    style={{ animation: 'heroFadeIn 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
+                  >
+                    {/* Non-Profit & Pillar Badge */}
+                    <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs sm:text-sm font-semibold text-amber-300 shadow-sm">
+                      <span>{slide.pillar}</span>
+                    </div>
+
+                    {/* Bold Headline - Increased size, anchored to move downwards */}
+                    <h1 className="text-3xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)]">
+                      {slide.headlinePrefix}{' '}
+                      <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
+                        {slide.headlineHighlight}
+                      </span>
+                    </h1>
+
+                    {/* Description Text - Focused max-width for clean reading */}
+                    <p className="text-sm sm:text-base lg:text-lg text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-lg drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
+                      {slide.description}
+                    </p>
                   </div>
-
-                  {/* Bold Headline - Broken into clean, punchy lines */}
-                  <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.14] drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
-                    {slide.headlinePrefix}{' '}
-                    <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
-                      {slide.headlineHighlight}
-                    </span>
-                  </h1>
-
-                  {/* Description Text - Focused max-width for clean reading */}
-                  <p className="text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
-                    {slide.description}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Action Buttons: Side-by-Side Pill Buttons (Just like in Reference Image) */}
