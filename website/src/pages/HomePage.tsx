@@ -27,7 +27,7 @@ import {
 export const HERO_SLIDES = [
   {
     id: 1,
-    image: '/assets/hero_boy_right.jpg',
+    image: '/assets/hero_education_new.jpg',
     pillar: 'Pillar 01 • Education Sponsorship',
     headlinePrefix: '‘Every Child Deserves',
     headlineHighlight: 'A Desk & A Dream’',
@@ -38,7 +38,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 2,
-    image: '/assets/hero_girls_right.jpg',
+    image: '/assets/hero_literacy_new.jpg',
     pillar: 'Pillar 02 • Mentorship & Literacy',
     headlinePrefix: '‘Unlocking Hope Through',
     headlineHighlight: 'Girl-Child Literacy’',
@@ -49,7 +49,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 3,
-    image: '/assets/hero_outreach_right.jpg',
+    image: '/assets/hero_community_new.jpg',
     pillar: 'Pillar 03 • Community Care & Relief',
     headlinePrefix: '‘Grassroots Aid Where',
     headlineHighlight: 'It Matters Most’',
@@ -60,7 +60,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 4,
-    image: '/assets/hero_group_right.jpg',
+    image: '/assets/hero_tvet_new.jpg',
     pillar: 'Pillar 04 • Sustainable Futures',
     headlinePrefix: '‘Empowering Lives,',
     headlineHighlight: 'Building Futures’',
@@ -135,14 +135,14 @@ export const HomePage: React.FC<HomePageProps> = ({
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="w-full h-full object-cover object-[82%_center] sm:object-[86%_center] lg:object-[85%_center] scale-100 transition-transform duration-7000 ease-out"
+                className="w-full h-full object-cover object-[70%_center] sm:object-[65%_center] lg:object-[62%_center] scale-100 transition-transform duration-7000 ease-out"
               />
             </div>
           ))}
 
-          {/* Directional Cinematic Gradient & Vignette - Reduced opacity so images are vivid & visible */}
-          <div className="absolute inset-0 bg-gradient-to-r from-[#000030]/85 via-[#000045]/50 via-50% to-transparent z-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-black/20 z-10"></div>
+          {/* Directional Cinematic Gradient & Vignette for maximum text readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/90 via-slate-950/60 via-45% to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-black/30 z-10"></div>
 
           {/* Smooth Bottom Fade to seamlessly merge with the next section */}
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#000080] to-transparent z-10 pointer-events-none"></div>
