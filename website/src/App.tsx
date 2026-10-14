@@ -11,6 +11,7 @@ import { TransparencyPage } from './pages/TransparencyPage';
 import { DonatePage } from './pages/DonatePage';
 import { GetInvolvedPage } from './pages/GetInvolvedPage';
 import { ContactPage } from './pages/ContactPage';
+import { PageSkeleton } from './components/PageSkeleton';
 
 export function App() {
   const getInitialState = () => {
@@ -40,6 +41,15 @@ export function App() {
   const [selectedProgramId, setSelectedProgramId] = useState<string>(initialState.programId);
   const [currency, setCurrency] = useState<Currency>('GHS');
   const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Initial load skeleton simulation for seamless page boot
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 650);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -159,6 +169,9 @@ export function App() {
     }
   };
 
+  if (isLoading) {
+    return <PageSkeleton page={currentPage} />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-slate-900 selection:bg-amber-300 selection:text-blue-950 font-['Plus_Jakarta_Sans']">
