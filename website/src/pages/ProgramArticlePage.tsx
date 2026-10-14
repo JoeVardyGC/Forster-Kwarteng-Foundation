@@ -304,12 +304,6 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
               <div className="space-y-10 sm:space-y-12">
                 {/* 1. The Grassroots Challenge */}
                 <section id="challenge" className="space-y-3 sm:space-y-4">
-                  <div className="flex items-center gap-2">
-                    <div className="w-5 sm:w-6 h-1 bg-amber-500 rounded-full" />
-                    <span className="text-[11px] sm:text-xs font-bold text-amber-600 uppercase tracking-widest">
-                      The Grassroots Reality
-                    </span>
-                  </div>
                   <h2 className="text-xl sm:text-2xl font-extrabold font-['Outfit'] text-slate-900 leading-tight">
                     {article.challenge.headline}
                   </h2>
