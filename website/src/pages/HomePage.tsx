@@ -168,11 +168,11 @@ export const HomePage: React.FC<HomePageProps> = ({
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        {/* Content Container - Anchored at the top so text flows cleanly downwards */}
-        <div className="max-w-7xl mx-auto px-6 sm:px-14 lg:px-16 pt-8 pb-4 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
+        {/* Content Container - Anchored with comfortable headroom so badge, headline, and controls flow cleanly */}
+        <div className="max-w-7xl mx-auto px-6 sm:px-14 lg:px-16 pt-16 pb-6 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
           <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3.5 sm:space-y-4">
             {/* Dynamic Storytelling Text */}
-            <div className="relative min-h-[300px] sm:min-h-[220px] lg:min-h-[245px]">
+            <div className="relative min-h-[260px] sm:min-h-[220px] lg:min-h-[245px]">
               {HERO_SLIDES.map((slide, idx) => {
                 if (idx !== currentSlide) return null;
                 return (
@@ -195,7 +195,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     </h1>
 
                     {/* Description Text - Pushed down in mobile view closer to the bottom */}
-                    <p className="mt-36 sm:mt-0 text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
+                    <p className="mt-20 sm:mt-0 text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
                       {slide.description}
                     </p>
                   </div>
