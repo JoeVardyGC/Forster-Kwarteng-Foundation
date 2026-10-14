@@ -386,10 +386,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   className="w-full h-full object-cover object-[80%_center] group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <div className="absolute top-4 left-4 px-3.5 py-1 rounded-full bg-slate-950/65 backdrop-blur-md text-white text-xs font-mono font-bold border border-white/20 shadow-sm flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#F5BD02]" />
-                  <span>01 / The Horizon</span>
-                </div>
+
               </div>
 
               {/* Content Area */}
@@ -432,10 +429,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                   className="w-full h-full object-cover object-[80%_center] group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                <div className="absolute top-4 left-4 px-3.5 py-1 rounded-full bg-slate-950/65 backdrop-blur-md text-white text-xs font-mono font-bold border border-white/20 shadow-sm flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                  <span>02 / The Action</span>
-                </div>
+
               </div>
 
               {/* Content Area */}
@@ -482,7 +476,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                     <span>Explore the 4 Pillars in Detail</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
-                  <span className="text-slate-500 hidden sm:inline-block">Grassroots Driven</span>
                 </div>
               </div>
             </div>
