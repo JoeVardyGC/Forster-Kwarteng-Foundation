@@ -113,9 +113,6 @@ export const ContactPage: React.FC = () => {
                     <p className="text-xs text-slate-700 mt-1">
                       {FOUNDATION_INFO.address}
                     </p>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      Accra, Greater Accra Region, Ghana
-                    </p>
                   </div>
                 </div>
 

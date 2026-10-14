@@ -11,7 +11,7 @@ export const FOUNDATION_INFO = {
   mission:
     'To empower lives and build futures through education, mentorship, skills development, and sustainable community impact.',
   hqLocation: 'Accra, Ghana',
-  address: 'Ring Road Central, Greater Accra Region, Ghana',
+  address: 'Greater Accra, Ghana',
   phones: ['+233 546732812', '+233 556727083'],
   email: 'info@forsterkwartengfoundation.org',
   secondaryEmail: 'contact@forsterkwartengfoundation.org',
