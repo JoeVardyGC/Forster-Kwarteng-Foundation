@@ -78,8 +78,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
       <section className="relative">
         <div className="relative min-h-[380px] sm:min-h-[440px] w-full bg-[#000080] overflow-hidden flex items-center justify-center text-center">
           <img
-            src="/assets/hero_community_new.jpg"
-            alt="Forster Kwarteng Foundation Community Outreach"
+            src="/assets/about_hero_banner.png"
+            alt="Forster Kwarteng Foundation"
             className="absolute inset-0 w-full h-full object-cover object-center mix-blend-overlay opacity-30 scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#000080]/95 via-[#000080]/90 to-[#000052]/98" />

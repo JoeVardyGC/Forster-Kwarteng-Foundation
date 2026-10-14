@@ -27,7 +27,7 @@ import {
 export const HERO_SLIDES = [
   {
     id: 1,
-    image: '/assets/hero_education_new.jpg',
+    image: '/assets/hero_boy_right.jpg',
     pillar: 'Pillar 01 • Education Sponsorship',
     headlinePrefix: '‘Every Child Deserves',
     headlineHighlight: 'A Desk & A Dream’',
@@ -38,7 +38,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 2,
-    image: '/assets/hero_literacy_new.jpg',
+    image: '/assets/hero_girls_right.jpg',
     pillar: 'Pillar 02 • Mentorship & Literacy',
     headlinePrefix: '‘Unlocking Hope Through',
     headlineHighlight: 'Girl-Child Literacy’',
@@ -49,7 +49,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 3,
-    image: '/assets/hero_community_new.jpg',
+    image: '/assets/hero_outreach_right.jpg',
     pillar: 'Pillar 03 • Community Care & Relief',
     headlinePrefix: '‘Grassroots Aid Where',
     headlineHighlight: 'It Matters Most’',
@@ -60,7 +60,7 @@ export const HERO_SLIDES = [
   },
   {
     id: 4,
-    image: '/assets/hero_tvet_new.jpg',
+    image: '/assets/hero_group_right.jpg',
     pillar: 'Pillar 04 • Sustainable Futures',
     headlinePrefix: '‘Empowering Lives,',
     headlineHighlight: 'Building Futures’',
@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Arranged like Reference Screenshot) */}
       <section
-        className="relative min-h-[520px] sm:min-h-[600px] lg:min-h-[660px] flex flex-col justify-end sm:items-center text-white overflow-hidden pb-11 sm:pb-16"
+        className="relative min-h-[520px] sm:min-h-[600px] lg:min-h-[660px] flex items-center text-white overflow-hidden pb-12 sm:pb-16"
       >
         {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
@@ -135,14 +135,14 @@ export const HomePage: React.FC<HomePageProps> = ({
               <img
                 src={slide.image}
                 alt={slide.title}
-                className="w-full h-full object-cover object-[70%_center] sm:object-[65%_center] lg:object-[62%_center] scale-100 transition-transform duration-7000 ease-out"
+                className="w-full h-full object-cover object-[82%_center] sm:object-[86%_center] lg:object-[85%_center] scale-100 transition-transform duration-7000 ease-out"
               />
             </div>
           ))}
 
-          {/* Directional Cinematic Gradient & Vignette for maximum text readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 via-55% to-slate-950/20 z-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/40 z-10"></div>
+          {/* Directional Cinematic Gradient & Vignette - Reduced opacity so images are vivid & visible */}
+          <div className="absolute inset-0 bg-gradient-to-r from-[#000030]/85 via-[#000045]/50 via-50% to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-black/20 z-10"></div>
 
           {/* Smooth Bottom Fade to seamlessly merge with the next section */}
           <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-[#000080] to-transparent z-10 pointer-events-none"></div>
@@ -169,45 +169,45 @@ export const HomePage: React.FC<HomePageProps> = ({
         </button>
 
         {/* Content Container - Compact width with reference layout & clearance from side chevrons */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-14 lg:px-16 py-2 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
-          <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3 sm:space-y-4">
+        <div className="max-w-7xl mx-auto px-10 sm:px-14 lg:px-16 pt-8 pb-4 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
+          <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3.5 sm:space-y-4">
             {/* Dynamic Storytelling Text */}
-            <div className="relative min-h-0 sm:min-h-[210px] lg:min-h-[235px]">
-              {HERO_SLIDES.map((slide, idx) => {
-                if (idx !== currentSlide) return null;
-                return (
-                  <div
-                    key={slide.id}
-                    className="space-y-2 sm:space-y-3"
-                    style={{ animation: 'heroFadeIn 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
-                  >
-                    {/* Non-Profit & Pillar Badge */}
-                    <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-[11px] sm:text-xs font-semibold text-amber-300 shadow-sm">
-                      <span>{slide.pillar}</span>
-                    </div>
-
-                    {/* Bold Headline - Original desktop size (sm:text-4xl lg:text-5xl xl:text-6xl), enlarged on mobile (text-[32px]) */}
-                    <h1 className="text-[32px] sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] sm:leading-[1.14] drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
-                      {slide.headlinePrefix}{' '}
-                      <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
-                        {slide.headlineHighlight}
-                      </span>
-                    </h1>
-
-                    {/* Description Text - Focused max-width for clean reading */}
-                    <p className="text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
-                      {slide.description}
-                    </p>
+            <div className="relative min-h-[170px] sm:min-h-[210px] lg:min-h-[235px]">
+              {HERO_SLIDES.map((slide, idx) => (
+                <div
+                  key={slide.id}
+                  className={`space-y-2.5 sm:space-y-3 transition-all duration-700 ease-out ${
+                    idx === currentSlide
+                      ? 'opacity-100 translate-y-0 relative z-10'
+                      : 'opacity-0 translate-y-2 pointer-events-none absolute inset-0 z-0'
+                  }`}
+                >
+                  {/* Non-Profit & Pillar Badge */}
+                  <div className="inline-flex items-center px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-semibold text-amber-300 shadow-sm">
+                    <span>{slide.pillar}</span>
                   </div>
-                );
-              })}
+
+                  {/* Bold Headline - Broken into clean, punchy lines */}
+                  <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.14] drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
+                    {slide.headlinePrefix}{' '}
+                    <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
+                      {slide.headlineHighlight}
+                    </span>
+                  </h1>
+
+                  {/* Description Text - Focused max-width for clean reading */}
+                  <p className="text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
+                    {slide.description}
+                  </p>
+                </div>
+              ))}
             </div>
 
-            {/* Action Buttons: Side-by-Side Pill Buttons */}
-            <div className="pt-0 sm:pt-1 flex flex-row items-center gap-2.5 sm:gap-3.5">
+            {/* Action Buttons: Side-by-Side Pill Buttons (Just like in Reference Image) */}
+            <div className="pt-1 flex flex-row items-center gap-2.5 sm:gap-3.5">
               <button
                 onClick={onOpenDonateModal}
-                className="px-4 py-2.5 sm:px-7 sm:py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs sm:text-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer group shrink-0"
+                className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs sm:text-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer group shrink-0"
               >
                 <Heart className="w-4 h-4 fill-[#000080] group-hover:scale-110 transition-transform" />
                 <span>Make a Donation</span>
@@ -215,7 +215,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
               <button
                 onClick={handleScrollToPrograms}
-                className="px-4 py-2.5 sm:px-7 sm:py-3.5 bg-white hover:bg-slate-100 text-[#000080] font-bold text-xs sm:text-sm rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+                className="px-5 py-2.5 sm:px-7 sm:py-3.5 bg-white hover:bg-slate-100 text-[#000080] font-bold text-xs sm:text-sm rounded-full shadow-md hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
               >
                 <span>Explore Projects</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -223,7 +223,7 @@ export const HomePage: React.FC<HomePageProps> = ({
             </div>
 
             {/* Slide Indicators: Centered Dots & Elongated Active Pill */}
-            <div className="pt-0.5 sm:pt-2 flex items-center gap-1.5">
+            <div className="pt-2 flex items-center gap-1.5">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
                   key={idx}

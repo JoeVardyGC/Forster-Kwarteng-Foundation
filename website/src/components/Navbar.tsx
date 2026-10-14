@@ -87,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Desktop Right Actions (Glassy Pill Button) */}
-          <div className="hidden lg:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-3">
             <button
               onClick={onOpenDonateModal}
               className="flex items-center gap-2 bg-gradient-to-r from-[#F5BD02] to-[#e5ae00] hover:from-[#e5ae00] hover:to-[#d49e00] text-[#000080] font-black text-sm px-6 py-2.5 rounded-full shadow-md shadow-amber-500/25 border border-amber-300/70 hover:shadow-xl hover:shadow-amber-500/35 transition-all duration-300 hover:scale-105 active:scale-100 cursor-pointer"
