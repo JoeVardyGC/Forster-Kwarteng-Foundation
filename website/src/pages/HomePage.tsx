@@ -374,53 +374,55 @@ export const HomePage: React.FC<HomePageProps> = ({
             </p>
           </div>
 
-          {/* Unified Dual Showcase Container (Matching Inspo Structure) */}
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl lg:rounded-[36px] border border-slate-200/90 shadow-[0_12px_44px_rgba(0,0,128,0.06)] overflow-hidden grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-200/80">
-            {/* LEFT HALF: OUR VISION */}
-            <div className="flex flex-col justify-between group">
+          {/* Dual Showcase Cards */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-stretch">
+            {/* LEFT CARD: OUR VISION */}
+            <div className="bg-[#000080] text-white rounded-3xl lg:rounded-[36px] border border-blue-950/80 shadow-[0_16px_48px_rgba(0,0,128,0.18)] overflow-hidden flex flex-col justify-between group relative">
               {/* Top Photo Banner */}
-              <div className="relative h-60 sm:h-72 lg:h-80 overflow-hidden bg-slate-100">
+              <div className="relative h-60 sm:h-72 lg:h-80 overflow-hidden bg-slate-900">
                 <img
                   src="/assets/hero_girls_right.jpg"
                   alt="Our Vision — Educating and Empowering Youth in Ghana"
                   className="w-full h-full object-cover object-[80%_center] group-hover:scale-105 transition-transform duration-700 ease-out"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
+                <div className="absolute inset-0 bg-gradient-to-t from-[#000080] via-[#000080]/20 to-transparent" />
               </div>
 
               {/* Content Area */}
-              <div className="p-8 sm:p-10 lg:p-12 flex flex-col justify-between flex-1">
-                <div>
+              <div className="p-8 sm:p-10 lg:p-12 flex flex-col justify-between flex-1 bg-[#000080] relative">
+                {/* Subtle ambient blur glow in card corner */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+
+                <div className="relative z-10">
                   {/* Triangular Brand Accent (From Inspo) */}
                   <div className="w-5 h-5 bg-[#F5BD02] [clip-path:polygon(0_0,100%_0,0_100%)] mb-4" />
 
-                  <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-slate-900 tracking-tight mb-4">
+                  <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-white tracking-tight mb-4">
                     Our Vision
                   </h3>
 
-                  <blockquote className="text-base sm:text-lg font-medium text-slate-700 leading-relaxed mb-3">
+                  <blockquote className="text-base sm:text-lg font-medium text-blue-50 leading-relaxed mb-3">
                     "{FOUNDATION_INFO.vision}"
                   </blockquote>
 
-                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal mb-6">
+                  <p className="text-xs sm:text-sm text-blue-100/80 leading-relaxed font-normal mb-6">
                     We envision a resilient Ghana where poverty and lack of resources never limit human potential, and where young people possess the skills and agency to lead.
                   </p>
                 </div>
 
                 {/* Bottom Indicator */}
-                <div className="pt-6 border-t border-slate-100 mt-6 flex items-center justify-between text-xs text-slate-500">
-                  <span className="flex items-center gap-2 font-medium text-slate-700">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="relative z-10 pt-6 border-t border-white/15 mt-6 flex items-center justify-between text-xs">
+                  <span className="flex items-center gap-2 font-medium text-blue-100">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     Building sustainable community agency across Ghana
                   </span>
-                  <span className="text-[#000080] font-bold hidden sm:inline-block">Long-Term Impact</span>
+                  <span className="text-[#F5BD02] font-bold hidden sm:inline-block">Long-Term Impact</span>
                 </div>
               </div>
             </div>
 
-            {/* RIGHT HALF: OUR MISSION */}
-            <div className="flex flex-col justify-between group">
+            {/* RIGHT CARD: OUR MISSION */}
+            <div className="bg-white/95 backdrop-blur-xl rounded-3xl lg:rounded-[36px] border border-slate-200/90 shadow-[0_12px_44px_rgba(0,0,128,0.06)] overflow-hidden flex flex-col justify-between group relative">
               {/* Top Photo Banner */}
               <div className="relative h-60 sm:h-72 lg:h-80 overflow-hidden bg-slate-100">
                 <img
