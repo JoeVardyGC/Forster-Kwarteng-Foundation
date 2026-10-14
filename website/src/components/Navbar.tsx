@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { PageId } from '../types';
-import { Heart, Menu, X, ChevronRight } from 'lucide-react';
+import { Heart, Menu, X, Phone, ChevronRight } from 'lucide-react';
 
 interface NavbarProps {
   currentPage: PageId;
@@ -40,6 +40,31 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <>
+      {/* Top Utility Bar */}
+      <div className="bg-[#000052]/95 backdrop-blur-md text-white text-[11px] sm:text-xs py-1.5 sm:py-2 px-4 border-b border-blue-900/40">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-4 sm:gap-6">
+            <span className="flex items-center gap-1.5 text-blue-200">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+              <span className="truncate">Accra, Ghana • Non-Profit Organization</span>
+            </span>
+            <a
+              href="tel:+233546732812"
+              className="hidden sm:flex items-center gap-1.5 text-blue-200 hover:text-amber-300 transition-colors shrink-0"
+            >
+              <Phone className="w-3.5 h-3.5 text-amber-400" />
+              <span>+233 546732812 / +233 556727083</span>
+            </a>
+          </div>
+
+          <div>
+            <span className="text-amber-300/95 font-semibold tracking-wide text-[11px] sm:text-xs hidden xs:inline">
+              Empowering Lives, Building Futures
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* Main Sticky Navbar (Frosted Glass UI inspired by Save The Coin) */}
       <header
         className={`sticky top-0 z-40 transition-all duration-300 ${
