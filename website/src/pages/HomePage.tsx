@@ -6,8 +6,6 @@ import {
   PROGRAM_PILLARS,
   IMPACT_STATS,
   CORE_VALUES,
-  BENEFICIARY_STORIES,
-  DONATION_TIERS,
   OUR_PROGRAMS,
 } from '../data/foundationData';
 import {
@@ -538,55 +536,62 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 6. INTERACTIVE GIVING CALCULATOR BANNER (Glassmorphic Container with Ambient Glow) */}
+      {/* 6. DIGNIFIED GIVING & DONATE CARD (Clean & Focused Call to Action) */}
       <section className="relative py-20 bg-gradient-to-br from-[#000080] via-[#090979] to-[#000052] text-white overflow-hidden">
         {/* Ambient Blur Orbs */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="bg-white/95 backdrop-blur-xl text-slate-900 rounded-3xl p-6 sm:p-10 lg:p-12 shadow-2xl border border-white/50 max-w-4xl mx-auto">
-            <div className="text-center max-w-2xl mx-auto mb-8">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 mb-2 border border-amber-200">
-                <Heart className="w-3.5 h-3.5 fill-amber-500" />
-                Tangible Giving • Direct Impact
-              </span>
-              <h3 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] text-[#000080]">
-                See How Your Support Changes a Life in Ghana
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-2">
-                Every cedi or dollar directly funds uniforms, books, medical screenings, and vocational apprenticeships.
-              </p>
+          <div className="bg-white/95 backdrop-blur-xl text-slate-900 rounded-3xl p-8 sm:p-12 lg:p-14 shadow-2xl border border-white/50 max-w-4xl mx-auto text-center">
+            {/* Pill Tag */}
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-[#000080] mb-4 border border-amber-200/80">
+              <Heart className="w-3.5 h-3.5 fill-[#000080] text-[#000080]" />
+              <span>Direct Community Impact • 100% Transparent</span>
+            </span>
+
+            {/* Headline */}
+            <h3 className="text-2xl sm:text-4xl font-extrabold font-['Outfit'] text-[#000080] tracking-tight max-w-2xl mx-auto leading-tight">
+              Support Our Mission & Transform a Life in Ghana
+            </h3>
+
+            {/* Description */}
+            <p className="text-sm sm:text-base text-slate-600 mt-3 max-w-2xl mx-auto leading-relaxed font-normal">
+              Every contribution directly equips orphaned pupils with syllabus textbooks, funds youth TVET apprenticeship toolkits, and delivers vital free medical screenings to underserved families.
+            </p>
+
+            {/* Trust Badges */}
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 my-8">
+              <div className="px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-700 flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Instant MoMo & Card Giving</span>
+              </div>
+              <div className="px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-700 flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Registered Non-Profit (DSW/1042)</span>
+              </div>
+              <div className="px-3.5 py-1.5 rounded-full bg-slate-50 border border-slate-200/80 text-xs font-semibold text-slate-700 flex items-center gap-2">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                <span>Transparent Stewardship</span>
+              </div>
             </div>
 
-            {/* Tier Selector */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-              {DONATION_TIERS.slice(0, 3).map((tier) => (
-                <div
-                  key={tier.id}
-                  onClick={onOpenDonateModal}
-                  className="p-4 sm:p-5 rounded-2xl border-2 border-slate-200/90 bg-white/70 backdrop-blur-xs hover:border-[#000080] hover:bg-blue-50/50 hover:shadow-md transition-all cursor-pointer text-center group"
-                >
-                  <div className="text-2xl font-black font-['Outfit'] text-[#000080] group-hover:scale-105 transition-transform">
-                    {currency === 'GHS' ? `₵${tier.amountGHS}` : `$${tier.amountUSD}`}
-                  </div>
-                  <div className="text-xs font-bold text-slate-800 mt-1">
-                    {tier.label}
-                  </div>
-                  <p className="text-[11px] text-slate-500 mt-1 line-clamp-2">
-                    {tier.impactDescription}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center pt-2">
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
               <button
                 onClick={onOpenDonateModal}
-                className="px-8 py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 inline-flex items-center gap-2 cursor-pointer"
+                className="w-full sm:w-auto px-8 py-4 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-sm sm:text-base rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 inline-flex items-center justify-center gap-2.5 cursor-pointer"
               >
                 <Heart className="w-4 h-4 fill-[#000080]" />
-                <span>Open Instant Giving Portal (MoMo & Card)</span>
+                <span>Make a Donation</span>
+              </button>
+
+              <button
+                onClick={() => onNavigate('donate')}
+                className="w-full sm:w-auto px-7 py-4 bg-slate-100 hover:bg-slate-200/90 text-[#000080] font-bold text-sm rounded-full transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>View Bank & MoMo Details</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
           </div>
