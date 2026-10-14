@@ -121,7 +121,7 @@ export const HomePage: React.FC<HomePageProps> = ({
     <div className="space-y-0">
       {/* 1. FULL-BLEED HERO SECTION (Arranged like Reference Screenshot) */}
       <section
-        className="relative min-h-[520px] sm:min-h-[580px] lg:min-h-[640px] flex flex-col justify-end sm:justify-center text-white overflow-hidden pb-11 sm:py-12"
+        className="relative min-h-[520px] sm:min-h-[600px] lg:min-h-[660px] flex flex-col justify-end sm:items-center text-white overflow-hidden pb-11 sm:pb-16"
       >
         {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
@@ -168,11 +168,11 @@ export const HomePage: React.FC<HomePageProps> = ({
           <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
 
-        {/* Content Container - Anchored on mobile so increasing headline expands towards the top */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-14 lg:px-16 py-2 sm:py-4 relative z-20 w-full">
+        {/* Content Container - Compact width with reference layout & clearance from side chevrons */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-14 lg:px-16 py-2 sm:pt-14 sm:pb-8 lg:pt-16 lg:pb-10 relative z-20 w-full">
           <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3 sm:space-y-4">
-            {/* Dynamic Storytelling Text - min-h-0 on mobile to bring buttons tight under description */}
-            <div className="relative min-h-0 sm:min-h-[220px] lg:min-h-[245px]">
+            {/* Dynamic Storytelling Text */}
+            <div className="relative min-h-0 sm:min-h-[210px] lg:min-h-[235px]">
               {HERO_SLIDES.map((slide, idx) => {
                 if (idx !== currentSlide) return null;
                 return (
@@ -186,15 +186,15 @@ export const HomePage: React.FC<HomePageProps> = ({
                       <span>{slide.pillar}</span>
                     </div>
 
-                    {/* Bold Headline - Bigger on mobile (text-[32px]), reverted to original on desktop (lg:text-5xl xl:text-6xl) */}
-                    <h1 className="text-[32px] sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] sm:leading-[1.14] drop-shadow-[0_2px_14px_rgba(0,0,0,0.75)]">
+                    {/* Bold Headline - Original desktop size (sm:text-4xl lg:text-5xl xl:text-6xl), enlarged on mobile (text-[32px]) */}
+                    <h1 className="text-[32px] sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold font-['Outfit'] tracking-tight text-white leading-[1.12] sm:leading-[1.14] drop-shadow-[0_2px_12px_rgba(0,0,0,0.7)]">
                       {slide.headlinePrefix}{' '}
                       <span className="block sm:inline-block text-[#F5BD02] drop-shadow-md">
                         {slide.headlineHighlight}
                       </span>
                     </h1>
 
-                    {/* Description Text - Grouped together directly below headline and above buttons */}
+                    {/* Description Text - Focused max-width for clean reading */}
                     <p className="text-xs sm:text-base text-blue-100/95 leading-relaxed font-normal max-w-sm sm:max-w-md drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
                       {slide.description}
                     </p>
@@ -203,8 +203,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               })}
             </div>
 
-            {/* Action Buttons: Side-by-Side Pill Buttons placed directly under description */}
-            <div className="pt-0 flex flex-row items-center gap-2.5 sm:gap-3.5">
+            {/* Action Buttons: Side-by-Side Pill Buttons */}
+            <div className="pt-0 sm:pt-1 flex flex-row items-center gap-2.5 sm:gap-3.5">
               <button
                 onClick={onOpenDonateModal}
                 className="px-4 py-2.5 sm:px-7 sm:py-3.5 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-xs sm:text-sm rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer group shrink-0"
@@ -222,8 +222,8 @@ export const HomePage: React.FC<HomePageProps> = ({
               </button>
             </div>
 
-            {/* Slide Indicators: Directly below the buttons */}
-            <div className="pt-0.5 sm:pt-1 flex items-center gap-1.5">
+            {/* Slide Indicators: Centered Dots & Elongated Active Pill */}
+            <div className="pt-0.5 sm:pt-2 flex items-center gap-1.5">
               {HERO_SLIDES.map((slide, idx) => (
                 <button
                   key={idx}
