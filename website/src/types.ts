@@ -3,7 +3,6 @@ export type PageId =
   | 'about' 
   | 'programs' 
   | 'program-article'
-  | 'impact' 
   | 'transparency' 
   | 'donate' 
   | 'get-involved' 

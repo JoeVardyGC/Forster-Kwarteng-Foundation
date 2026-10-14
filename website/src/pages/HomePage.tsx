@@ -654,7 +654,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                     </p>
                   </div>
                   <button
-                    onClick={() => onNavigate('impact')}
+                    onClick={() => onNavigate('programs')}
                     className="text-xs font-bold text-[#000080] hover:text-amber-600 transition-colors flex items-center gap-1 cursor-pointer"
                   >
                     <span>Read More Stories</span>

@@ -7,7 +7,6 @@ import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { ProgramsPage } from './pages/ProgramsPage';
 import { ProgramArticlePage } from './pages/ProgramArticlePage';
-import { ImpactPage } from './pages/ImpactPage';
 import { TransparencyPage } from './pages/TransparencyPage';
 import { DonatePage } from './pages/DonatePage';
 import { GetInvolvedPage } from './pages/GetInvolvedPage';
@@ -25,7 +24,6 @@ export function App() {
       'about',
       'programs',
       'program-article',
-      'impact',
       'transparency',
       'donate',
       'get-involved',
@@ -55,7 +53,6 @@ export function App() {
           'home',
           'about',
           'programs',
-          'impact',
           'transparency',
           'donate',
           'get-involved',
@@ -124,13 +121,6 @@ export function App() {
             onSelectProgram={handleSelectProgram}
             currency={currency}
             onToggleCurrency={toggleCurrency}
-            onOpenDonateModal={() => setIsDonateModalOpen(true)}
-          />
-        );
-      case 'impact':
-        return (
-          <ImpactPage
-            onNavigate={handleNavigate}
             onOpenDonateModal={() => setIsDonateModalOpen(true)}
           />
         );

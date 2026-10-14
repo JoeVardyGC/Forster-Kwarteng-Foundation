@@ -103,7 +103,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
                 { label: 'Home', page: 'home' },
                 { label: 'About Us & Vision', page: 'about' },
                 { label: 'Our 4 Core Pillars', page: 'programs' },
-                { label: 'Impact & Real Stories', page: 'impact' },
                 { label: 'Financial Transparency', page: 'transparency' },
                 { label: 'Volunteer & Partner', page: 'get-involved' },
                 { label: 'Contact & Hotlines', page: 'contact' },
