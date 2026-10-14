@@ -537,22 +537,9 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </h3>
 
                   {/* Description */}
-                  <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal mb-6">
+                  <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal">
                     {pillar.description}
                   </p>
-                </div>
-
-                {/* Bottom Verified Impact Metric Capsule (Clean, Dignified Grassroots Proof) */}
-                <div className="relative z-10 pt-4 border-t border-slate-100/90 mt-auto">
-                  <div className="p-3 rounded-2xl bg-slate-50/90 backdrop-blur-xs border border-slate-200/70 group-hover:bg-blue-50/50 group-hover:border-blue-200/80 transition-colors">
-                    <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">
-                      Grassroots Metric
-                    </div>
-                    <div className="text-xs font-bold text-slate-800 flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                      <span className="leading-tight">{pillar.impactMetric}</span>
-                    </div>
-                  </div>
                 </div>
               </div>
             ))}
