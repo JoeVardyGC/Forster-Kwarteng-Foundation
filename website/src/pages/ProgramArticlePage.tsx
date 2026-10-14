@@ -5,7 +5,6 @@ import {
   ArrowLeft,
   Clock,
   Check,
-  Heart,
   Play,
   ChevronRight,
   ChevronLeft,
@@ -397,17 +396,6 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
                     </div>
                   </section>
                 )}
-
-                {/* 4. Direct Frontline Giving Callout (In article) */}
-                <div className="pt-6 border-t border-slate-100 text-center">
-                  <button
-                    onClick={onOpenDonateModal}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 sm:py-4 bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-black text-sm rounded-full shadow-lg hover:shadow-xl hover:scale-102 transition-all cursor-pointer"
-                  >
-                    <Heart className="w-4 h-4 fill-[#000080]" />
-                    <span>Support {article.title}</span>
-                  </button>
-                </div>
               </div>
             </main>
 
