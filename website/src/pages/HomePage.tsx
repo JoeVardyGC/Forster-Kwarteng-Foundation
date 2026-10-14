@@ -405,7 +405,6 @@ export const HomePage: React.FC<HomePageProps> = ({
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   Building sustainable community agency across Ghana
                 </span>
-                <span className="text-[#F5BD02] font-bold hidden sm:inline-block">Long-Term Impact</span>
               </div>
             </div>
 

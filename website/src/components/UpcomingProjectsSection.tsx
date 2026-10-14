@@ -7,7 +7,6 @@ import {
   MapPin,
   Heart,
   ArrowRight,
-  Sparkles,
   Users,
   Timer,
   ChevronRight,
@@ -108,12 +107,8 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 
-                {/* Top Badge: Featured Outreach */}
+                {/* Top Badge */}
                 <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                  <span className="px-3.5 py-1.5 rounded-full bg-amber-400 text-[#000080] text-xs font-black shadow-md flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 fill-[#000080]" />
-                    Featured Outreach
-                  </span>
                   <span className="px-3.5 py-1.5 rounded-full bg-slate-950/70 backdrop-blur-md text-white text-xs font-semibold border border-white/20">
                     {featuredProject.category}
                   </span>

@@ -147,7 +147,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   Building Empowered Communities
                 </span>
-                <span className="text-[#F5BD02] font-bold">Long-Term Impact</span>
               </div>
             </div>
 
