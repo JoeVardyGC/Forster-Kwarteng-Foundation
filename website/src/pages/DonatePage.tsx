@@ -70,7 +70,8 @@ export const DonatePage: React.FC<DonatePageProps> = ({
     {
       network: 'MTN Mobile Money',
       badge: 'MTN MoMo',
-      badgeColor: 'bg-amber-400 text-slate-950',
+      badgeColor: 'bg-[#FFCB05] text-slate-950 border border-amber-400',
+      logo: '/assets/mtn_momo_logo.svg',
       number: '0546732812',
       formatted: '054 673 2812',
       accountName: 'Forster Kwarteng Foundation',
@@ -80,6 +81,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({
       network: 'MTN & Telecel Cash',
       badge: 'Telecel / MTN',
       badgeColor: 'bg-red-500 text-white',
+      logo: null,
       number: '0556727083',
       formatted: '055 672 7083',
       accountName: 'Forster Kwarteng Foundation',
@@ -233,9 +235,16 @@ export const DonatePage: React.FC<DonatePageProps> = ({
                           <div className="space-y-1.5">
                             <div className="flex items-center gap-2">
                               <span
-                                className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider ${acc.badgeColor}`}
+                                className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider ${acc.badgeColor}`}
                               >
-                                {acc.badge}
+                                {acc.logo && (
+                                  <img
+                                    src={acc.logo}
+                                    alt="MTN"
+                                    className="h-3.5 w-auto rounded-xs object-contain"
+                                  />
+                                )}
+                                <span>{acc.badge}</span>
                               </span>
                               <span className="text-xs text-slate-500 font-medium">
                                 {acc.network}
