@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useData } from '../../../context/DataContext';
+import { useAuth } from '../../../context/AuthContext';
 import {
   FolderKanban,
   Calendar,
@@ -12,6 +13,18 @@ import {
   ExternalLink,
   Phone,
   ShieldCheck,
+  Shield,
+  Key,
+  Lock,
+  RotateCcw,
+  Smartphone,
+  Building,
+  CreditCard,
+  Eye,
+  EyeOff,
+  Check,
+  AlertCircle,
+  X,
 } from 'lucide-react';
 
 interface DashboardViewProps {
@@ -27,11 +40,61 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab }) => 
     contactMessages,
     volunteerSubmissions,
     foundationInfo,
+    momoAccounts,
+    bankAccounts,
   } = useData();
+
+  const { adminUser, changePassword, resetPasswordToDefault } = useAuth();
+
+  // In-Dashboard Password Modal State
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordSuccess, setPasswordSuccess] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [showResetDefaultModal, setShowResetDefaultModal] = useState(false);
 
   const newMessagesCount = contactMessages.filter((m) => m.status === 'new').length;
   const newVolunteersCount = volunteerSubmissions.filter((v) => v.status === 'new').length;
   const featuredEvent = upcomingEvents.find((e) => e.status === 'Featured') || upcomingEvents[0];
+
+  const handlePasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError(null);
+    setPasswordSuccess(null);
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError('New password and confirmation password do not match.');
+      return;
+    }
+
+    const res = changePassword(currentPassword, newPassword);
+    if (res.success) {
+      setPasswordSuccess('Admin password changed successfully! Your session is updated.');
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => {
+        setPasswordSuccess(null);
+        setIsPasswordModalOpen(false);
+      }, 2000);
+    } else {
+      setPasswordError(res.error || 'Failed to update password.');
+    }
+  };
+
+  const handleResetToDefault = () => {
+    const res = resetPasswordToDefault();
+    setShowResetDefaultModal(false);
+    if (res.success) {
+      setPasswordSuccess('Admin password has been reset to default (fkf2026).');
+      setTimeout(() => setPasswordSuccess(null), 4000);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -80,6 +143,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab }) => 
         {/* Ambient glow in corner */}
         <div className="absolute right-0 top-0 bottom-0 w-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
       </div>
+
+      {/* Global Dashboard Password Feedback Banner */}
+      {passwordSuccess && (
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center justify-between shadow-2xs animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+            <span>{passwordSuccess}</span>
+          </div>
+          <button
+            onClick={() => setPasswordSuccess(null)}
+            className="text-emerald-700 hover:text-emerald-900 cursor-pointer"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
 
       {/* 2. STATS CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -239,7 +318,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab }) => 
           </div>
         </div>
 
-        {/* Right Column: Featured Countdown Spotlight & Official Lines */}
+        {/* Right Column: Featured Countdown, Donation Accounts & Admin Security */}
         <div className="lg:col-span-5 space-y-6">
           {/* Featured Countdown */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-2xs space-y-4">
@@ -277,30 +356,302 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab }) => 
             )}
           </div>
 
-          {/* Quick Settings Snapshot */}
+          {/* DYNAMIC DONATION CHANNELS SNAPSHOT */}
           <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-700">Official MoMo Numbers</span>
+              <div className="flex items-center gap-2">
+                <CreditCard className="w-4 h-4 text-[#000080]" />
+                <span className="text-xs font-bold text-slate-800">
+                  Official Donation Channels ({momoAccounts.length + bankAccounts.length})
+                </span>
+              </div>
               <button
                 onClick={() => onSelectTab('settings')}
-                className="text-xs font-bold text-[#000080] hover:underline cursor-pointer"
+                className="text-xs font-bold text-[#000080] hover:text-amber-600 cursor-pointer flex items-center gap-1"
               >
-                Edit
+                <span>Edit All</span>
+                <ArrowRight className="w-3 h-3" />
               </button>
             </div>
-            <div className="space-y-2 text-xs font-medium text-slate-600">
-              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-                <span>MTN MoMo:</span>
-                <strong className="text-slate-900 font-mono">054 673 2812</strong>
+
+            <div className="space-y-2 text-xs">
+              {momoAccounts.map((momo) => (
+                <div
+                  key={momo.id}
+                  className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2"
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-extrabold text-[10px] uppercase">
+                      {momo.badge || momo.network}
+                    </span>
+                    <span className="text-slate-600 truncate text-[11px]">{momo.accountName}</span>
+                  </div>
+                  <strong className="text-slate-900 font-mono shrink-0">
+                    {momo.formatted || momo.number}
+                  </strong>
+                </div>
+              ))}
+
+              {bankAccounts.slice(0, 1).map((bank) => (
+                <div
+                  key={bank.id}
+                  className="p-2.5 rounded-xl bg-blue-50/50 border border-blue-200/70 flex items-center justify-between gap-2"
+                >
+                  <div className="flex items-center gap-2 truncate">
+                    <span className="px-2 py-0.5 rounded-md bg-[#000080] text-white font-extrabold text-[10px] uppercase">
+                      Bank
+                    </span>
+                    <span className="text-slate-700 font-medium truncate text-[11px]">{bank.bankName}</span>
+                  </div>
+                  <strong className="text-slate-900 font-mono shrink-0">
+                    {bank.accountNumber}
+                  </strong>
+                </div>
+              ))}
+            </div>
+
+            <button
+              onClick={() => onSelectTab('settings')}
+              className="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <Plus className="w-3.5 h-3.5 text-[#000080]" />
+              <span>Configure Channels &amp; Banks</span>
+            </button>
+          </div>
+
+          {/* ADMIN SECURITY & PASSWORD MANAGEMENT SECTION ON DASHBOARD */}
+          <div className="bg-white rounded-3xl p-6 border border-slate-200/90 shadow-2xs space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#000080]">
+                <ShieldCheck className="w-4 h-4 text-[#F5BD02]" />
+                Admin Security &amp; Access
               </div>
-              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-                <span>Telecel Cash:</span>
-                <strong className="text-slate-900 font-mono">055 672 7083</strong>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-black uppercase">
+                Active
+              </span>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#000080] text-[#F5BD02] flex items-center justify-center font-black text-xs font-['Outfit']">
+                  FK
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-900">
+                    {adminUser?.name || 'Founder & Super Admin'}
+                  </div>
+                  <div className="text-[11px] text-slate-500 font-mono">
+                    {adminUser?.email || 'founder@forsterkwartengfoundation.org'}
+                  </div>
+                </div>
               </div>
+
+              <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-[11px] text-slate-500">
+                <span>Registration No:</span>
+                <span className="font-mono font-bold text-slate-800">{foundationInfo.registrationNo || '000000000000000000000'}</span>
+              </div>
+
+              <div className="pt-1.5 flex items-center justify-between text-[11px] text-slate-500">
+                <span>Default Password:</span>
+                <span className="font-mono font-bold text-slate-800">fkf2026</span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setPasswordError(null);
+                  setPasswordSuccess(null);
+                  setIsPasswordModalOpen(true);
+                }}
+                className="py-2.5 px-3 rounded-xl bg-[#000080] hover:bg-[#00006a] text-white text-xs font-bold transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <Key className="w-3.5 h-3.5 text-[#F5BD02]" />
+                <span>Change Password</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowResetDefaultModal(true)}
+                className="py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              >
+                <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
+                <span>Reset to Default</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* DASHBOARD IN-APP PASSWORD CHANGE MODAL */}
+      {isPasswordModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#000080] flex items-center justify-center">
+                  <Key className="w-5 h-5 text-[#000080]" />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-slate-900 font-['Outfit']">
+                    Change Admin Password
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Update credentials for founder/admin access.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPasswordModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {passwordError && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                <span>{passwordError}</span>
+              </div>
+            )}
+
+            {passwordSuccess && (
+              <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold flex items-center gap-2">
+                <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{passwordSuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handlePasswordSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Current Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showCurrentPassword ? 'text' : 'password'}
+                    required
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter current password"
+                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#000080] outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showCurrentPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  New Password (min 6 chars)
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    required
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#000080] outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Confirm New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter new password"
+                    className="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-[#000080] outline-none"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="pt-3 flex items-center justify-end gap-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsPasswordModalOpen(false)}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 rounded-xl bg-[#000080] hover:bg-[#00006a] text-white text-xs font-bold shadow-md cursor-pointer flex items-center gap-2"
+                >
+                  <Key className="w-4 h-4 text-[#F5BD02]" />
+                  <span>Update Password</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* DASHBOARD RESET TO DEFAULT MODAL */}
+      {showResetDefaultModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 text-center space-y-4">
+            <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+              <RotateCcw className="w-7 h-7" />
+            </div>
+
+            <h3 className="text-lg font-bold text-slate-900 font-['Outfit']">
+              Restore Default Admin Password?
+            </h3>
+
+            <p className="text-xs text-slate-500 leading-relaxed">
+              This will reset your login password back to the default original credentials: <strong className="text-[#000080] font-mono text-sm">fkf2026</strong>.
+            </p>
+
+            <div className="pt-4 flex items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowResetDefaultModal(false)}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 text-xs font-bold hover:bg-slate-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleResetToDefault}
+                className="flex-1 px-4 py-2.5 rounded-xl bg-[#000080] text-white text-xs font-bold hover:bg-[#00006a] cursor-pointer shadow-md"
+              >
+                Yes, Restore (fkf2026)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+

@@ -7,6 +7,8 @@ import type {
   BeneficiaryStory,
   ContactSubmission,
   VolunteerSubmission,
+  MomoAccount,
+  BankAccount,
 } from '../types';
 import {
   OUR_PROGRAMS,
@@ -14,6 +16,8 @@ import {
   UPCOMING_PROJECTS,
   BENEFICIARY_STORIES,
   FOUNDATION_INFO,
+  DEFAULT_MOMO_ACCOUNTS,
+  DEFAULT_BANK_ACCOUNTS,
 } from '../data/foundationData';
 import {
   collection,
@@ -84,6 +88,8 @@ interface DataContextType {
   upcomingEvents: UpcomingProjectEvent[];
   beneficiaryStories: BeneficiaryStory[];
   foundationInfo: typeof FOUNDATION_INFO;
+  momoAccounts: MomoAccount[];
+  bankAccounts: BankAccount[];
   contactMessages: ContactSubmission[];
   volunteerSubmissions: VolunteerSubmission[];
 
@@ -111,6 +117,17 @@ interface DataContextType {
 
   // Settings Actions
   updateFoundationInfo: (info: Partial<typeof FOUNDATION_INFO>) => void;
+
+  // Donation Channels Actions
+  updateMomoAccounts: (accounts: MomoAccount[]) => void;
+  addMomoAccount: (account: Omit<MomoAccount, 'id'>) => void;
+  updateMomoAccount: (id: string, updated: Partial<MomoAccount>) => void;
+  deleteMomoAccount: (id: string) => void;
+
+  updateBankAccounts: (accounts: BankAccount[]) => void;
+  addBankAccount: (account: Omit<BankAccount, 'id'>) => void;
+  updateBankAccount: (id: string, updated: Partial<BankAccount>) => void;
+  deleteBankAccount: (id: string) => void;
 
   // Submission Inbox Actions
   submitContactForm: (data: Omit<ContactSubmission, 'id' | 'date' | 'status'>) => void;
@@ -156,6 +173,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       upcomingEvents: UPCOMING_PROJECTS,
       beneficiaryStories: BENEFICIARY_STORIES,
       foundationInfo: FOUNDATION_INFO,
+      momoAccounts: DEFAULT_MOMO_ACCOUNTS,
+      bankAccounts: DEFAULT_BANK_ACCOUNTS,
       contactMessages: [],
       volunteerSubmissions: [],
     };
@@ -177,6 +196,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [foundationInfo, setFoundationInfo] = useState<typeof FOUNDATION_INFO>(
     initial.foundationInfo || FOUNDATION_INFO
   );
+  const [momoAccounts, setMomoAccounts] = useState<MomoAccount[]>(
+    initial.momoAccounts || DEFAULT_MOMO_ACCOUNTS
+  );
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[]>(
+    initial.bankAccounts || DEFAULT_BANK_ACCOUNTS
+  );
   const [contactMessages, setContactMessages] = useState<ContactSubmission[]>(
     initial.contactMessages || []
   );
@@ -194,6 +219,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         upcomingEvents,
         beneficiaryStories,
         foundationInfo,
+        momoAccounts,
+        bankAccounts,
         contactMessages,
         volunteerSubmissions,
       };
@@ -208,6 +235,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     upcomingEvents,
     beneficiaryStories,
     foundationInfo,
+    momoAccounts,
+    bankAccounts,
     contactMessages,
     volunteerSubmissions,
   ]);
@@ -292,7 +321,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       doc(db, 'settings', 'general'),
       (snapshot) => {
         if (snapshot.exists()) {
-          setFoundationInfo(snapshot.data() as typeof FOUNDATION_INFO);
+          const cloud = snapshot.data() as Partial<typeof FOUNDATION_INFO>;
+          setFoundationInfo((prev) => ({
+            ...prev,
+            ...cloud,
+            registrationNo:
+              cloud.registrationNo && cloud.registrationNo !== FOUNDATION_INFO.registrationNo
+                ? cloud.registrationNo
+                : prev.registrationNo || cloud.registrationNo || FOUNDATION_INFO.registrationNo,
+          }));
         }
       },
       () => {}
@@ -324,6 +361,23 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       () => {}
     );
 
+    // 9. Subscribe to settings/financials (Mobile Money & Bank Accounts)
+    const unsubFinancials = onSnapshot(
+      doc(db, 'settings', 'financials'),
+      (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (data.momoAccounts && Array.isArray(data.momoAccounts)) {
+            setMomoAccounts(data.momoAccounts);
+          }
+          if (data.bankAccounts && Array.isArray(data.bankAccounts)) {
+            setBankAccounts(data.bankAccounts);
+          }
+        }
+      },
+      () => {}
+    );
+
     return () => {
       unsubSlides();
       unsubProjects();
@@ -333,6 +387,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       unsubSettings();
       unsubContact();
       unsubVolunteers();
+      unsubFinancials();
     };
   }, []);
 
@@ -454,7 +509,76 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateFoundationInfo = (info: Partial<typeof FOUNDATION_INFO>) => {
     const updated = { ...foundationInfo, ...info };
     setFoundationInfo(updated);
-    setDoc(doc(db, 'settings', 'general'), updated).catch(() => {});
+    setDoc(doc(db, 'settings', 'general'), updated).catch((err) => {
+      console.warn('[Firestore] settings/general update deferred:', err);
+    });
+  };
+
+  // --- Donation Channel Actions ---
+  const saveFinancialsToFirestore = (updatedMomo: MomoAccount[], updatedBank: BankAccount[]) => {
+    setDoc(doc(db, 'settings', 'financials'), {
+      momoAccounts: updatedMomo,
+      bankAccounts: updatedBank,
+      updatedAt: new Date().toISOString(),
+    }).catch(() => {});
+  };
+
+  const updateMomoAccounts = (accounts: MomoAccount[]) => {
+    setMomoAccounts(accounts);
+    saveFinancialsToFirestore(accounts, bankAccounts);
+  };
+
+  const addMomoAccount = (account: Omit<MomoAccount, 'id'>) => {
+    const newAcc: MomoAccount = {
+      ...account,
+      id: `momo-${Date.now()}`,
+    };
+    const updated = [...momoAccounts, newAcc];
+    setMomoAccounts(updated);
+    saveFinancialsToFirestore(updated, bankAccounts);
+  };
+
+  const updateMomoAccount = (id: string, updated: Partial<MomoAccount>) => {
+    const newAccounts = momoAccounts.map((acc) =>
+      acc.id === id ? { ...acc, ...updated } : acc
+    );
+    setMomoAccounts(newAccounts);
+    saveFinancialsToFirestore(newAccounts, bankAccounts);
+  };
+
+  const deleteMomoAccount = (id: string) => {
+    const newAccounts = momoAccounts.filter((acc) => acc.id !== id);
+    setMomoAccounts(newAccounts);
+    saveFinancialsToFirestore(newAccounts, bankAccounts);
+  };
+
+  const updateBankAccounts = (accounts: BankAccount[]) => {
+    setBankAccounts(accounts);
+    saveFinancialsToFirestore(momoAccounts, accounts);
+  };
+
+  const addBankAccount = (account: Omit<BankAccount, 'id'>) => {
+    const newAcc: BankAccount = {
+      ...account,
+      id: `bank-${Date.now()}`,
+    };
+    const updated = [...bankAccounts, newAcc];
+    setBankAccounts(updated);
+    saveFinancialsToFirestore(momoAccounts, updated);
+  };
+
+  const updateBankAccount = (id: string, updated: Partial<BankAccount>) => {
+    const newAccounts = bankAccounts.map((acc) =>
+      acc.id === id ? { ...acc, ...updated } : acc
+    );
+    setBankAccounts(newAccounts);
+    saveFinancialsToFirestore(momoAccounts, newAccounts);
+  };
+
+  const deleteBankAccount = (id: string) => {
+    const newAccounts = bankAccounts.filter((acc) => acc.id !== id);
+    setBankAccounts(newAccounts);
+    saveFinancialsToFirestore(momoAccounts, newAccounts);
   };
 
   // --- Inbox Submissions ---
@@ -512,6 +636,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUpcomingEvents(UPCOMING_PROJECTS);
     setBeneficiaryStories(BENEFICIARY_STORIES);
     setFoundationInfo(FOUNDATION_INFO);
+    setMomoAccounts(DEFAULT_MOMO_ACCOUNTS);
+    setBankAccounts(DEFAULT_BANK_ACCOUNTS);
     setContactMessages([]);
     setVolunteerSubmissions([]);
     try {
@@ -530,6 +656,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         upcomingEvents,
         beneficiaryStories,
         foundationInfo,
+        momoAccounts,
+        bankAccounts,
         contactMessages,
         volunteerSubmissions,
 
@@ -552,6 +680,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         deleteStory,
 
         updateFoundationInfo,
+
+        updateMomoAccounts,
+        addMomoAccount,
+        updateMomoAccount,
+        deleteMomoAccount,
+
+        updateBankAccounts,
+        addBankAccount,
+        updateBankAccount,
+        deleteBankAccount,
 
         submitContactForm,
         deleteContactMessage,

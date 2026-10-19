@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { PageId, Currency } from '../types';
+import { useData } from '../context/DataContext';
 import { FOUNDATION_INFO } from '../data/foundationData';
 import {
   Heart,
@@ -63,37 +64,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({
     document.body.removeChild(textArea);
   };
 
-  const momoAccounts = [
-    {
-      network: 'MTN Mobile Money',
-      badge: 'MTN MoMo',
-      badgeColor: 'bg-[#FFCB05] text-slate-950 border border-amber-400',
-      logo: '/assets/mtn_momo_logo.svg',
-      number: '0546732812',
-      formatted: '054 673 2812',
-      accountName: 'Forster Kwarteng Foundation',
-      isPrimary: true,
-    },
-    {
-      network: 'MTN & Telecel Cash',
-      badge: 'Telecel / MTN',
-      badgeColor: 'bg-red-500 text-white',
-      logo: null,
-      number: '0556727083',
-      formatted: '055 672 7083',
-      accountName: 'Forster Kwarteng Foundation',
-      isPrimary: false,
-    },
-  ];
-
-  const bankDetails = {
-    bankName: 'GCB Bank PLC / Ecobank Ghana',
-    accountName: 'Forster Kwarteng Foundation',
-    accountNumber: '1041009823420',
-    branch: 'High Street Branch, Accra',
-    swiftCode: 'GCBLGHAC',
-    country: 'Ghana',
-  };
+  const { foundationInfo, momoAccounts, bankAccounts } = useData();
 
   const whatsappMessage = encodeURIComponent(
     'Hello Forster Kwarteng Foundation, I have just made a donation to support your foundation programs! Please find my transaction confirmation here.'
@@ -125,7 +96,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({
           <div className="pt-2 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-semibold text-blue-200">
             <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Official Registration: {FOUNDATION_INFO.registrationNo}
+              Official Registration: {foundationInfo.registrationNo || FOUNDATION_INFO.registrationNo}
             </span>
             <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-full border border-white/15 backdrop-blur-md">
               <ShieldCheck className="w-3.5 h-3.5 text-amber-300" />
@@ -295,7 +266,12 @@ export const DonatePage: React.FC<DonatePageProps> = ({
                         Dial <strong className="text-slate-900 font-mono">*170#</strong> on your phone (or open your MTN/Telecel MoMo app).
                       </li>
                       <li>Select <strong>Transfer Money</strong> &gt; <strong>MoMo User</strong>.</li>
-                      <li>Enter either official number: <strong className="text-slate-900 font-mono">054 673 2812</strong> or <strong className="text-slate-900 font-mono">055 672 7083</strong>.</li>
+                      <li>
+                        Enter official number:{' '}
+                        <strong className="text-slate-900 font-mono">
+                          {momoAccounts.map((m) => m.formatted || m.number).join(' or ') || '054 673 2812'}
+                        </strong>.
+                      </li>
                       <li>Confirm the recipient name shows: <strong className="text-[#000080]">FORSTER KWARTENG FOUNDATION</strong>.</li>
                       <li>Enter Reference: <strong className="text-slate-900 font-mono">FKF DONATION</strong> or your name.</li>
                     </ol>
@@ -304,7 +280,11 @@ export const DonatePage: React.FC<DonatePageProps> = ({
                   {/* Action Buttons: WhatsApp Confirmation */}
                   <div className="pt-2 flex flex-col sm:flex-row gap-3">
                     <a
-                      href={`https://wa.me/233546732812?text=${whatsappMessage}`}
+                      href={`https://wa.me/${(() => {
+                        const prim = momoAccounts.find((m) => m.isPrimary) || momoAccounts[0];
+                        const digits = prim ? prim.number.replace(/\D/g, '') : '233546732812';
+                        return digits.startsWith('0') ? `233${digits.slice(1)}` : digits;
+                      })()}?text=${whatsappMessage}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 py-3.5 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md shadow-emerald-600/20 transition-all cursor-pointer hover:-translate-y-0.5"
@@ -337,77 +317,98 @@ export const DonatePage: React.FC<DonatePageProps> = ({
                     </span>
                   </div>
 
-                  {/* Bank Details Table */}
-                  <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4">
-                    <div className="space-y-3.5 text-xs sm:text-sm">
-                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
-                        <span className="text-slate-500 font-medium">Bank Name</span>
-                        <span className="font-bold text-slate-900 text-right">
-                          {bankDetails.bankName}
-                        </span>
-                      </div>
+                  {/* Bank Details Cards */}
+                  <div className="space-y-4">
+                    {bankAccounts.map((bank, bIdx) => (
+                      <div
+                        key={bank.id || bIdx}
+                        className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-4"
+                      >
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                          <div className="flex items-center gap-2">
+                            <Building2 className="w-4 h-4 text-[#000080]" />
+                            <span className="font-bold text-slate-900 text-sm">{bank.bankName}</span>
+                          </div>
+                          {bank.isPrimary && (
+                            <span className="text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+                              Primary Account
+                            </span>
+                          )}
+                        </div>
 
-                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
-                        <span className="text-slate-500 font-medium">Account Name</span>
-                        <span className="font-bold text-[#000080] text-right">
-                          {bankDetails.accountName}
-                        </span>
-                      </div>
+                        <div className="space-y-3 text-xs sm:text-sm">
+                          <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
+                            <span className="text-slate-500 font-medium">Account Name</span>
+                            <span className="font-bold text-[#000080] text-right">
+                              {bank.accountName}
+                            </span>
+                          </div>
 
-                      <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                        <span className="text-slate-500 font-medium">Account Number</span>
-                        <div className="flex items-center gap-2.5">
-                          <span className="font-mono font-black text-lg text-slate-900">
-                            {bankDetails.accountNumber}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              copyToClipboard(bankDetails.accountNumber, 'bank-acc')
-                            }
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
-                              copiedField === 'bank-acc'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                            }`}
-                            title="Copy Account Number"
-                          >
-                            {copiedField === 'bank-acc' ? (
-                              <>
-                                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                                <span>Copied!</span>
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-3.5 h-3.5" />
-                                <span>Copy</span>
-                              </>
-                            )}
-                          </button>
+                          <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                            <span className="text-slate-500 font-medium">Account Number</span>
+                            <div className="flex items-center gap-2.5">
+                              <span className="font-mono font-black text-base sm:text-lg text-slate-900">
+                                {bank.accountNumber}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  copyToClipboard(bank.accountNumber, `bank-acc-${bIdx}`)
+                                }
+                                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                                  copiedField === `bank-acc-${bIdx}`
+                                    ? 'bg-emerald-100 text-emerald-800'
+                                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                                }`}
+                                title="Copy Account Number"
+                              >
+                                {copiedField === `bank-acc-${bIdx}` ? (
+                                  <>
+                                    <Check className="w-3.5 h-3.5 text-emerald-600" />
+                                    <span>Copied!</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-3.5 h-3.5" />
+                                    <span>Copy</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+                          </div>
+
+                          <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
+                            <span className="text-slate-500 font-medium">Branch</span>
+                            <span className="font-medium text-slate-800 text-right">
+                              {bank.branch}
+                            </span>
+                          </div>
+
+                          <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
+                            <span className="text-slate-500 font-medium">SWIFT / BIC Code</span>
+                            <span className="font-mono font-bold text-slate-900 text-right">
+                              {bank.swiftCode}
+                            </span>
+                          </div>
+
+                          {bank.currency && (
+                            <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
+                              <span className="text-slate-500 font-medium">Currency</span>
+                              <span className="font-medium text-slate-800 text-right">
+                                {bank.currency}
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="flex items-start justify-between pt-0.5">
+                            <span className="text-slate-500 font-medium">Country</span>
+                            <span className="font-medium text-slate-800 text-right">
+                              {bank.country}
+                            </span>
+                          </div>
                         </div>
                       </div>
-
-                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
-                        <span className="text-slate-500 font-medium">Branch</span>
-                        <span className="font-medium text-slate-800 text-right">
-                          {bankDetails.branch}
-                        </span>
-                      </div>
-
-                      <div className="flex items-start justify-between border-b border-slate-100 pb-3">
-                        <span className="text-slate-500 font-medium">SWIFT / BIC Code</span>
-                        <span className="font-mono font-bold text-slate-900 text-right">
-                          {bankDetails.swiftCode}
-                        </span>
-                      </div>
-
-                      <div className="flex items-start justify-between pt-1">
-                        <span className="text-slate-500 font-medium">Country</span>
-                        <span className="font-medium text-slate-800 text-right">
-                          {bankDetails.country}
-                        </span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
 
                   {/* Wire Advice */}
@@ -440,7 +441,7 @@ export const DonatePage: React.FC<DonatePageProps> = ({
               {[
                 {
                   q: 'How does Mobile Money giving work in Ghana?',
-                  a: 'You can transfer directly from your MTN MoMo or Telecel Cash wallet to our official lines (054 673 2812 / 055 672 7083). The recipient name will confirm FORSTER KWARTENG FOUNDATION before you approve with your PIN. No extra platform deductions are charged.',
+                  a: `You can transfer directly from your MTN MoMo, Telecel Cash, or AT Money wallet to our official lines (${momoAccounts.map((m) => m.formatted || m.number).join(' / ') || '054 673 2812'}). The recipient name will confirm FORSTER KWARTENG FOUNDATION before you approve with your PIN. No extra platform deductions are charged.`,
                 },
                 {
                   q: 'Can international supporters donate via bank wire?',

@@ -1,4 +1,15 @@
-import type { CoreValue, ProgramPillar, BeneficiaryStory, DonationTier, FinancialMetric, FoundationProgram, ProgramArticle, UpcomingProjectEvent } from '../types';
+import type {
+  CoreValue,
+  ProgramPillar,
+  BeneficiaryStory,
+  DonationTier,
+  FinancialMetric,
+  FoundationProgram,
+  ProgramArticle,
+  UpcomingProjectEvent,
+  MomoAccount,
+  BankAccount,
+} from '../types';
 
 export const FOUNDATION_INFO = {
   name: 'FORSTER KWARTENG FOUNDATION',
@@ -19,6 +30,48 @@ export const FOUNDATION_INFO = {
   registrationNo: '000000000000000000000',
   operatingHours: 'Monday – Friday: 8:00 AM – 5:00 PM GMT',
 };
+
+export const DEFAULT_MOMO_ACCOUNTS: MomoAccount[] = [
+  {
+    id: 'momo-1',
+    network: 'MTN Mobile Money',
+    badge: 'MTN MoMo',
+    badgeColor: 'bg-[#FFCB05] text-slate-950 border border-amber-400',
+    logo: '/assets/mtn_momo_logo.svg',
+    number: '0546732812',
+    formatted: '054 673 2812',
+    accountName: 'Forster Kwarteng Foundation',
+    reference: 'FKF Donation',
+    isPrimary: true,
+  },
+  {
+    id: 'momo-2',
+    network: 'Telecel Cash',
+    badge: 'Telecel Cash',
+    badgeColor: 'bg-red-500 text-white',
+    logo: null,
+    number: '0556727083',
+    formatted: '055 672 7083',
+    accountName: 'Forster Kwarteng Foundation',
+    reference: 'FKF Donation',
+    isPrimary: false,
+  },
+];
+
+export const DEFAULT_BANK_ACCOUNTS: BankAccount[] = [
+  {
+    id: 'bank-1',
+    bankName: 'GCB Bank PLC / Ecobank Ghana',
+    accountName: 'Forster Kwarteng Foundation',
+    accountNumber: '1041009823420',
+    branch: 'High Street Branch, Accra',
+    swiftCode: 'GCBLGHAC',
+    routingCode: '040101',
+    currency: 'GHS & USD / Multi-Currency',
+    country: 'Ghana',
+    isPrimary: true,
+  },
+];
 
 export const CORE_VALUES: CoreValue[] = [
   {

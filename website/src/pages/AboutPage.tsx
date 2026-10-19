@@ -1,5 +1,6 @@
 import React from 'react';
 import type { PageId } from '../types';
+import { useData } from '../context/DataContext';
 import { FOUNDATION_INFO, CORE_VALUES } from '../data/foundationData';
 import {
   Users,
@@ -21,6 +22,7 @@ interface AboutPageProps {
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateModal }) => {
+  const { foundationInfo } = useData();
   const valueIcons: Record<string, React.ReactNode> = {
     ShieldCheck: <ShieldCheck className="w-5 h-5 text-[#000080]" />,
     HeartHandshake: <HeartHandshake className="w-5 h-5 text-rose-500" />,
@@ -90,15 +92,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
 
           <div className="relative z-10 px-4 max-w-4xl mx-auto space-y-4 py-16">
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-semibold text-amber-300 shadow-sm">
-              <span>{FOUNDATION_INFO.motto}</span>
+              <span>{foundationInfo.motto || FOUNDATION_INFO.motto}</span>
             </span>
 
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold font-['Outfit'] text-white tracking-tight leading-tight">
-              {FOUNDATION_INFO.name}
+              {foundationInfo.name || FOUNDATION_INFO.name}
             </h1>
 
             <p className="text-sm sm:text-base lg:text-lg text-blue-100 max-w-3xl mx-auto font-normal leading-relaxed">
-              {FOUNDATION_INFO.brandStatement}
+              {foundationInfo.brandStatement || FOUNDATION_INFO.brandStatement}
             </p>
           </div>
         </div>
@@ -369,8 +371,8 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-4 h-4 text-[#000080] shrink-0 mt-0.5" />
               <p className="text-xs text-slate-600 leading-relaxed">
-                <strong className="text-slate-900 font-semibold">{FOUNDATION_INFO.name}</strong> is a registered non-profit organization in Ghana under Registration No:{' '}
-                <span className="font-mono font-bold text-[#000080]">{FOUNDATION_INFO.registrationNo}</span>.
+                <strong className="text-slate-900 font-semibold">{foundationInfo.name || FOUNDATION_INFO.name}</strong> is a registered non-profit organization in Ghana under Registration No:{' '}
+                <span className="font-mono font-bold text-[#000080]">{foundationInfo.registrationNo || FOUNDATION_INFO.registrationNo}</span>.
               </p>
             </div>
             <div className="flex items-start gap-3">
@@ -391,7 +393,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
           <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-slate-500 font-semibold pt-1">
             <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#000080] px-3.5 py-1.5 rounded-full border border-blue-200/60 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              Official Registration: {FOUNDATION_INFO.registrationNo}
+              Official Registration: {foundationInfo.registrationNo || FOUNDATION_INFO.registrationNo}
             </span>
             <span className="inline-flex items-center gap-1.5 bg-blue-50 text-[#000080] px-3.5 py-1.5 rounded-full border border-blue-200/60 shadow-2xs">
               <span className="w-2 h-2 rounded-full bg-[#000080]" />

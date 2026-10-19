@@ -1,5 +1,6 @@
 import React from 'react';
 import type { PageId } from '../types';
+import { useData } from '../context/DataContext';
 import { FINANCIAL_METRICS, FOUNDATION_INFO } from '../data/foundationData';
 import {
   ShieldCheck,
@@ -21,13 +22,16 @@ export const TransparencyPage: React.FC<TransparencyPageProps> = ({
   onNavigate,
   onOpenDonateModal,
 }) => {
+  const { foundationInfo } = useData();
+  const regNo = foundationInfo.registrationNo || FOUNDATION_INFO.registrationNo;
+
   return (
     <div className="space-y-0">
       {/* 1. HERO */}
       <section className="bg-gradient-to-b from-[#000080] to-[#0a0a85] text-white py-16 lg:py-24 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center max-w-3xl">
           <span className="inline-block px-3.5 py-1.5 rounded-full bg-white/10 text-amber-300 font-semibold text-xs border border-white/20 mb-4">
-            Core Values: Integrity & Accountability
+            Official Registration: {regNo} • Statutory Non-Profit
           </span>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] tracking-tight">
             Financial Stewardship & Radical Transparency
@@ -138,7 +142,7 @@ export const TransparencyPage: React.FC<TransparencyPageProps> = ({
                 size: '1.8 MB PDF',
               },
               {
-                title: 'Official Non-Profit Registration Certificate (Accra)',
+                title: `Official Non-Profit Registration Certificate (${regNo})`,
                 date: 'Updated 2025',
                 size: '850 KB PDF',
               },

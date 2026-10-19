@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { Currency } from '../types';
+import { useData } from '../context/DataContext';
 import { FOUNDATION_INFO } from '../data/foundationData';
 import {
   X,
@@ -63,37 +64,8 @@ export const DonationModal: React.FC<DonationModalProps> = ({
     document.body.removeChild(textArea);
   };
 
-  const momoAccounts = [
-    {
-      network: 'MTN Mobile Money',
-      badge: 'MTN MoMo',
-      badgeColor: 'bg-[#FFCB05] text-slate-950 border border-amber-400',
-      logo: '/assets/mtn_momo_logo.svg',
-      number: '0546732812',
-      formatted: '054 673 2812',
-      accountName: 'Forster Kwarteng Foundation',
-      isPrimary: true,
-    },
-    {
-      network: 'MTN & Telecel Cash',
-      badge: 'Telecel / MTN',
-      badgeColor: 'bg-red-500 text-white',
-      logo: null,
-      number: '0556727083',
-      formatted: '055 672 7083',
-      accountName: 'Forster Kwarteng Foundation',
-      isPrimary: false,
-    },
-  ];
-
-  const bankDetails = {
-    bankName: 'GCB Bank PLC / Ecobank Ghana',
-    accountName: 'Forster Kwarteng Foundation',
-    accountNumber: '1041009823420',
-    branch: 'High Street Branch, Accra',
-    swiftCode: 'GCBLGHAC',
-    country: 'Ghana',
-  };
+  const { foundationInfo, momoAccounts, bankAccounts } = useData();
+  const primaryBank = bankAccounts.find((b) => b.isPrimary) || bankAccounts[0];
 
   const whatsappMessage = encodeURIComponent(
     'Hello Forster Kwarteng Foundation, I have just made a donation to support your foundation programs! Please find my transaction confirmation here.'
@@ -314,110 +286,122 @@ export const DonationModal: React.FC<DonationModalProps> = ({
                 </span>
               </div>
 
-              {/* Bank Account Details Card */}
-              <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs space-y-4">
-                <div className="space-y-3 text-xs">
-                  <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
-                    <span className="text-slate-500 font-medium">Bank Name</span>
-                    <span className="font-bold text-slate-900 text-right">
-                      {bankDetails.bankName}
-                    </span>
-                  </div>
-
-                  <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
-                    <span className="text-slate-500 font-medium">Account Name</span>
-                    <span className="font-bold text-[#000080] text-right">
-                      {bankDetails.accountName}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-                    <span className="text-slate-500 font-medium">Account Number</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-black text-base text-slate-900">
-                        {bankDetails.accountNumber}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          copyToClipboard(bankDetails.accountNumber, 'bank-acc')
-                        }
-                        className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          copiedField === 'bank-acc'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                        title="Copy Account Number"
-                      >
-                        {copiedField === 'bank-acc' ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5" />
-                        )}
-                      </button>
+              {/* Bank Account Details Cards */}
+              <div className="space-y-3">
+                {bankAccounts.map((bank, bIdx) => (
+                  <div
+                    key={bank.id || bIdx}
+                    className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-xs space-y-3"
+                  >
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                      <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4 text-[#000080]" />
+                        <span className="font-bold text-slate-900 text-xs sm:text-sm">{bank.bankName}</span>
+                      </div>
+                      {bank.isPrimary && (
+                        <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full">
+                          Primary
+                        </span>
+                      )}
                     </div>
-                  </div>
 
-                  <div className="flex items-start justify-between border-b border-slate-100 pb-2.5">
-                    <span className="text-slate-500 font-medium">Branch</span>
-                    <span className="font-medium text-slate-800 text-right">
-                      {bankDetails.branch}
-                    </span>
-                  </div>
+                    <div className="space-y-2.5 text-xs">
+                      <div className="flex items-start justify-between border-b border-slate-100 pb-2">
+                        <span className="text-slate-500 font-medium">Account Name</span>
+                        <span className="font-bold text-[#000080] text-right">
+                          {bank.accountName}
+                        </span>
+                      </div>
 
-                  <div className="flex items-start justify-between">
-                    <span className="text-slate-500 font-medium">Swift Code</span>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-slate-900">
-                        {bankDetails.swiftCode}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          copyToClipboard(bankDetails.swiftCode, 'bank-swift')
-                        }
-                        className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                          copiedField === 'bank-swift'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                        }`}
-                        title="Copy Swift Code"
-                      >
-                        {copiedField === 'bank-swift' ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        ) : (
-                          <Copy className="w-3.5 h-3.5" />
-                        )}
-                      </button>
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <span className="text-slate-500 font-medium">Account Number</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-black text-sm sm:text-base text-slate-900">
+                            {bank.accountNumber}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              copyToClipboard(bank.accountNumber, `bank-acc-${bIdx}`)
+                            }
+                            className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                              copiedField === `bank-acc-${bIdx}`
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                            }`}
+                            title="Copy Account Number"
+                          >
+                            {copiedField === `bank-acc-${bIdx}` ? (
+                              <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start justify-between border-b border-slate-100 pb-2">
+                        <span className="text-slate-500 font-medium">Branch</span>
+                        <span className="font-medium text-slate-800 text-right">
+                          {bank.branch}
+                        </span>
+                      </div>
+
+                      <div className="flex items-start justify-between">
+                        <span className="text-slate-500 font-medium">Swift Code</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-slate-900">
+                            {bank.swiftCode}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              copyToClipboard(bank.swiftCode, `bank-swift-${bIdx}`)
+                            }
+                            className={`p-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                              copiedField === `bank-swift-${bIdx}`
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                            }`}
+                            title="Copy Swift Code"
+                          >
+                            {copiedField === `bank-swift-${bIdx}` ? (
+                              <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            ) : (
+                              <Copy className="w-3.5 h-3.5" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
 
-                {/* Copy All Bank Info Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    const slip = `Bank: ${bankDetails.bankName}\nAccount Name: ${bankDetails.accountName}\nAccount Number: ${bankDetails.accountNumber}\nBranch: ${bankDetails.branch}\nSwift: ${bankDetails.swiftCode}`;
-                    copyToClipboard(slip, 'bank-all');
-                  }}
-                  className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                    copiedField === 'bank-all'
-                      ? 'bg-emerald-600 text-white shadow-sm'
-                      : 'bg-slate-100 hover:bg-[#000080] text-slate-700 hover:text-white border border-slate-200'
-                  }`}
-                >
-                  {copiedField === 'bank-all' ? (
-                    <>
-                      <Check className="w-4 h-4" />
-                      <span>All Bank Details Copied!</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      <span>Copy Full Bank Slip</span>
-                    </>
-                  )}
-                </button>
+                    {/* Copy All Bank Info Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const slip = `Bank: ${bank.bankName}\nAccount Name: ${bank.accountName}\nAccount Number: ${bank.accountNumber}\nBranch: ${bank.branch}\nSwift: ${bank.swiftCode}`;
+                        copyToClipboard(slip, `bank-all-${bIdx}`);
+                      }}
+                      className={`w-full py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                        copiedField === `bank-all-${bIdx}`
+                          ? 'bg-emerald-600 text-white shadow-sm'
+                          : 'bg-slate-100 hover:bg-[#000080] text-slate-700 hover:text-white border border-slate-200'
+                      }`}
+                    >
+                      {copiedField === `bank-all-${bIdx}` ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" />
+                          <span>All Bank Details Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-3.5 h-3.5" />
+                          <span>Copy Full Bank Slip</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                ))}
               </div>
 
               {/* Bank Notice */}
@@ -428,14 +412,14 @@ export const DonationModal: React.FC<DonationModalProps> = ({
                 </p>
                 <p className="text-amber-800/90 leading-relaxed">
                   For wire transfers and corporate donations, please send proof of payment or receipt to{' '}
-                  <strong className="text-amber-950 underline">{FOUNDATION_INFO.email}</strong> or on WhatsApp to receive an official Foundation tax receipt and recognition letter.
+                  <strong className="text-amber-950 underline">{foundationInfo.email || FOUNDATION_INFO.email}</strong> or on WhatsApp to receive an official Foundation tax receipt and recognition letter.
                 </p>
               </div>
 
               {/* Action Buttons */}
               <div className="pt-1 flex flex-col sm:flex-row gap-2.5">
                 <a
-                  href={`mailto:${FOUNDATION_INFO.email}?subject=Donation%20Confirmation%20-%20Forster%20Kwarteng%20Foundation`}
+                  href={`mailto:${foundationInfo.email || FOUNDATION_INFO.email}?subject=Donation%20Confirmation%20-%20Forster%20Kwarteng%20Foundation`}
                   className="flex-1 py-3 px-4 rounded-xl bg-[#000080] hover:bg-[#0a0a85] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer"
                 >
                   <span>Email Payment Receipt</span>
@@ -459,7 +443,7 @@ export const DonationModal: React.FC<DonationModalProps> = ({
           <div className="pt-2 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
             <span className="flex items-center gap-1.5 font-medium text-slate-600">
               <ShieldCheck className="w-4 h-4 text-[#000080]" />
-              Official Registration: <strong className="text-slate-800 font-mono">{FOUNDATION_INFO.registrationNo}</strong>
+              Official Registration: <strong className="text-slate-800 font-mono">{foundationInfo.registrationNo || FOUNDATION_INFO.registrationNo}</strong>
             </span>
             <span className="font-semibold text-emerald-700 flex items-center gap-1">
               <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />

@@ -193,4 +193,31 @@ export interface VolunteerSubmission {
   status: 'new' | 'reviewed' | 'contacted';
 }
 
+export interface MomoAccount {
+  id: string;
+  network: string; // e.g. "MTN Mobile Money", "Telecel Cash", "AT Money"
+  badge: string; // e.g. "MTN MoMo", "Telecel Cash", "AT Money"
+  badgeColor?: string;
+  logo?: string | null;
+  number: string;
+  formatted: string;
+  accountName: string;
+  reference?: string;
+  isPrimary: boolean;
+}
+
+export interface BankAccount {
+  id: string;
+  bankName: string;
+  accountName: string;
+  accountNumber: string;
+  branch: string;
+  swiftCode: string;
+  routingCode?: string;
+  currency?: string;
+  country: string;
+  isPrimary: boolean;
+}
+
+
 

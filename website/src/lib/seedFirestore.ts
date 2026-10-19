@@ -15,6 +15,8 @@ import {
   UPCOMING_PROJECTS,
   BENEFICIARY_STORIES,
   FOUNDATION_INFO,
+  DEFAULT_MOMO_ACCOUNTS,
+  DEFAULT_BANK_ACCOUNTS,
 } from '../data/foundationData';
 
 /**
@@ -65,6 +67,14 @@ export async function seedFirestoreIfEmpty(): Promise<boolean> {
     // 6. Seed Foundation Settings
     const settingsRef = doc(db, 'settings', 'general');
     batch.set(settingsRef, FOUNDATION_INFO);
+
+    // 7. Seed Financials & Donation Channels
+    const financialsRef = doc(db, 'settings', 'financials');
+    batch.set(financialsRef, {
+      momoAccounts: DEFAULT_MOMO_ACCOUNTS,
+      bankAccounts: DEFAULT_BANK_ACCOUNTS,
+      updatedAt: new Date().toISOString(),
+    });
 
     await batch.commit();
     console.log('[Firestore] Initial foundation data seeded successfully!');

@@ -11,27 +11,41 @@ interface AuthContextType {
   adminUser: AdminUser | null;
   login: (password: string, email?: string) => { success: boolean; error?: string };
   logout: () => void;
+  changePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => { success: boolean; error?: string };
+  resetPasswordToDefault: () => { success: boolean };
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const AUTH_STORAGE_KEY = 'fkf_admin_session';
+const AUTH_PASSWORD_KEY = 'fkf_admin_custom_pwd';
+const DEFAULT_PASSWORD = 'fkf2026';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [adminUser, setAdminUser] = useState<AdminUser | null>(() => {
     try {
-      const stored = localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
+      const stored =
+        localStorage.getItem(AUTH_STORAGE_KEY) || sessionStorage.getItem(AUTH_STORAGE_KEY);
       return stored ? JSON.parse(stored) : null;
     } catch {
       return null;
     }
   });
 
+  const [activePassword, setActivePassword] = useState<string>(() => {
+    try {
+      return localStorage.getItem(AUTH_PASSWORD_KEY) || DEFAULT_PASSWORD;
+    } catch {
+      return DEFAULT_PASSWORD;
+    }
+  });
+
   const isAuthenticated = !!adminUser;
 
   const login = (password: string, email = 'founder@forsterkwartengfoundation.org') => {
-    // Single authorized admin password
-    const validPasswords = ['fkf2026'];
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanEmail) {
@@ -42,7 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return { success: false, error: 'Please enter your password.' };
     }
 
-    if (validPasswords.includes(password.trim())) {
+    if (password.trim() === activePassword.trim()) {
       const isFounder = cleanEmail.startsWith('founder');
       const user: AdminUser = {
         email: cleanEmail,
@@ -64,6 +78,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   };
 
+  const changePassword = (currentPassword: string, newPassword: string) => {
+    if (!currentPassword) {
+      return { success: false, error: 'Please enter your current password.' };
+    }
+    if (currentPassword.trim() !== activePassword.trim()) {
+      return { success: false, error: 'Current password does not match. Please verify and try again.' };
+    }
+    if (!newPassword || newPassword.trim().length < 6) {
+      return { success: false, error: 'New password must be at least 6 characters long.' };
+    }
+    if (newPassword.trim() === currentPassword.trim()) {
+      return { success: false, error: 'New password cannot be the same as your current password.' };
+    }
+
+    const updated = newPassword.trim();
+    setActivePassword(updated);
+    try {
+      localStorage.setItem(AUTH_PASSWORD_KEY, updated);
+    } catch (err) {
+      console.error('Failed to save updated password', err);
+    }
+    return { success: true };
+  };
+
+  const resetPasswordToDefault = () => {
+    setActivePassword(DEFAULT_PASSWORD);
+    try {
+      localStorage.removeItem(AUTH_PASSWORD_KEY);
+    } catch (err) {
+      console.error('Failed to reset password', err);
+    }
+    return { success: true };
+  };
+
   const logout = () => {
     setAdminUser(null);
     try {
@@ -75,7 +123,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, adminUser, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        adminUser,
+        login,
+        logout,
+        changePassword,
+        resetPasswordToDefault,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
