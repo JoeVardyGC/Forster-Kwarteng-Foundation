@@ -19,17 +19,23 @@ import { PageSkeleton } from './components/PageSkeleton';
 export function App() {
   const { isAuthenticated } = useAuth();
 
-  const getInitialState = () => {
-    const hash = window.location.hash.replace('#', '');
-    if (hash.startsWith('program/') || hash.startsWith('project/')) {
-      const progId = hash.replace('program/', '').replace('project/', '');
+  const resolveRoute = () => {
+    // Check hash first (e.g. #admin, #programs, #program/mental-health)
+    const hash = window.location.hash.replace(/^#\/?/, '');
+    // Check pathname second (e.g. /admin, /programs, /admin-login)
+    const path = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+
+    const route = hash || path;
+
+    if (route.startsWith('program/') || route.startsWith('project/')) {
+      const progId = route.replace('program/', '').replace('project/', '');
       return { page: 'program-article' as PageId, programId: progId || 'mental-health' };
     }
-    if (hash === 'projects') {
+    if (route === 'projects') {
       return { page: 'programs' as PageId, programId: 'mental-health' };
     }
-    if (hash === 'admin' || hash === 'admin-login') {
-      return { page: hash as PageId, programId: 'mental-health' };
+    if (route === 'admin' || route === 'admin-login') {
+      return { page: route as PageId, programId: 'mental-health' };
     }
     const validPages: PageId[] = [
       'home',
@@ -44,12 +50,12 @@ export function App() {
       'admin-login',
     ];
     return {
-      page: validPages.includes(hash as PageId) ? (hash as PageId) : ('home' as PageId),
+      page: validPages.includes(route as PageId) ? (route as PageId) : ('home' as PageId),
       programId: 'mental-health',
     };
   };
 
-  const initialState = getInitialState();
+  const initialState = resolveRoute();
   const [currentPage, setCurrentPage] = useState<PageId>(initialState.page);
   const [selectedProgramId, setSelectedProgramId] = useState<string>(initialState.programId);
   const [currency, setCurrency] = useState<Currency>('GHS');
@@ -60,41 +66,25 @@ export function App() {
     // Initial load skeleton simulation for seamless page boot
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 650);
+    }, 450);
     return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash.startsWith('program/') || hash.startsWith('project/')) {
-        const progId = hash.replace('program/', '').replace('project/', '');
-        setSelectedProgramId(progId || 'mental-health');
-        setCurrentPage('program-article');
-      } else if (hash === 'projects') {
-        setCurrentPage('programs');
-      } else {
-        const validPages: PageId[] = [
-          'home',
-          'about',
-          'programs',
-          'transparency',
-          'donate',
-          'get-involved',
-          'contact',
-          'admin',
-          'admin-login',
-        ];
-        if (validPages.includes(hash as PageId)) {
-          setCurrentPage(hash as PageId);
-        } else if (!hash) {
-          setCurrentPage('home');
-        }
+    const handleRouteChange = () => {
+      const { page, programId } = resolveRoute();
+      setCurrentPage(page);
+      if (page === 'program-article') {
+        setSelectedProgramId(programId);
       }
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
+    return () => {
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
+    };
   }, []);
 
   const toggleCurrency = () => {
@@ -103,7 +93,15 @@ export function App() {
 
   const handleNavigate = (page: PageId) => {
     setCurrentPage(page);
-    window.location.hash = page === 'home' ? '' : page;
+    if (page === 'home') {
+      if (window.location.hash) {
+        window.history.pushState(null, '', '/');
+      } else if (window.location.pathname !== '/') {
+        window.history.pushState(null, '', '/');
+      }
+    } else {
+      window.location.hash = page;
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

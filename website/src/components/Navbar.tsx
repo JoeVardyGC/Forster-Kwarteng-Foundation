@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { PageId } from '../types';
-import { Heart, Menu, X, ChevronRight } from 'lucide-react';
+import { Heart, Menu, X, ChevronRight, Lock, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   currentPage: PageId;
@@ -15,6 +16,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,6 +90,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Desktop Right Actions (Glassy Pill Button) */}
           <div className="hidden md:flex items-center gap-3">
+            {isAuthenticated && (
+              <button
+                onClick={() => handleLinkClick('admin')}
+                className="flex items-center gap-1.5 bg-blue-50 hover:bg-blue-100 text-[#000080] border border-blue-200 font-bold text-xs px-3.5 py-2 rounded-full shadow-xs transition-all cursor-pointer"
+                title="Open Foundation Admin Console"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
+                <span>Console</span>
+              </button>
+            )}
+
             <button
               onClick={onOpenDonateModal}
               className="flex items-center gap-2 bg-gradient-to-r from-[#F5BD02] to-[#e5ae00] hover:from-[#e5ae00] hover:to-[#d49e00] text-[#000080] font-black text-sm px-6 py-2.5 rounded-full shadow-md shadow-amber-500/25 border border-amber-300/70 hover:shadow-xl hover:shadow-amber-500/35 transition-all duration-300 hover:scale-105 active:scale-100 cursor-pointer"
@@ -181,6 +194,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <p className="text-xs font-semibold text-slate-700 mt-1">
                   +233 546732812 / +233 556727083
                 </p>
+              </div>
+
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-center">
+                <button
+                  onClick={() => handleLinkClick('admin')}
+                  className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-[#000080] font-semibold py-1.5 px-3 rounded-lg hover:bg-slate-50 transition-colors cursor-pointer"
+                >
+                  <Lock className="w-3.5 h-3.5 text-amber-500" />
+                  <span>{isAuthenticated ? 'Open Admin Console' : 'Staff Administration Portal'}</span>
+                </button>
               </div>
             </div>
           </div>

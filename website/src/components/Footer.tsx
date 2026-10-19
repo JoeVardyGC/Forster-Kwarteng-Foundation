@@ -78,7 +78,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
             </div>
 
             <p className="text-sm text-blue-100/80 leading-relaxed max-w-sm">
-              {FOUNDATION_INFO.brandStatement}
+              {foundationInfo.brandStatement}
             </p>
 
             <div className="pt-1 flex flex-wrap items-center gap-3">
