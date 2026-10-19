@@ -1,0 +1,14 @@
+# Robots.txt for Forster Kwarteng Foundation
+# https://www.forsterkwartengfoundation.org
+
+User-agent: *
+Allow: /
+
+# Disallow private administrative areas
+Disallow: /admin
+Disallow: /#admin
+Disallow: /admin-login
+Disallow: /#admin-login
+
+# Primary XML Sitemap for Googlebot, Bingbot & search engines
+Sitemap: https://www.forsterkwartengfoundation.org/sitemap.xml
