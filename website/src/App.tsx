@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { PageId, Currency } from './types';
+import { useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { DonationModal } from './components/DonationModal';
@@ -11,9 +12,13 @@ import { TransparencyPage } from './pages/TransparencyPage';
 import { DonatePage } from './pages/DonatePage';
 import { GetInvolvedPage } from './pages/GetInvolvedPage';
 import { ContactPage } from './pages/ContactPage';
+import { AdminLayout } from './pages/admin/AdminLayout';
+import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { PageSkeleton } from './components/PageSkeleton';
 
 export function App() {
+  const { isAuthenticated } = useAuth();
+
   const getInitialState = () => {
     const hash = window.location.hash.replace('#', '');
     if (hash.startsWith('program/') || hash.startsWith('project/')) {
@@ -22,6 +27,9 @@ export function App() {
     }
     if (hash === 'projects') {
       return { page: 'programs' as PageId, programId: 'mental-health' };
+    }
+    if (hash === 'admin' || hash === 'admin-login') {
+      return { page: hash as PageId, programId: 'mental-health' };
     }
     const validPages: PageId[] = [
       'home',
@@ -32,6 +40,8 @@ export function App() {
       'donate',
       'get-involved',
       'contact',
+      'admin',
+      'admin-login',
     ];
     return {
       page: validPages.includes(hash as PageId) ? (hash as PageId) : ('home' as PageId),
@@ -72,6 +82,8 @@ export function App() {
           'donate',
           'get-involved',
           'contact',
+          'admin',
+          'admin-login',
         ];
         if (validPages.includes(hash as PageId)) {
           setCurrentPage(hash as PageId);
@@ -167,6 +179,13 @@ export function App() {
         );
       case 'contact':
         return <ContactPage />;
+      case 'admin-login':
+        return <AdminLoginPage onNavigate={handleNavigate} />;
+      case 'admin':
+        if (!isAuthenticated) {
+          return <AdminLoginPage onNavigate={handleNavigate} />;
+        }
+        return <AdminLayout onNavigateHome={() => handleNavigate('home')} />;
       default:
         return (
           <HomePage
@@ -181,6 +200,15 @@ export function App() {
 
   if (isLoading) {
     return <PageSkeleton page={currentPage} />;
+  }
+
+  // Admin routes render as a dedicated full-screen console without public navbar/footer
+  if (currentPage === 'admin' || currentPage === 'admin-login') {
+    return (
+      <div className="min-h-screen bg-slate-100 font-['Plus_Jakarta_Sans']">
+        {renderCurrentPage()}
+      </div>
+    );
   }
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { PageId, Currency, ProgramArticle } from '../types';
-import { PROGRAM_ARTICLES, OUR_PROGRAMS } from '../data/foundationData';
+import { useData } from '../context/DataContext';
 import {
   ArrowLeft,
   Clock,
@@ -12,6 +12,7 @@ import {
   Share2,
   Send,
   Bookmark,
+  FolderOpen,
 } from 'lucide-react';
 
 interface ProgramArticlePageProps {
@@ -29,15 +30,16 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
   onSelectProgram,
   onOpenDonateModal,
 }) => {
+  const { programArticles, programs } = useData();
   const [scrollProgress, setScrollProgress] = useState(0);
   const [copiedLink, setCopiedLink] = useState(false);
   const [activeLightboxIndex, setActiveLightboxIndex] = useState<number | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
 
-  // Retrieve program article data or fallback to first
-  const article: ProgramArticle =
-    PROGRAM_ARTICLES[programId] || PROGRAM_ARTICLES['mental-health'];
+  // Retrieve program article data or fallback to first available
+  const article: ProgramArticle | undefined =
+    programArticles[programId] || Object.values(programArticles)[0];
 
   // Scroll tracking progress bar
   useEffect(() => {
@@ -76,7 +78,7 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
   // Lightbox key controls
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      const galleryLength = article.gallery?.length || 0;
+      const galleryLength = article?.gallery?.length || 0;
       if (activeLightboxIndex !== null && galleryLength > 0) {
         if (e.key === 'Escape') setActiveLightboxIndex(null);
         if (e.key === 'ArrowRight') {
@@ -99,10 +101,30 @@ export const ProgramArticlePage: React.FC<ProgramArticlePageProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeLightboxIndex, isVideoModalOpen, article.gallery?.length]);
+  }, [activeLightboxIndex, isVideoModalOpen, article?.gallery?.length]);
+
+  if (!article) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center bg-white">
+        <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#000080] flex items-center justify-center mb-4">
+          <FolderOpen className="w-8 h-8 text-[#000080]" />
+        </div>
+        <h2 className="text-2xl font-bold font-['Outfit'] text-slate-900">Project Not Found</h2>
+        <p className="text-xs sm:text-sm text-slate-500 max-w-md mt-1 mb-6">
+          This project may have been removed or updated. Please explore our other initiatives.
+        </p>
+        <button
+          onClick={() => onNavigate('programs')}
+          className="px-6 py-2.5 rounded-full bg-[#000080] text-white font-bold text-xs shadow-md cursor-pointer"
+        >
+          View All Projects
+        </button>
+      </div>
+    );
+  }
 
   // Related programs lookup (all other programs)
-  const otherPrograms = OUR_PROGRAMS.filter((p) => p.id !== article.id);
+  const otherPrograms = programs.filter((p) => p.id !== article.id);
 
   const getProgramCategoryTag = (id: string) => {
     switch (id) {

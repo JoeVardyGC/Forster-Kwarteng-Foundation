@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FOUNDATION_INFO } from '../data/foundationData';
+import { useData } from '../context/DataContext';
 import {
   MapPin,
   Phone,
@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 export const ContactPage: React.FC = () => {
+  const { foundationInfo, submitContactForm } = useData();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -21,6 +22,13 @@ export const ContactPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    submitContactForm({
+      name,
+      email,
+      phone,
+      subject,
+      message,
+    });
     setIsSent(true);
   };
 
@@ -74,12 +82,15 @@ export const ContactPage: React.FC = () => {
                     </h4>
                     <p className="text-xs text-slate-500 mt-0.5">Calls & WhatsApp:</p>
                     <div className="mt-1 space-y-0.5 text-xs font-bold text-slate-800">
-                      <a href="tel:+233546732812" className="block hover:text-[#000080]">
-                        +233 546732812
-                      </a>
-                      <a href="tel:+233556727083" className="block hover:text-[#000080]">
-                        +233 556727083
-                      </a>
+                      {foundationInfo.phones.map((phone, pIdx) => (
+                        <a
+                          key={pIdx}
+                          href={`tel:${phone.replace(/\s+/g, '')}`}
+                          className="block hover:text-[#000080]"
+                        >
+                          {phone}
+                        </a>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -94,10 +105,10 @@ export const ContactPage: React.FC = () => {
                     </h4>
                     <p className="text-xs text-slate-500 mt-0.5">General & Institutional:</p>
                     <a
-                      href={`mailto:${FOUNDATION_INFO.email}`}
+                      href={`mailto:${foundationInfo.email}`}
                       className="text-xs font-bold text-slate-800 hover:text-[#000080] block mt-1 break-all"
                     >
-                      {FOUNDATION_INFO.email}
+                      {foundationInfo.email}
                     </a>
                   </div>
                 </div>
@@ -111,7 +122,7 @@ export const ContactPage: React.FC = () => {
                       Headquarters Location
                     </h4>
                     <p className="text-xs text-slate-700 mt-1">
-                      {FOUNDATION_INFO.address}
+                      {foundationInfo.address}
                     </p>
                   </div>
                 </div>
@@ -125,7 +136,7 @@ export const ContactPage: React.FC = () => {
                       Operating Office Hours
                     </h4>
                     <p className="text-xs text-slate-700 mt-1">
-                      {FOUNDATION_INFO.operatingHours}
+                      {foundationInfo.operatingHours}
                     </p>
                   </div>
                 </div>

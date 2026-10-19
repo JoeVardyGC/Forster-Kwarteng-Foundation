@@ -6,7 +6,9 @@ export type PageId =
   | 'transparency' 
   | 'donate' 
   | 'get-involved' 
-  | 'contact';
+  | 'contact'
+  | 'admin'
+  | 'admin-login';
 
 export type Currency = 'GHS' | 'USD';
 
@@ -155,6 +157,39 @@ export interface UpcomingProjectEvent {
     label: string;
   };
   tags: string[];
+}
+
+export interface HeroSlide {
+  id: string | number;
+  image: string;
+  pillar: string;
+  headlinePrefix: string;
+  headlineHighlight: string;
+  description: string;
+  tag?: string;
+  title?: string;
+}
+
+export interface ContactSubmission {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  subject: string;
+  message: string;
+  date: string;
+  status: 'new' | 'read' | 'replied';
+}
+
+export interface VolunteerSubmission {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  formType: 'volunteer' | 'partner';
+  skills: string;
+  date: string;
+  status: 'new' | 'reviewed' | 'contacted';
 }
 
 

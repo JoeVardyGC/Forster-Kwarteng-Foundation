@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { PageId } from '../types';
+import { useData } from '../context/DataContext';
 import {
   Users,
   Briefcase,
@@ -21,6 +22,7 @@ export const GetInvolvedPage: React.FC<GetInvolvedPageProps> = ({
   onNavigate,
   onOpenDonateModal,
 }) => {
+  const { submitVolunteerForm } = useData();
   const [formType, setFormType] = useState<'volunteer' | 'partner'>('volunteer');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -30,6 +32,13 @@ export const GetInvolvedPage: React.FC<GetInvolvedPageProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    submitVolunteerForm({
+      fullName,
+      email,
+      phone,
+      formType,
+      skills,
+    });
     setIsSubmitted(true);
   };
 

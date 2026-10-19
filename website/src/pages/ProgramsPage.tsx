@@ -1,10 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import type { PageId } from '../types';
+import { useData } from '../context/DataContext';
 import {
-  OUR_PROGRAMS,
-  PROGRAM_ARTICLES,
   PROGRAM_PILLARS,
-  UPCOMING_PROJECTS,
 } from '../data/foundationData';
 import {
   Calendar,
@@ -39,6 +37,7 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
   onSelectProgram,
   onOpenDonateModal,
 }) => {
+  const { programs, programArticles, upcomingEvents } = useData();
   const [filter, setFilter] = useState<ProjectFilter>('all');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -51,8 +50,8 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
 
   // 1. Prepare Active Programs
   const activeItems = useMemo(() => {
-    return OUR_PROGRAMS.map((prog) => {
-      const article = PROGRAM_ARTICLES[prog.id];
+    return programs.map((prog) => {
+      const article = programArticles[prog.id];
       return {
         kind: 'active' as const,
         id: prog.id,
@@ -67,11 +66,11 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
         readTime: article?.readTime || '4 min read',
       };
     });
-  }, []);
+  }, [programs, programArticles]);
 
   // 2. Prepare Upcoming Missions
   const upcomingItems = useMemo(() => {
-    return UPCOMING_PROJECTS.map((up) => ({
+    return upcomingEvents.map((up) => ({
       kind: 'upcoming' as const,
       id: up.id,
       title: up.title,
@@ -79,13 +78,15 @@ export const ProgramsPage: React.FC<ProgramsPageProps> = ({
       description: up.summary,
       image: up.image,
       location: up.location,
-      metric: `${up.highlightMetric.value} (${up.highlightMetric.label})`,
+      metric: up.highlightMetric
+        ? `${up.highlightMetric.value} ${up.highlightMetric.label}`
+        : 'Outreach in Planning',
       formattedDate: up.formattedDate,
       time: up.time,
       status: up.status,
-      tags: up.tags,
+      readTime: 'Field Date',
     }));
-  }, []);
+  }, [upcomingEvents]);
 
   // 3. Filtered List based on tab and search
   const displayedItems = useMemo(() => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import type { PageId } from '../types';
-import { UPCOMING_PROJECTS } from '../data/foundationData';
+import { useData } from '../context/DataContext';
 import {
   Calendar,
   CalendarOff,
@@ -48,9 +48,11 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
   onNavigate,
   onOpenDonateModal,
 }) => {
+  const { upcomingEvents } = useData();
+
   const [times, setTimes] = useState<Record<string, TimeRemaining>>(() => {
     const initial: Record<string, TimeRemaining> = {};
-    UPCOMING_PROJECTS.forEach((item) => {
+    upcomingEvents.forEach((item) => {
       initial[item.id] = calculateTimeRemaining(item.targetDate);
     });
     return initial;
@@ -59,17 +61,17 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
   useEffect(() => {
     const timer = setInterval(() => {
       const updated: Record<string, TimeRemaining> = {};
-      UPCOMING_PROJECTS.forEach((item) => {
+      upcomingEvents.forEach((item) => {
         updated[item.id] = calculateTimeRemaining(item.targetDate);
       });
       setTimes(updated);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [upcomingEvents]);
 
-  const featuredProject = UPCOMING_PROJECTS.find((p) => p.status === 'Featured') || UPCOMING_PROJECTS[0];
-  const otherProjects = UPCOMING_PROJECTS.filter((p) => p.id !== featuredProject?.id);
+  const featuredProject = upcomingEvents.find((p) => p.status === 'Featured') || upcomingEvents[0];
+  const otherProjects = upcomingEvents.filter((p) => p.id !== featuredProject?.id);
 
   const featuredTime = featuredProject ? times[featuredProject.id] : null;
 
@@ -96,7 +98,7 @@ export const UpcomingProjectsSection: React.FC<UpcomingProjectsSectionProps> = (
         </div>
 
         {/* EMPTY STATE OR PROJECT CARDS */}
-        {UPCOMING_PROJECTS.length === 0 ? (
+        {upcomingEvents.length === 0 ? (
           <div className="max-w-xl mx-auto text-center py-14 px-6 sm:px-8 rounded-3xl bg-white border border-slate-200/90 shadow-[0_10px_30px_rgba(0,0,128,0.05)] space-y-4">
             <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#000080] flex items-center justify-center mx-auto shadow-2xs border border-blue-100">
               <CalendarOff className="w-8 h-8 text-[#000080]" />

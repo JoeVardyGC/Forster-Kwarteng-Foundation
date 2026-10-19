@@ -1,7 +1,8 @@
 import React from 'react';
 import type { PageId } from '../types';
-import { FOUNDATION_INFO, CORE_VALUES } from '../data/foundationData';
-import { Phone, Mail, MapPin, Heart, ArrowUp } from 'lucide-react';
+import { useData } from '../context/DataContext';
+import { CORE_VALUES } from '../data/foundationData';
+import { Phone, Mail, MapPin, Heart, ArrowUp, Lock } from 'lucide-react';
 
 interface FooterProps {
   onNavigate: (page: PageId) => void;
@@ -9,6 +10,8 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal }) => {
+  const { foundationInfo } = useData();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -143,7 +146,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
                 </div>
                 <div>
                   <span className="block font-bold text-white mb-0.5">Location</span>
-                  <span className="text-blue-200/80 leading-relaxed block">{FOUNDATION_INFO.address}</span>
+                  <span className="text-blue-200/80 leading-relaxed block">{foundationInfo.address}</span>
                 </div>
               </div>
 
@@ -154,18 +157,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
                 <div>
                   <span className="block font-bold text-white mb-0.5">Direct Hotlines</span>
                   <div className="space-y-0.5">
-                    <a
-                      href="tel:+233546732812"
-                      className="block text-blue-200/80 hover:text-amber-300 transition-colors"
-                    >
-                      +233 546732812
-                    </a>
-                    <a
-                      href="tel:+233556727083"
-                      className="block text-blue-200/80 hover:text-amber-300 transition-colors"
-                    >
-                      +233 556727083
-                    </a>
+                    {foundationInfo.phones.map((phone, pIdx) => (
+                      <a
+                        key={pIdx}
+                        href={`tel:${phone.replace(/\s+/g, '')}`}
+                        className="block text-blue-200/80 hover:text-amber-300 transition-colors"
+                      >
+                        {phone}
+                      </a>
+                    ))}
                   </div>
                 </div>
               </div>
@@ -177,11 +177,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
                 <div className="min-w-0 flex-1">
                   <span className="block font-bold text-white mb-0.5">Email</span>
                   <a
-                    href={`mailto:${FOUNDATION_INFO.email}`}
+                    href={`mailto:${foundationInfo.email}`}
                     className="text-blue-200/80 hover:text-amber-300 transition-colors block truncate"
-                    title={FOUNDATION_INFO.email}
+                    title={foundationInfo.email}
                   >
-                    {FOUNDATION_INFO.email}
+                    {foundationInfo.email}
                   </a>
                 </div>
               </div>
@@ -192,14 +192,23 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
         {/* 3. Sub-Footer Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-blue-200/70 font-montserrat font-normal">
           <p className="font-montserrat font-normal">
-            © {new Date().getFullYear()} {FOUNDATION_INFO.name}. All rights reserved.
+            © {new Date().getFullYear()} {foundationInfo.name}. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 sm:gap-6">
             <span className="text-amber-300/80 font-medium hidden sm:inline-block">
-              Accra, Ghana
+              {foundationInfo.hqLocation}
             </span>
             <span className="hidden sm:inline-block">•</span>
+            <button
+              onClick={() => handleNav('admin')}
+              className="flex items-center gap-1 text-blue-200/60 hover:text-amber-300 transition-colors cursor-pointer"
+              title="Staff & Management Access"
+            >
+              <Lock className="w-3 h-3 text-amber-400/80" />
+              <span>Admin Portal</span>
+            </button>
+            <span>•</span>
             <button
               onClick={scrollToTop}
               className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 transition-colors cursor-pointer group font-semibold"

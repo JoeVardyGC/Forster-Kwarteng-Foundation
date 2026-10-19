@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import type { PageId, Currency } from '../types';
+import { useData } from '../context/DataContext';
 import { UpcomingProjectsSection } from '../components/UpcomingProjectsSection';
 import {
   FOUNDATION_INFO,
   PROGRAM_PILLARS,
   IMPACT_STATS,
   CORE_VALUES,
-  OUR_PROGRAMS,
 } from '../data/foundationData';
 import {
   Heart,
@@ -24,53 +24,6 @@ import {
   FolderOpen,
 } from 'lucide-react';
 
-export const HERO_SLIDES = [
-  {
-    id: 1,
-    image: '/assets/hero_boy_right.jpg',
-    pillar: 'Pillar 01 • Education Sponsorship',
-    headlinePrefix: '‘Every Child Deserves',
-    headlineHighlight: 'A Desk & A Dream’',
-    description:
-      'Equipping orphaned and vulnerable school children across Ghana with textbooks, uniforms, and scholarships.',
-    tag: 'Educational Sponsorship',
-    title: 'Dignity & Hope in the Classroom',
-  },
-  {
-    id: 2,
-    image: '/assets/hero_girls_right.jpg',
-    pillar: 'Pillar 02 • Mentorship & Literacy',
-    headlinePrefix: '‘Unlocking Hope Through',
-    headlineHighlight: 'Girl-Child Literacy’',
-    description:
-      'Creating safe reading clubs and structured mentorship circles so every young girl thrives in school and beyond.',
-    tag: 'Girl-Child Literacy',
-    title: 'Foundations of Lifelong Learning',
-  },
-  {
-    id: 3,
-    image: '/assets/hero_outreach_right.jpg',
-    pillar: 'Pillar 03 • Community Care & Relief',
-    headlinePrefix: '‘Grassroots Aid Where',
-    headlineHighlight: 'It Matters Most’',
-    description:
-      'Delivering essential back-to-school kits, nutritional supplies, and urgent relief directly to underserved families.',
-    tag: 'Community Care & Relief',
-    title: 'Direct Aid & Emergency Safety Nets',
-  },
-  {
-    id: 4,
-    image: '/assets/hero_group_right.jpg',
-    pillar: 'Pillar 04 • Sustainable Futures',
-    headlinePrefix: '‘Empowering Lives,',
-    headlineHighlight: 'Building Futures’',
-    description:
-      'Partnering with local communities in Accra to build self-reliance, youth mentorship, and lasting opportunities.',
-    tag: 'Sustainable Futures',
-    title: 'Empowering the Next Generation',
-  },
-];
-
 interface HomePageProps {
   onNavigate: (page: PageId) => void;
   onSelectProgram?: (programId: string) => void;
@@ -84,21 +37,33 @@ export const HomePage: React.FC<HomePageProps> = ({
   currency,
   onOpenDonateModal,
 }) => {
+  const { heroSlides, programs } = useData();
+  const slides = heroSlides;
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Keep currentSlide within valid range if slides count changes
   useEffect(() => {
+    if (currentSlide >= slides.length && slides.length > 0) {
+      setCurrentSlide(0);
+    }
+  }, [slides.length, currentSlide]);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [currentSlide]);
+  }, [currentSlide, slides.length]);
 
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+    if (slides.length <= 1) return;
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    if (slides.length <= 1) return;
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
   const pillarIcons: Record<string, React.ReactNode> = {
@@ -125,7 +90,7 @@ export const HomePage: React.FC<HomePageProps> = ({
       >
         {/* Full-Bleed Background Carousel Images - Shifted right for character prominence */}
         <div className="absolute inset-0 z-0">
-          {HERO_SLIDES.map((slide, idx) => (
+          {slides.map((slide, idx) => (
             <div
               key={slide.id}
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
@@ -173,7 +138,7 @@ export const HomePage: React.FC<HomePageProps> = ({
           <div className="max-w-md sm:max-w-lg lg:max-w-xl space-y-3.5 sm:space-y-4">
             {/* Dynamic Storytelling Text */}
             <div className="relative min-h-[170px] sm:min-h-[210px] lg:min-h-[235px]">
-              {HERO_SLIDES.map((slide, idx) => (
+              {slides.map((slide, idx) => (
                 <div
                   key={slide.id}
                   className={`space-y-2.5 sm:space-y-3 transition-all duration-700 ease-out ${
@@ -224,7 +189,7 @@ export const HomePage: React.FC<HomePageProps> = ({
 
             {/* Slide Indicators: Centered Dots & Elongated Active Pill */}
             <div className="pt-2 flex items-center gap-1.5">
-              {HERO_SLIDES.map((slide, idx) => (
+              {slides.map((slide, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentSlide(idx)}
@@ -340,9 +305,9 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
 
           {/* Cards Grid or Empty State */}
-          {OUR_PROGRAMS.length > 0 ? (
+          {programs.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {OUR_PROGRAMS.map((prog) => (
+              {programs.map((prog) => (
                 <div
                   key={prog.id}
                   className="bg-white/85 backdrop-blur-md rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_24px_rgba(0,0,0,0.03)] hover:shadow-[0_24px_48px_rgba(0,0,128,0.12)] hover:border-[#000080]/30 hover:-translate-y-2 transition-all duration-500 flex flex-col group"
