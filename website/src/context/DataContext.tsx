@@ -15,6 +15,16 @@ import {
   BENEFICIARY_STORIES,
   FOUNDATION_INFO,
 } from '../data/foundationData';
+import {
+  collection,
+  doc,
+  onSnapshot,
+  setDoc,
+  deleteDoc,
+  updateDoc,
+} from 'firebase/firestore';
+import { db, isFirebaseReady } from '../lib/firebase';
+import { seedFirestoreIfEmpty } from '../lib/seedFirestore';
 
 // Initial default hero slides
 export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
@@ -214,6 +224,126 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     volunteerSubmissions,
   ]);
 
+  // --- Cloud Firestore Realtime Synchronization ---
+  useEffect(() => {
+    if (!isFirebaseReady()) return;
+
+    // Trigger one-time auto-seed if cloud database is empty
+    seedFirestoreIfEmpty().catch(() => {});
+
+    // 1. Subscribe to hero_slides
+    const unsubSlides = onSnapshot(
+      collection(db, 'hero_slides'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const cloudSlides = snapshot.docs.map((d) => d.data() as HeroSlide);
+          cloudSlides.sort((a, b) => (Number(a.id) || 0) - (Number(b.id) || 0));
+          setHeroSlides(cloudSlides);
+        }
+      },
+      () => {}
+    );
+
+    // 2. Subscribe to projects
+    const unsubProjects = onSnapshot(
+      collection(db, 'projects'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const cloudProgs = snapshot.docs.map((d) => d.data() as FoundationProgram);
+          setPrograms(cloudProgs);
+        }
+      },
+      () => {}
+    );
+
+    // 3. Subscribe to program_articles
+    const unsubArticles = onSnapshot(
+      collection(db, 'program_articles'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const cloudArticles: Record<string, ProgramArticle> = {};
+          snapshot.docs.forEach((d) => {
+            cloudArticles[d.id] = d.data() as ProgramArticle;
+          });
+          setProgramArticles(cloudArticles);
+        }
+      },
+      () => {}
+    );
+
+    // 4. Subscribe to events
+    const unsubEvents = onSnapshot(
+      collection(db, 'events'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const cloudEvents = snapshot.docs.map((d) => d.data() as UpcomingProjectEvent);
+          setUpcomingEvents(cloudEvents);
+        }
+      },
+      () => {}
+    );
+
+    // 5. Subscribe to stories
+    const unsubStories = onSnapshot(
+      collection(db, 'stories'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const cloudStories = snapshot.docs.map((d) => d.data() as BeneficiaryStory);
+          setBeneficiaryStories(cloudStories);
+        }
+      },
+      () => {}
+    );
+
+    // 6. Subscribe to settings
+    const unsubSettings = onSnapshot(
+      doc(db, 'settings', 'general'),
+      (snapshot) => {
+        if (snapshot.exists()) {
+          setFoundationInfo(snapshot.data() as typeof FOUNDATION_INFO);
+        }
+      },
+      () => {}
+    );
+
+    // 7. Subscribe to contact_messages
+    const unsubContact = onSnapshot(
+      collection(db, 'contact_messages'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const msgs = snapshot.docs.map((d) => d.data() as ContactSubmission);
+          msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          setContactMessages(msgs);
+        }
+      },
+      () => {}
+    );
+
+    // 8. Subscribe to volunteer_submissions
+    const unsubVolunteers = onSnapshot(
+      collection(db, 'volunteer_submissions'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const vols = snapshot.docs.map((d) => d.data() as VolunteerSubmission);
+          vols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          setVolunteerSubmissions(vols);
+        }
+      },
+      () => {}
+    );
+
+    return () => {
+      unsubSlides();
+      unsubProjects();
+      unsubArticles();
+      unsubEvents();
+      unsubStories();
+      unsubSettings();
+      unsubContact();
+      unsubVolunteers();
+    };
+  }, []);
+
   // --- Hero Carousel Actions ---
   const addHeroSlide = (slide: Omit<HeroSlide, 'id'>) => {
     const newSlide: HeroSlide = {
@@ -221,20 +351,26 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: `slide-${Date.now()}`,
     };
     setHeroSlides((prev) => [...prev, newSlide]);
+    setDoc(doc(db, 'hero_slides', String(newSlide.id)), newSlide).catch(() => {});
   };
 
   const updateHeroSlide = (id: string | number, updated: Partial<HeroSlide>) => {
     setHeroSlides((prev) =>
       prev.map((s) => (String(s.id) === String(id) ? { ...s, ...updated } : s))
     );
+    updateDoc(doc(db, 'hero_slides', String(id)), updated).catch(() => {});
   };
 
   const deleteHeroSlide = (id: string | number) => {
     setHeroSlides((prev) => prev.filter((s) => String(s.id) !== String(id)));
+    deleteDoc(doc(db, 'hero_slides', String(id))).catch(() => {});
   };
 
   const reorderHeroSlides = (newSlides: HeroSlide[]) => {
     setHeroSlides(newSlides);
+    newSlides.forEach((slide) => {
+      setDoc(doc(db, 'hero_slides', String(slide.id)), slide).catch(() => {});
+    });
   };
 
   // --- Project Actions ---
@@ -244,6 +380,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...prev,
       [program.id]: article,
     }));
+    setDoc(doc(db, 'projects', program.id), program).catch(() => {});
+    setDoc(doc(db, 'program_articles', program.id), article).catch(() => {});
   };
 
   const updateProject = (program: FoundationProgram, article: ProgramArticle) => {
@@ -254,6 +392,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...prev,
       [program.id]: article,
     }));
+    setDoc(doc(db, 'projects', program.id), program).catch(() => {});
+    setDoc(doc(db, 'program_articles', program.id), article).catch(() => {});
   };
 
   const deleteProject = (id: string) => {
@@ -263,50 +403,66 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       delete copy[id];
       return copy;
     });
+    deleteDoc(doc(db, 'projects', id)).catch(() => {});
+    deleteDoc(doc(db, 'program_articles', id)).catch(() => {});
   };
 
   // --- Upcoming Events Actions ---
   const addEvent = (event: UpcomingProjectEvent) => {
     setUpcomingEvents((prev) => [event, ...prev]);
+    setDoc(doc(db, 'events', event.id), event).catch(() => {});
   };
 
   const updateEvent = (event: UpcomingProjectEvent) => {
     setUpcomingEvents((prev) =>
       prev.map((e) => (e.id === event.id ? event : e))
     );
+    setDoc(doc(db, 'events', event.id), event).catch(() => {});
   };
 
   const deleteEvent = (id: string) => {
     setUpcomingEvents((prev) => prev.filter((e) => e.id !== id));
+    deleteDoc(doc(db, 'events', id)).catch(() => {});
   };
 
   const setFeaturedEvent = (id: string) => {
     setUpcomingEvents((prev) =>
-      prev.map((e) => ({
-        ...e,
-        status: e.id === id ? 'Featured' : e.status === 'Featured' ? 'Upcoming' : e.status,
-      }))
+      prev.map((e) => {
+        const isTarget = e.id === id;
+        const updated = {
+          ...e,
+          status: isTarget ? ('Featured' as const) : e.status === 'Featured' ? ('Upcoming' as const) : e.status,
+          isLiveCountdown: isTarget,
+        };
+        setDoc(doc(db, 'events', e.id), updated).catch(() => {});
+        return updated;
+      })
     );
   };
 
   // --- Story Actions ---
   const addStory = (story: BeneficiaryStory) => {
     setBeneficiaryStories((prev) => [story, ...prev]);
+    setDoc(doc(db, 'stories', story.id), story).catch(() => {});
   };
 
   const updateStory = (story: BeneficiaryStory) => {
     setBeneficiaryStories((prev) =>
       prev.map((s) => (s.id === story.id ? story : s))
     );
+    setDoc(doc(db, 'stories', story.id), story).catch(() => {});
   };
 
   const deleteStory = (id: string) => {
     setBeneficiaryStories((prev) => prev.filter((s) => s.id !== id));
+    deleteDoc(doc(db, 'stories', id)).catch(() => {});
   };
 
   // --- Settings Actions ---
   const updateFoundationInfo = (info: Partial<typeof FOUNDATION_INFO>) => {
-    setFoundationInfo((prev) => ({ ...prev, ...info }));
+    const updated = { ...foundationInfo, ...info };
+    setFoundationInfo(updated);
+    setDoc(doc(db, 'settings', 'general'), updated).catch(() => {});
   };
 
   // --- Inbox Submissions ---
@@ -318,16 +474,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       status: 'new',
     };
     setContactMessages((prev) => [newMsg, ...prev]);
+    setDoc(doc(db, 'contact_messages', newMsg.id), newMsg).catch(() => {});
   };
 
   const deleteContactMessage = (id: string) => {
     setContactMessages((prev) => prev.filter((m) => m.id !== id));
+    deleteDoc(doc(db, 'contact_messages', id)).catch(() => {});
   };
 
   const updateContactStatus = (id: string, status: 'new' | 'read' | 'replied') => {
     setContactMessages((prev) =>
       prev.map((m) => (m.id === id ? { ...m, status } : m))
     );
+    updateDoc(doc(db, 'contact_messages', id), { status }).catch(() => {});
   };
 
   const submitVolunteerForm = (data: Omit<VolunteerSubmission, 'id' | 'date' | 'status'>) => {
@@ -338,16 +497,19 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       status: 'new',
     };
     setVolunteerSubmissions((prev) => [newVol, ...prev]);
+    setDoc(doc(db, 'volunteer_submissions', newVol.id), newVol).catch(() => {});
   };
 
   const deleteVolunteerSubmission = (id: string) => {
     setVolunteerSubmissions((prev) => prev.filter((v) => v.id !== id));
+    deleteDoc(doc(db, 'volunteer_submissions', id)).catch(() => {});
   };
 
   const updateVolunteerStatus = (id: string, status: 'new' | 'reviewed' | 'contacted') => {
     setVolunteerSubmissions((prev) =>
       prev.map((v) => (v.id === id ? { ...v, status } : v))
     );
+    updateDoc(doc(db, 'volunteer_submissions', id), { status }).catch(() => {});
   };
 
   // --- Factory Reset ---

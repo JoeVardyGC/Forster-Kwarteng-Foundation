@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useData } from '../../../context/DataContext';
+import { uploadImageToStorage } from '../../../lib/firebase';
 import type { BeneficiaryStory } from '../../../types';
 import {
   Quote,
@@ -74,13 +75,21 @@ export const StoriesView: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (editingStory) {
-        setEditingStory({ ...editingStory, image: reader.result as string });
-      }
-    };
-    reader.readAsDataURL(file);
+    uploadImageToStorage(file, 'stories')
+      .then((url) => {
+        if (editingStory) {
+          setEditingStory({ ...editingStory, image: url });
+        }
+      })
+      .catch(() => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (editingStory) {
+            setEditingStory({ ...editingStory, image: reader.result as string });
+          }
+        };
+        reader.readAsDataURL(file);
+      });
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useData } from '../../../context/DataContext';
+import { uploadImageToStorage } from '../../../lib/firebase';
 import type { UpcomingProjectEvent } from '../../../types';
 import {
   Calendar,
@@ -101,13 +102,21 @@ export const EventsView: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (editingEvent) {
-        setEditingEvent({ ...editingEvent, image: reader.result as string });
-      }
-    };
-    reader.readAsDataURL(file);
+    uploadImageToStorage(file, 'events')
+      .then((url) => {
+        if (editingEvent) {
+          setEditingEvent({ ...editingEvent, image: url });
+        }
+      })
+      .catch(() => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          if (editingEvent) {
+            setEditingEvent({ ...editingEvent, image: reader.result as string });
+          }
+        };
+        reader.readAsDataURL(file);
+      });
   };
 
   return (

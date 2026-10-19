@@ -9,7 +9,7 @@ interface AdminLoginPageProps {
 
 export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) => {
   const { login } = useAuth();
-  const [email, setEmail] = useState('admin@fkf.org');
+  const [email, setEmail] = useState('founder@forsterkwartengfoundation.org');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,9 +29,9 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) =>
   };
 
   const handleQuickDemo = () => {
-    setEmail('admin@fkf.org');
+    setEmail('founder@forsterkwartengfoundation.org');
     setPassword('fkf2026');
-    const res = login('fkf2026', 'admin@fkf.org');
+    const res = login('fkf2026', 'founder@forsterkwartengfoundation.org');
     if (res.success) {
       onNavigate('admin');
     }

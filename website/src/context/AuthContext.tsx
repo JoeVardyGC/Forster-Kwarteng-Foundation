@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const isAuthenticated = !!adminUser;
 
-  const login = (password: string, email = 'admin@fkf.org') => {
+  const login = (password: string, email = 'founder@forsterkwartengfoundation.org') => {
     // Standard secure local admin credentials for foundation team
     const validPasswords = ['admin', 'admin123', 'fkf2026', 'fkfadmin'];
     const cleanEmail = email.trim().toLowerCase();
@@ -43,10 +43,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     if (validPasswords.includes(password.trim())) {
+      const isFounder = cleanEmail.startsWith('founder');
       const user: AdminUser = {
         email: cleanEmail,
-        name: 'FKF Administrator',
-        role: 'Super Admin',
+        name: isFounder ? 'Founder (Mr. Forster Kwarteng)' : 'FKF Administrator',
+        role: 'Founder & Super Admin',
       };
       setAdminUser(user);
       try {

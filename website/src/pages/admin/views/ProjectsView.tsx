@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useData } from '../../../context/DataContext';
+import { uploadImageToStorage } from '../../../lib/firebase';
 import type {
   FoundationProgram,
   ProgramArticle,
@@ -202,17 +203,28 @@ export const ProjectsView: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
-      if (editingProgram) {
-        setEditingProgram({ ...editingProgram, image: dataUrl });
-      }
-      if (editingArticle) {
-        setEditingArticle({ ...editingArticle, coverImage: dataUrl });
-      }
-    };
-    reader.readAsDataURL(file);
+    uploadImageToStorage(file, 'projects')
+      .then((url) => {
+        if (editingProgram) {
+          setEditingProgram({ ...editingProgram, image: url });
+        }
+        if (editingArticle) {
+          setEditingArticle({ ...editingArticle, coverImage: url });
+        }
+      })
+      .catch(() => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          if (editingProgram) {
+            setEditingProgram({ ...editingProgram, image: dataUrl });
+          }
+          if (editingArticle) {
+            setEditingArticle({ ...editingArticle, coverImage: dataUrl });
+          }
+        };
+        reader.readAsDataURL(file);
+      });
   };
 
   // Add gallery image
@@ -227,11 +239,17 @@ export const ProjectsView: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      handleAddGalleryImage(reader.result as string, file.name.replace(/\.[^/.]+$/, ''));
-    };
-    reader.readAsDataURL(file);
+    uploadImageToStorage(file, 'project-gallery')
+      .then((url) => {
+        handleAddGalleryImage(url, file.name.replace(/\.[^/.]+$/, ''));
+      })
+      .catch(() => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          handleAddGalleryImage(reader.result as string, file.name.replace(/\.[^/.]+$/, ''));
+        };
+        reader.readAsDataURL(file);
+      });
   };
 
   // Remove gallery image

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useData } from '../../../context/DataContext';
 import type { HeroSlide } from '../../../types';
+import { uploadImageToStorage } from '../../../lib/firebase';
 import {
   Image as ImageIcon,
   Plus,
@@ -65,16 +66,26 @@ export const CarouselView: React.FC = () => {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      if (isModal) {
-        setNewSlide((prev) => ({ ...prev, image: result }));
-      } else if (currentSlide) {
-        updateHeroSlide(currentSlide.id, { image: result });
-      }
-    };
-    reader.readAsDataURL(file);
+    uploadImageToStorage(file, 'hero-carousel')
+      .then((url) => {
+        if (isModal) {
+          setNewSlide((prev) => ({ ...prev, image: url }));
+        } else if (currentSlide) {
+          updateHeroSlide(currentSlide.id, { image: url });
+        }
+      })
+      .catch(() => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          if (isModal) {
+            setNewSlide((prev) => ({ ...prev, image: result }));
+          } else if (currentSlide) {
+            updateHeroSlide(currentSlide.id, { image: result });
+          }
+        };
+        reader.readAsDataURL(file);
+      });
   };
 
   // Move slide up
