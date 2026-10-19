@@ -12,6 +12,7 @@ import { TransparencyPage } from './pages/TransparencyPage';
 import { DonatePage } from './pages/DonatePage';
 import { GetInvolvedPage } from './pages/GetInvolvedPage';
 import { ContactPage } from './pages/ContactPage';
+import { StoriesPage } from './pages/StoriesPage';
 import { AdminLayout } from './pages/admin/AdminLayout';
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { PageSkeleton } from './components/PageSkeleton';
@@ -34,6 +35,9 @@ export function App() {
     if (route === 'projects') {
       return { page: 'programs' as PageId, programId: 'mental-health' };
     }
+    if (route === 'stories' || route === 'testimonials' || route === 'beneficiary-stories') {
+      return { page: 'stories' as PageId, programId: 'mental-health' };
+    }
     if (route === 'admin' || route === 'admin-login') {
       return { page: route as PageId, programId: 'mental-health' };
     }
@@ -46,6 +50,7 @@ export function App() {
       'donate',
       'get-involved',
       'contact',
+      'stories',
       'admin',
       'admin-login',
     ];
@@ -177,6 +182,13 @@ export function App() {
         );
       case 'contact':
         return <ContactPage />;
+      case 'stories':
+        return (
+          <StoriesPage
+            onNavigate={handleNavigate}
+            onOpenDonateModal={handleOpenDonate}
+          />
+        );
       case 'admin-login':
         return <AdminLoginPage onNavigate={handleNavigate} />;
       case 'admin':

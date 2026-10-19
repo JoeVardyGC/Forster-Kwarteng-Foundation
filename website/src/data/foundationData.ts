@@ -227,41 +227,54 @@ export const BENEFICIARY_STORIES: BeneficiaryStory[] = [
   {
     id: 'story-1',
     name: 'Kofi Mensah',
-    role: 'Primary 5 Student, Accra',
+    role: 'Primary 5 Student & Scholar',
     location: 'Chorkor, Accra',
     program: 'Quality Education & Scholarships',
     story:
       'Kofi was on the verge of dropping out when his mother lost her fish-smoking kiosk in a coastal storm. The Forster Kwarteng Foundation stepped in with a complete scholarship package, brand-new uniform, and textbooks. Today, Kofi ranks 2nd in his class and aspires to become a civil engineer.',
     quote:
       '"FKF gave me back my school uniform and made my mother smile again. I know I will finish school and build bridges for Ghana."',
-    image: '/assets/FKF mockup 1.png',
+    image: '/assets/orphan_boy_classroom.jpg',
     outcome: 'Maintained 88% academic average; zero days missed from school',
   },
   {
     id: 'story-2',
     name: 'Akua Serwaa',
-    role: 'Youth Vocational Graduate',
+    role: 'Youth Vocational Graduate & Boutique Owner',
     location: 'Madina, Greater Accra',
     program: 'Skills Acquisition & Vocational Training',
     story:
       'Akua completed FKF’s 4-month intensive fashion craftsmanship and business management course. Upon graduation, she received an industrial sewing starter kit. Today, she runs her own boutique and currently trains two other young teenage girls from her neighborhood.',
     quote:
       '"Before FKF, I felt stuck after high school. Now I am financially independent and employing others in my community."',
-    image: '/assets/bd FKF.png',
-    outcome: 'Earns sustainable monthly income; employs 2 apprentices',
+    image: '/assets/about_story_photo.png',
+    outcome: 'Earns sustainable monthly income; employs 2 local apprentices',
   },
   {
     id: 'story-3',
     name: 'Emmanuel Boateng',
     role: 'Peer Mentor & High School Prefect',
-    location: 'Tema, Ghana',
+    location: 'Tema, Greater Accra',
     program: 'Mentorship & Youth Leadership',
     story:
       'Through FKF’s youth leadership bootcamps, Emmanuel discovered his voice and passion for community organization. He spearheaded a peer tutoring club in his school that has helped over 40 struggling students improve their basic mathematics scores.',
     quote:
       '"Leadership is about lifting others as you climb. FKF taught me that true strength comes from integrity and service."',
-    image: '/assets/foster logo main VERTICAL.png',
-    outcome: 'Founded campus peer-study network with 40+ members',
+    image: '/assets/orphan_community_outreach.jpg',
+    outcome: 'Founded campus peer-study network with 40+ active members',
+  },
+  {
+    id: 'story-4',
+    name: 'Abena Osei',
+    role: 'Reading Club Leader & BECE Graduate',
+    location: 'Ashaiman, Greater Accra',
+    program: 'Girl-Child Literacy & Mentorship',
+    story:
+      'Abena struggled with reading confidence and was at risk of leaving junior high. Through the FKF Saturday reading circles and dedicated girl-child mentors, she not only passed her BECE with distinction but now leads reading sessions for younger girls in her community.',
+    quote:
+      '"FKF showed me that my voice matters. Today, I stand tall knowing I can read, write, and inspire younger girls in Ashaiman."',
+    image: '/assets/orphan_girls_reading.jpg',
+    outcome: 'Passed BECE with distinction; leads weekly reading circle',
   },
 ];
 

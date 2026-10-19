@@ -7,6 +7,7 @@ export type PageId =
   | 'donate' 
   | 'get-involved' 
   | 'contact'
+  | 'stories'
   | 'admin'
   | 'admin-login';
 

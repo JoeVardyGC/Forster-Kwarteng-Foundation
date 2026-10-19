@@ -22,6 +22,8 @@ import {
   ChevronLeft,
   ChevronRight,
   FolderOpen,
+  MapPin,
+  MessageSquarePlus,
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -37,7 +39,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   currency,
   onOpenDonateModal,
 }) => {
-  const { heroSlides, programs } = useData();
+  const { heroSlides, programs, beneficiaryStories } = useData();
   const slides = heroSlides;
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -567,6 +569,96 @@ export const HomePage: React.FC<HomePageProps> = ({
               <span>Explore All Projects in Detail</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 5.5. BENEFICIARY STORIES & TESTIMONIALS (Embedded Impact Voices) */}
+      <section className="py-20 lg:py-28 bg-white relative overflow-hidden border-t border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16">
+            <div>
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-900 border border-amber-200/80 shadow-2xs">
+                <Heart className="w-3.5 h-3.5 fill-[#F5BD02] text-[#F5BD02]" />
+                <span>Voices of Impact • Beneficiary Stories</span>
+              </span>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold font-['Outfit'] text-slate-900 mt-3 tracking-tight">
+                Real Stories From Real Beneficiaries
+              </h2>
+              <div className="h-1 w-16 bg-[#000080] rounded-full my-3" />
+              <p className="text-slate-600 text-sm sm:text-base max-w-xl leading-relaxed">
+                Behind every scholarship, classroom kit, and vocational tool is a transformed life. Hear directly from the scholars, apprentices, and families whose futures are taking flight.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => onNavigate('stories')}
+                className="px-6 py-3 rounded-full bg-[#000080] hover:bg-[#0a0a85] text-white font-bold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <span>Read All Testimonials</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <button
+                onClick={() => onNavigate('stories')}
+                className="px-5 py-3 rounded-full bg-amber-50 hover:bg-amber-100 text-[#000080] font-bold text-xs sm:text-sm border border-amber-200/80 transition-all flex items-center gap-2 cursor-pointer"
+              >
+                <MessageSquarePlus className="w-4 h-4 text-amber-600" />
+                <span>Submit Your Story</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Beneficiary Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {beneficiaryStories.slice(0, 3).map((item) => (
+              <div
+                key={item.id}
+                onClick={() => onNavigate('stories')}
+                className="bg-slate-50/80 hover:bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-2xs hover:shadow-xl hover:border-[#000080]/30 transition-all duration-300 flex flex-col justify-between group cursor-pointer"
+              >
+                <div>
+                  <div className="relative aspect-[16/11] rounded-2xl overflow-hidden mb-5 bg-slate-200 shadow-xs">
+                    <img
+                      src={item.image || '/assets/orphan_boy_classroom.jpg'}
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/assets/about_story_photo.png';
+                      }}
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold bg-white/95 text-[#000080] shadow-xs backdrop-blur-xs">
+                        <MapPin className="w-3 h-3 text-amber-500" />
+                        <span>{item.location}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-amber-600 block mb-1">
+                    {item.program}
+                  </span>
+
+                  <h3 className="text-lg font-black font-['Outfit'] text-slate-900 group-hover:text-[#000080] transition-colors leading-snug">
+                    {item.name}
+                  </h3>
+                  <div className="text-xs text-slate-500 mb-4">{item.role}</div>
+
+                  <blockquote className="text-xs sm:text-[13px] text-slate-700 italic border-l-2 border-[#F5BD02] pl-3.5 mb-3 leading-relaxed">
+                    {item.quote}
+                  </blockquote>
+                </div>
+
+                <div className="pt-4 border-t border-slate-200/70 flex items-center justify-between text-xs text-emerald-800 font-semibold">
+                  <span className="flex items-center gap-1.5 line-clamp-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <span>{item.outcome}</span>
+                  </span>
+                  <ArrowRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 group-hover:text-[#000080] transition-all shrink-0 ml-2" />
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
