@@ -251,7 +251,12 @@ export const InboxView: React.FC = () => {
                     </a>
 
                     <button
-                      onClick={() => deleteContactMessage(msg.id)}
+                      onClick={() => {
+                        deleteContactMessage(msg.id);
+                        if (selectedMessage?.id === msg.id) {
+                          setSelectedMessage(null);
+                        }
+                      }}
                       className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                       title="Delete Message"
                     >
@@ -335,7 +340,12 @@ export const InboxView: React.FC = () => {
                     </a>
 
                     <button
-                      onClick={() => deleteVolunteerSubmission(vol.id)}
+                      onClick={() => {
+                        deleteVolunteerSubmission(vol.id);
+                        if (selectedVolunteer?.id === vol.id) {
+                          setSelectedVolunteer(null);
+                        }
+                      }}
                       className="p-2 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                       title="Delete Application"
                     >
@@ -404,7 +414,18 @@ export const InboxView: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  deleteContactMessage(selectedMessage.id);
+                  setSelectedMessage(null);
+                }}
+                className="px-4 py-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Message</span>
+              </button>
               <a
                 href={`mailto:${selectedMessage.email}?subject=Re: ${encodeURIComponent(selectedMessage.subject)}`}
                 className="px-4 py-2 rounded-xl bg-[#000080] text-white text-xs font-bold hover:bg-[#00006a] flex items-center gap-1.5 shadow-sm"
@@ -472,7 +493,18 @@ export const InboxView: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+            <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  deleteVolunteerSubmission(selectedVolunteer.id);
+                  setSelectedVolunteer(null);
+                }}
+                className="px-4 py-2 rounded-xl border border-red-200 text-red-600 hover:bg-red-50 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Application</span>
+              </button>
               <a
                 href={`mailto:${selectedVolunteer.email}?subject=Welcome to the Forster Kwarteng Foundation Team`}
                 className="px-4 py-2 rounded-xl bg-[#000080] text-white text-xs font-bold hover:bg-[#00006a] flex items-center gap-1.5 shadow-sm"

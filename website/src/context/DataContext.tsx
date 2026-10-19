@@ -133,7 +133,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const stored = localStorage.getItem(DATA_STORAGE_KEY);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        if (parsed.contactMessages && Array.isArray(parsed.contactMessages)) {
+          parsed.contactMessages = parsed.contactMessages.filter(
+            (m: any) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-')
+          );
+        }
+        if (parsed.volunteerSubmissions && Array.isArray(parsed.volunteerSubmissions)) {
+          parsed.volunteerSubmissions = parsed.volunteerSubmissions.filter(
+            (v: any) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-')
+          );
+        }
+        return parsed;
       }
     } catch (e) {
       console.warn('Failed to parse persisted site data, loading defaults.', e);
@@ -145,31 +156,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       upcomingEvents: UPCOMING_PROJECTS,
       beneficiaryStories: BENEFICIARY_STORIES,
       foundationInfo: FOUNDATION_INFO,
-      contactMessages: [
-        {
-          id: 'msg-demo-1',
-          name: 'Rev. Emmanuel Darko',
-          email: 'emmanuel.darko@gracefellowship.org',
-          phone: '+233 24 456 7890',
-          subject: 'Partnership with Church Youth Ministry',
-          message:
-            'Warm greetings from Grace Fellowship Church. We would love to collaborate on your next rural school distribution in Prampram by providing 20 volunteer teachers.',
-          date: '2026-10-18T10:30:00Z',
-          status: 'new' as const,
-        },
-      ],
-      volunteerSubmissions: [
-        {
-          id: 'vol-demo-1',
-          fullName: 'Priscilla Asantewaa',
-          email: 'priscilla.asantewaa@gmail.com',
-          phone: '+233 50 123 4567',
-          formType: 'volunteer' as const,
-          skills: 'Certified clinical psychologist & youth counselor with 4 years experience.',
-          date: '2026-10-17T14:15:00Z',
-          status: 'new' as const,
-        },
-      ],
+      contactMessages: [],
+      volunteerSubmissions: [],
     };
   };
 
@@ -230,6 +218,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Trigger one-time auto-seed if cloud database is empty
     seedFirestoreIfEmpty().catch(() => {});
+
+    // Clean up any legacy demo submissions from Firestore if they were previously uploaded
+    deleteDoc(doc(db, 'contact_messages', 'msg-demo-1')).catch(() => {});
+    deleteDoc(doc(db, 'volunteer_submissions', 'vol-demo-1')).catch(() => {});
 
     // 1. Subscribe to hero_slides
     const unsubSlides = onSnapshot(
@@ -310,11 +302,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubContact = onSnapshot(
       collection(db, 'contact_messages'),
       (snapshot) => {
-        if (!snapshot.empty) {
-          const msgs = snapshot.docs.map((d) => d.data() as ContactSubmission);
-          msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          setContactMessages(msgs);
-        }
+        const msgs = snapshot.docs
+          .map((d) => d.data() as ContactSubmission)
+          .filter((m) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-'));
+        msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setContactMessages(msgs);
       },
       () => {}
     );
@@ -323,11 +315,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const unsubVolunteers = onSnapshot(
       collection(db, 'volunteer_submissions'),
       (snapshot) => {
-        if (!snapshot.empty) {
-          const vols = snapshot.docs.map((d) => d.data() as VolunteerSubmission);
-          vols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          setVolunteerSubmissions(vols);
-        }
+        const vols = snapshot.docs
+          .map((d) => d.data() as VolunteerSubmission)
+          .filter((v) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-'));
+        vols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setVolunteerSubmissions(vols);
       },
       () => {}
     );
@@ -520,6 +512,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUpcomingEvents(UPCOMING_PROJECTS);
     setBeneficiaryStories(BENEFICIARY_STORIES);
     setFoundationInfo(FOUNDATION_INFO);
+    setContactMessages([]);
+    setVolunteerSubmissions([]);
     try {
       localStorage.removeItem(DATA_STORAGE_KEY);
     } catch {

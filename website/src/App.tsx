@@ -38,8 +38,11 @@ export function App() {
     if (route === 'stories' || route === 'testimonials' || route === 'beneficiary-stories') {
       return { page: 'stories' as PageId, programId: 'mental-health' };
     }
-    if (route === 'admin' || route === 'admin-login') {
-      return { page: route as PageId, programId: 'mental-health' };
+    if (route === 'involved' || route === 'volunteer' || route === 'partner') {
+      return { page: 'get-involved' as PageId, programId: 'mental-health' };
+    }
+    if (route === 'admin' || route.startsWith('admin/') || route === 'admin-login') {
+      return { page: 'admin' as PageId, programId: 'mental-health' };
     }
     const validPages: PageId[] = [
       'home',
