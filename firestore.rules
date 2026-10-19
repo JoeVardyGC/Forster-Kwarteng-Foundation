@@ -1,0 +1,461 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: hero_slides/{slideId}
+    // Document ID: string or integer ID matching slide ID
+    // Fields:
+    //   - id: string | int (required, max 100 chars if string) - Unique slide identifier
+    //   - image: string (required, 1-2000 chars) - URL or asset path of hero image
+    //   - pillar: string (required, 1-200 chars) - Program pillar label (e.g. Pillar 01 • Education)
+    //   - headlinePrefix: string (required, 0-200 chars) - Headline opening phrase
+    //   - headlineHighlight: string (required, 0-200 chars) - Highlighted headline phrase
+    //   - description: string (required, 0-3000 chars) - Narrative description
+    //   - tag: string (optional, 0-200 chars) - Category tag
+    //   - title: string (optional, 0-200 chars) - Slide subtitle/heading
+    //   - order: int | float (optional) - Slide order index
+    //
+    // Collection: projects/{projectId}
+    // Document ID: string matching program/project ID
+    // Fields:
+    //   - id: string (required, 1-100 chars, immutable) - Project identifier
+    //   - title: string (required, 1-250 chars) - Project title
+    //   - description: string (required, 1-4000 chars) - Detailed description
+    //   - image: string (required, 1-2000 chars) - Project feature image URL
+    //   - linkText: string (optional, 0-150 chars) - Call to action link text
+    //
+    // Collection: program_articles/{articleId}
+    // Document ID: string matching project ID
+    // Fields:
+    //   - id: string (required, 1-100 chars, immutable) - Article identifier
+    //   - title: string (required, 1-250 chars) - Program article title
+    //   - category: string (required, 1-150 chars) - Pillar category
+    //   - readTime: string (required, 1-50 chars) - Estimated read time
+    //   - publishedDate: string (required, 1-100 chars) - Publication date display
+    //   - location: string (required, 1-200 chars) - Intervention geographical location
+    //   - summary: string (required, 1-5000 chars) - Executive summary
+    //   - coverImage: string (required, 1-2000 chars) - Cover photo URL
+    //   - coverImageCaption: string (optional, 0-500 chars) - Caption for cover photo
+    //   - impactStats: list of maps (required, max 30 items) - Quantitative metrics
+    //   - challenge: map (required) - Problem statement headline, body, and stat highlight
+    //   - intervention: map (required) - Solution title, description, and phases
+    //   - beneficiaryQuote: map (required) - First-hand testimonial quote & author
+    //   - video: map (optional) - Embedded video information
+    //   - gallery: list (optional, max 50 items) - Photos and captions
+    //   - sdgBadges: list (optional, max 30 items) - UN Sustainable Development Goals
+    //   - donationTiers: list (optional, max 30 items) - Suggested donation amounts
+    //   - relatedProgramIds: list (optional, max 30 items) - Related program slugs
+    //
+    // Collection: events/{eventId}
+    // Document ID: string matching event ID
+    // Fields:
+    //   - id: string (required, 1-100 chars, immutable) - Event identifier
+    //   - title: string (required, 1-250 chars) - Event title
+    //   - category: string (required, 1-150 chars) - Event category
+    //   - targetDate: string (required, 1-100 chars) - Target ISO / date string
+    //   - formattedDate: string (required, 1-100 chars) - Human readable date string
+    //   - time: string (required, 1-100 chars) - Time of event
+    //   - location: string (required, 1-250 chars) - Physical venue and region
+    //   - summary: string (required, 1-4000 chars) - Event description
+    //   - image: string (required, 1-2000 chars) - Event flyer / cover image URL
+    //   - status: string (required, 'Upcoming' | 'In Progress' | 'Featured')
+    //   - highlightMetric: map (optional) - Target metrics (e.g. 500+ pupils)
+    //   - tags: list of strings (required, max 30 items) - Search & topic tags
+    //   - isLiveCountdown: bool (optional) - Whether countdown is active on homepage
+    //
+    // Collection: stories/{storyId}
+    // Document ID: string matching story ID
+    // Fields:
+    //   - id: string (required, 1-100 chars, immutable) - Story identifier
+    //   - name: string (required, 1-150 chars) - Beneficiary full name
+    //   - role: string (required, 1-150 chars) - Role / designation
+    //   - location: string (required, 1-150 chars) - Community / Region in Ghana
+    //   - program: string (required, 1-200 chars) - Associated FKF program
+    //   - story: string (required, 1-8000 chars) - Full story narrative
+    //   - quote: string (required, 1-1500 chars) - Highlight quote
+    //   - image: string (required, 1-2000 chars) - Beneficiary photo URL
+    //   - outcome: string (required, 1-1000 chars) - Measurable life outcome
+    //
+    // Collection: settings/general
+    // Document ID: 'general'
+    // Fields:
+    //   - name: string (required, 1-250 chars) - Foundation official name
+    //   - shortName: string (optional, 0-50 chars) - Abbreviation (e.g. FKF)
+    //   - motto: string (required, 1-300 chars) - Foundation motto
+    //   - brandStatement: string (required, 1-3000 chars) - Official brand statement
+    //   - vision: string (required, 1-2000 chars) - Vision statement
+    //   - mission: string (required, 1-2000 chars) - Mission statement
+    //   - hqLocation: string (required, 1-200 chars) - Headquarters location
+    //   - address: string (required, 1-300 chars) - Postal / physical address
+    //   - phones: list of strings (required, max 10 items) - Contact telephone numbers
+    //   - email: string (required, valid email, max 150 chars) - Primary contact email
+    //   - secondaryEmail: string (optional, valid email if present, max 150 chars)
+    //   - website: string (required, 1-150 chars) - Official website URL
+    //   - registrationNo: string (optional, 0-100 chars) - Non-profit NGO registration number
+    //   - operatingHours: string (required, 1-200 chars) - Official working hours
+    //
+    // Collection: settings/financials
+    // Document ID: 'financials'
+    // Fields:
+    //   - momoAccounts: list of maps (required, max 30 items) - Mobile money channel details
+    //   - bankAccounts: list of maps (required, max 30 items) - Bank accounts for donations
+    //   - updatedAt: string (optional, max 100 chars) - Timestamp of last channel update
+    //
+    // Collection: contact_messages/{msgId}
+    // Document ID: string matching message ID
+    // Fields:
+    //   - id: string (required, 1-100 chars, immutable) - Message ID
+    //   - name: string (required, 1-150 chars, immutable) - Visitor name
+    //   - email: string (required, valid email, 5-150 chars, immutable) - Visitor email
+    //   - phone: string (optional, 0-50 chars, immutable) - Visitor phone number
+    //   - subject: string (required, 1-200 chars, immutable) - Subject line
+    //   - message: string (required, 1-5000 chars, immutable) - Inquiry message body
+    //   - date: string (required, 1-100 chars, immutable) - ISO date string
+    //   - status: string (required, 'new' on create, transitionable to 'read' | 'replied')
+    //
+    // Collection: volunteer_submissions/{volId}
+    // Document ID: string matching volunteer application ID
+    // Fields:
+    //   - id: string (required, 1-100 chars, immutable) - Application ID
+    //   - fullName: string (required, 1-150 chars, immutable) - Applicant full name
+    //   - email: string (required, valid email, 5-150 chars, immutable) - Applicant email
+    //   - phone: string (required, 1-50 chars, immutable) - Applicant phone
+    //   - formType: string (required, 'volunteer' | 'partner', immutable) - Role type
+    //   - skills: string (required, 0-3000 chars, immutable) - Skills & interests description
+    //   - date: string (required, 1-100 chars, immutable) - Application date
+    //   - status: string (required, 'new' on create, transitionable to 'reviewed' | 'contacted')
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isValidEmail(email) {
+      return email is string &&
+        email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidString(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    function isOptionalString(data, field, maxLen) {
+      return !(field in data) || (data[field] is string && data[field].size() <= maxLen);
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidHeroSlide(data) {
+      let allowed = ['id', 'image', 'pillar', 'headlinePrefix', 'headlineHighlight', 'description', 'tag', 'title', 'order'];
+      let required = ['id', 'image', 'pillar', 'headlinePrefix', 'headlineHighlight', 'description'];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        (data.id is int || (data.id is string && data.id.size() <= 100)) &&
+        isValidString(data.image, 1, 2000) &&
+        isValidString(data.pillar, 1, 200) &&
+        isValidString(data.headlinePrefix, 0, 200) &&
+        isValidString(data.headlineHighlight, 0, 200) &&
+        isValidString(data.description, 0, 3000) &&
+        isOptionalString(data, 'tag', 200) &&
+        isOptionalString(data, 'title', 200) &&
+        (!('order' in data) || (data.order is int || data.order is float));
+    }
+
+    function isValidProject(data) {
+      let allowed = ['id', 'title', 'description', 'image', 'linkText'];
+      let required = ['id', 'title', 'description', 'image'];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        isValidString(data.id, 1, 100) &&
+        isValidString(data.title, 1, 250) &&
+        isValidString(data.description, 1, 4000) &&
+        isValidString(data.image, 1, 2000) &&
+        isOptionalString(data, 'linkText', 150);
+    }
+
+    function isValidProgramArticle(data) {
+      let allowed = [
+        'id', 'title', 'category', 'readTime', 'publishedDate',
+        'location', 'summary', 'coverImage', 'coverImageCaption',
+        'impactStats', 'challenge', 'intervention', 'beneficiaryQuote',
+        'video', 'gallery', 'sdgBadges', 'donationTiers', 'relatedProgramIds'
+      ];
+      let required = [
+        'id', 'title', 'category', 'readTime', 'publishedDate',
+        'location', 'summary', 'coverImage', 'impactStats',
+        'challenge', 'intervention', 'beneficiaryQuote'
+      ];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        isValidString(data.id, 1, 100) &&
+        isValidString(data.title, 1, 250) &&
+        isValidString(data.category, 1, 150) &&
+        isValidString(data.readTime, 1, 50) &&
+        isValidString(data.publishedDate, 1, 100) &&
+        isValidString(data.location, 1, 200) &&
+        isValidString(data.summary, 1, 5000) &&
+        isValidString(data.coverImage, 1, 2000) &&
+        isOptionalString(data, 'coverImageCaption', 500) &&
+        (data.impactStats is list && data.impactStats.size() <= 30) &&
+        (data.challenge is map) &&
+        (data.intervention is map) &&
+        (data.beneficiaryQuote is map) &&
+        (!('video' in data) || data.video is map) &&
+        (!('gallery' in data) || (data.gallery is list && data.gallery.size() <= 50)) &&
+        (!('sdgBadges' in data) || (data.sdgBadges is list && data.sdgBadges.size() <= 30)) &&
+        (!('donationTiers' in data) || (data.donationTiers is list && data.donationTiers.size() <= 30)) &&
+        (!('relatedProgramIds' in data) || (data.relatedProgramIds is list && data.relatedProgramIds.size() <= 30));
+    }
+
+    function isValidEvent(data) {
+      let allowed = [
+        'id', 'title', 'category', 'targetDate', 'formattedDate',
+        'time', 'location', 'summary', 'image', 'status',
+        'highlightMetric', 'tags', 'isLiveCountdown'
+      ];
+      let required = [
+        'id', 'title', 'category', 'targetDate', 'formattedDate',
+        'time', 'location', 'summary', 'image', 'status', 'tags'
+      ];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        isValidString(data.id, 1, 100) &&
+        isValidString(data.title, 1, 250) &&
+        isValidString(data.category, 1, 150) &&
+        isValidString(data.targetDate, 1, 100) &&
+        isValidString(data.formattedDate, 1, 100) &&
+        isValidString(data.time, 1, 100) &&
+        isValidString(data.location, 1, 250) &&
+        isValidString(data.summary, 1, 4000) &&
+        isValidString(data.image, 1, 2000) &&
+        (data.status in ['Upcoming', 'In Progress', 'Featured']) &&
+        (data.tags is list && data.tags.size() <= 30) &&
+        (!('highlightMetric' in data) || data.highlightMetric is map) &&
+        (!('isLiveCountdown' in data) || data.isLiveCountdown is bool);
+    }
+
+    function isValidStory(data) {
+      let allowed = ['id', 'name', 'role', 'location', 'program', 'story', 'quote', 'image', 'outcome'];
+      let required = ['id', 'name', 'role', 'location', 'program', 'story', 'quote', 'image', 'outcome'];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        isValidString(data.id, 1, 100) &&
+        isValidString(data.name, 1, 150) &&
+        isValidString(data.role, 1, 150) &&
+        isValidString(data.location, 1, 150) &&
+        isValidString(data.program, 1, 200) &&
+        isValidString(data.story, 1, 8000) &&
+        isValidString(data.quote, 1, 1500) &&
+        isValidString(data.image, 1, 2000) &&
+        isValidString(data.outcome, 1, 1000);
+    }
+
+    function isValidGeneralSettings(data) {
+      let allowed = [
+        'name', 'shortName', 'motto', 'brandStatement', 'vision',
+        'mission', 'hqLocation', 'address', 'phones', 'email',
+        'secondaryEmail', 'website', 'registrationNo', 'operatingHours'
+      ];
+      let required = [
+        'name', 'motto', 'brandStatement', 'vision', 'mission',
+        'hqLocation', 'address', 'phones', 'email', 'website', 'operatingHours'
+      ];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        isValidString(data.name, 1, 250) &&
+        isOptionalString(data, 'shortName', 50) &&
+        isValidString(data.motto, 1, 300) &&
+        isValidString(data.brandStatement, 1, 3000) &&
+        isValidString(data.vision, 1, 2000) &&
+        isValidString(data.mission, 1, 2000) &&
+        isValidString(data.hqLocation, 1, 200) &&
+        isValidString(data.address, 1, 300) &&
+        (data.phones is list && data.phones.size() <= 10) &&
+        isValidString(data.email, 5, 150) && isValidEmail(data.email) &&
+        (!('secondaryEmail' in data) || data.secondaryEmail == '' || (data.secondaryEmail is string && data.secondaryEmail.size() <= 150 && isValidEmail(data.secondaryEmail))) &&
+        isValidString(data.website, 1, 150) &&
+        isOptionalString(data, 'registrationNo', 100) &&
+        isValidString(data.operatingHours, 1, 200);
+    }
+
+    function isValidFinancialSettings(data) {
+      let allowed = ['momoAccounts', 'bankAccounts', 'updatedAt'];
+      let required = ['momoAccounts', 'bankAccounts'];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        (data.momoAccounts is list && data.momoAccounts.size() <= 30) &&
+        (data.bankAccounts is list && data.bankAccounts.size() <= 30) &&
+        isOptionalString(data, 'updatedAt', 100);
+    }
+
+    function isValidContactMessage(data) {
+      let allowed = ['id', 'name', 'email', 'phone', 'subject', 'message', 'date', 'status'];
+      let required = ['id', 'name', 'email', 'phone', 'subject', 'message', 'date', 'status'];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        isValidString(data.id, 1, 100) &&
+        isValidString(data.name, 1, 150) &&
+        isValidString(data.email, 5, 150) && isValidEmail(data.email) &&
+        isValidString(data.phone, 0, 50) &&
+        isValidString(data.subject, 1, 200) &&
+        isValidString(data.message, 1, 5000) &&
+        isValidString(data.date, 1, 100) &&
+        (data.status in ['new', 'read', 'replied']);
+    }
+
+    function isValidVolunteerSubmission(data) {
+      let allowed = ['id', 'fullName', 'email', 'phone', 'formType', 'skills', 'date', 'status'];
+      let required = ['id', 'fullName', 'email', 'phone', 'formType', 'skills', 'date', 'status'];
+      return data.keys().hasOnly(allowed) &&
+        data.keys().hasAll(required) &&
+        isValidString(data.id, 1, 100) &&
+        isValidString(data.fullName, 1, 150) &&
+        isValidString(data.email, 5, 150) && isValidEmail(data.email) &&
+        isValidString(data.phone, 1, 50) &&
+        (data.formType in ['volunteer', 'partner']) &&
+        isValidString(data.skills, 0, 3000) &&
+        isValidString(data.date, 1, 100) &&
+        (data.status in ['new', 'reviewed', 'contacted']);
+    }
+
+    // ===============================================================
+    // Collection Match Rules
+    // ===============================================================
+
+    // -------------------------------------------------------------
+    // 1. Hero Slides
+    // -------------------------------------------------------------
+    match /hero_slides/{slideId} {
+      allow read: if true;
+      allow create: if isValidHeroSlide(request.resource.data) &&
+                       string(request.resource.data.id) == slideId;
+      allow update: if isValidHeroSlide(request.resource.data) &&
+                       string(request.resource.data.id) == string(resource.data.id);
+      allow delete: if true;
+    }
+
+    // -------------------------------------------------------------
+    // 2. Foundation Programs / Projects
+    // -------------------------------------------------------------
+    match /projects/{projectId} {
+      allow read: if true;
+      allow create: if isValidProject(request.resource.data) &&
+                       request.resource.data.id == projectId;
+      allow update: if isValidProject(request.resource.data) &&
+                       request.resource.data.id == resource.data.id;
+      allow delete: if true;
+    }
+
+    // -------------------------------------------------------------
+    // 3. Program Articles
+    // -------------------------------------------------------------
+    match /program_articles/{articleId} {
+      allow read: if true;
+      allow create: if isValidProgramArticle(request.resource.data) &&
+                       request.resource.data.id == articleId;
+      allow update: if isValidProgramArticle(request.resource.data) &&
+                       request.resource.data.id == resource.data.id;
+      allow delete: if true;
+    }
+
+    // -------------------------------------------------------------
+    // 4. Events
+    // -------------------------------------------------------------
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if isValidEvent(request.resource.data) &&
+                       request.resource.data.id == eventId;
+      allow update: if isValidEvent(request.resource.data) &&
+                       request.resource.data.id == resource.data.id;
+      allow delete: if true;
+    }
+
+    // -------------------------------------------------------------
+    // 5. Beneficiary Stories
+    // -------------------------------------------------------------
+    match /stories/{storyId} {
+      allow read: if true;
+      // Public testimonial submissions allowed with schema & size limits
+      allow create: if isValidStory(request.resource.data) &&
+                       request.resource.data.id == storyId;
+      allow update: if isValidStory(request.resource.data) &&
+                       request.resource.data.id == resource.data.id;
+      allow delete: if true;
+    }
+
+    // -------------------------------------------------------------
+    // 6. Foundation Settings
+    // -------------------------------------------------------------
+    match /settings/general {
+      allow read: if true;
+      allow create, update: if isValidGeneralSettings(request.resource.data);
+      allow delete: if false;
+    }
+
+    match /settings/financials {
+      allow read: if true;
+      allow create, update: if isValidFinancialSettings(request.resource.data);
+      allow delete: if false;
+    }
+
+    // -------------------------------------------------------------
+    // 7. Contact Messages (Public Submission Inbox)
+    // -------------------------------------------------------------
+    match /contact_messages/{msgId} {
+      // Admin dashboard reads
+      allow read: if true;
+      // Public contact form submissions
+      allow create: if isValidContactMessage(request.resource.data) &&
+                       request.resource.data.id == msgId &&
+                       request.resource.data.status == 'new';
+      // Admin status update: only 'status' can be updated, sender data is immutable
+      allow update: if isValidContactMessage(request.resource.data) &&
+                       request.resource.data.id == resource.data.id &&
+                       request.resource.data.name == resource.data.name &&
+                       request.resource.data.email == resource.data.email &&
+                       request.resource.data.message == resource.data.message &&
+                       request.resource.data.date == resource.data.date &&
+                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+      // Admin deletion
+      allow delete: if true;
+    }
+
+    // -------------------------------------------------------------
+    // 8. Volunteer Submissions (Public Application Inbox)
+    // -------------------------------------------------------------
+    match /volunteer_submissions/{volId} {
+      // Admin dashboard reads
+      allow read: if true;
+      // Public volunteer application submissions
+      allow create: if isValidVolunteerSubmission(request.resource.data) &&
+                       request.resource.data.id == volId &&
+                       request.resource.data.status == 'new';
+      // Admin status update: only 'status' can be updated, applicant data is immutable
+      allow update: if isValidVolunteerSubmission(request.resource.data) &&
+                       request.resource.data.id == resource.data.id &&
+                       request.resource.data.fullName == resource.data.fullName &&
+                       request.resource.data.email == resource.data.email &&
+                       request.resource.data.phone == resource.data.phone &&
+                       request.resource.data.formType == resource.data.formType &&
+                       request.resource.data.skills == resource.data.skills &&
+                       request.resource.data.date == resource.data.date &&
+                       request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status']);
+      // Admin deletion
+      allow delete: if true;
+    }
+
+    // -------------------------------------------------------------
+    // Default Deny for any unspecified collection/document
+    // -------------------------------------------------------------
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -258,7 +258,9 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       (snapshot) => {
         if (!snapshot.empty) {
           const cloudSlides = snapshot.docs.map((d) => d.data() as HeroSlide);
-          cloudSlides.sort((a, b) => (Number(a.id) || 0) - (Number(b.id) || 0));
+          cloudSlides.sort(
+            (a, b) => (Number(a.order) || Number(a.id) || 0) - (Number(b.order) || Number(b.id) || 0)
+          );
           setHeroSlides(cloudSlides);
         }
       },
@@ -405,7 +407,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setHeroSlides((prev) =>
       prev.map((s) => (String(s.id) === String(id) ? { ...s, ...updated } : s))
     );
-    updateDoc(doc(db, 'hero_slides', String(id)), updated).catch(() => {});
+    setDoc(doc(db, 'hero_slides', String(id)), updated, { merge: true }).catch(() => {});
   };
 
   const deleteHeroSlide = (id: string | number) => {
@@ -415,8 +417,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const reorderHeroSlides = (newSlides: HeroSlide[]) => {
     setHeroSlides(newSlides);
-    newSlides.forEach((slide) => {
-      setDoc(doc(db, 'hero_slides', String(slide.id)), slide).catch(() => {});
+    newSlides.forEach((slide, idx) => {
+      setDoc(
+        doc(db, 'hero_slides', String(slide.id)),
+        { ...slide, order: idx + 1 },
+        { merge: true }
+      ).catch(() => {});
     });
   };
 
@@ -439,8 +445,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...prev,
       [program.id]: article,
     }));
-    setDoc(doc(db, 'projects', program.id), program).catch(() => {});
-    setDoc(doc(db, 'program_articles', program.id), article).catch(() => {});
+    setDoc(doc(db, 'projects', program.id), program, { merge: true }).catch(() => {});
+    setDoc(doc(db, 'program_articles', program.id), article, { merge: true }).catch(() => {});
   };
 
   const deleteProject = (id: string) => {
@@ -464,7 +470,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUpcomingEvents((prev) =>
       prev.map((e) => (e.id === event.id ? event : e))
     );
-    setDoc(doc(db, 'events', event.id), event).catch(() => {});
+    setDoc(doc(db, 'events', event.id), event, { merge: true }).catch(() => {});
   };
 
   const deleteEvent = (id: string) => {
@@ -481,7 +487,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           status: isTarget ? ('Featured' as const) : e.status === 'Featured' ? ('Upcoming' as const) : e.status,
           isLiveCountdown: isTarget,
         };
-        setDoc(doc(db, 'events', e.id), updated).catch(() => {});
+        setDoc(doc(db, 'events', e.id), updated, { merge: true }).catch(() => {});
         return updated;
       })
     );
@@ -497,7 +503,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setBeneficiaryStories((prev) =>
       prev.map((s) => (s.id === story.id ? story : s))
     );
-    setDoc(doc(db, 'stories', story.id), story).catch(() => {});
+    setDoc(doc(db, 'stories', story.id), story, { merge: true }).catch(() => {});
   };
 
   const deleteStory = (id: string) => {
@@ -509,18 +515,22 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateFoundationInfo = (info: Partial<typeof FOUNDATION_INFO>) => {
     const updated = { ...foundationInfo, ...info };
     setFoundationInfo(updated);
-    setDoc(doc(db, 'settings', 'general'), updated).catch((err) => {
+    setDoc(doc(db, 'settings', 'general'), updated, { merge: true }).catch((err) => {
       console.warn('[Firestore] settings/general update deferred:', err);
     });
   };
 
   // --- Donation Channel Actions ---
   const saveFinancialsToFirestore = (updatedMomo: MomoAccount[], updatedBank: BankAccount[]) => {
-    setDoc(doc(db, 'settings', 'financials'), {
-      momoAccounts: updatedMomo,
-      bankAccounts: updatedBank,
-      updatedAt: new Date().toISOString(),
-    }).catch(() => {});
+    setDoc(
+      doc(db, 'settings', 'financials'),
+      {
+        momoAccounts: updatedMomo,
+        bankAccounts: updatedBank,
+        updatedAt: new Date().toISOString(),
+      },
+      { merge: true }
+    ).catch(() => {});
   };
 
   const updateMomoAccounts = (accounts: MomoAccount[]) => {
