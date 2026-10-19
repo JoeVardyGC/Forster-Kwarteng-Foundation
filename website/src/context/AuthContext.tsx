@@ -30,8 +30,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isAuthenticated = !!adminUser;
 
   const login = (password: string, email = 'founder@forsterkwartengfoundation.org') => {
-    // Standard secure local admin credentials for foundation team
-    const validPasswords = ['admin', 'admin123', 'fkf2026', 'fkfadmin'];
+    // Single authorized admin password
+    const validPasswords = ['fkf2026'];
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanEmail) {
@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return {
       success: false,
-      error: 'Invalid password. (Hint: For testing, use "admin" or "fkf2026")',
+      error: 'Invalid password. Please verify your credentials or contact the founder.',
     };
   };
 

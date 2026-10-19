@@ -140,7 +140,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) =>
               <span>Instant Demo Login (Single Click)</span>
             </button>
             <p className="text-[11px] text-slate-400">
-              Default password: <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-600 font-mono">fkf2026</code> or <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-600 font-mono">admin</code>
+              Authorized password: <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-600 font-mono">fkf2026</code>
             </p>
           </div>
         </div>
