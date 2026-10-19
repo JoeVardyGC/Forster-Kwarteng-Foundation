@@ -8,7 +8,6 @@ import {
   Users,
   ArrowRight,
   Plus,
-  Sparkles,
   CheckCircle2,
   ExternalLink,
   Phone,
@@ -40,10 +39,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab }) => 
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#000080] via-[#00006a] to-[#000052] p-8 sm:p-10 text-white shadow-lg">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="max-w-2xl space-y-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-amber-300 font-semibold text-xs border border-white/20">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              Control Center
-            </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] tracking-tight">
               Welcome to the Foundation Admin Console
             </h2>
