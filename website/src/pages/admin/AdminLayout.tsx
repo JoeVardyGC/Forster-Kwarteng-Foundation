@@ -101,18 +101,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ onNavigateHome }) => {
         <div>
           {/* Logo & Brand Header */}
           <div className="p-6 border-b border-white/10 flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shadow-xs">
+            <div className="w-11 h-11 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shadow-xs shrink-0">
               <img
-                src="/assets/fkf-emblem-mark.png"
+                src="/assets/fkf-emblem-white-gold.png"
                 alt="FKF Emblem"
-                className="w-full h-full object-contain"
+                className="w-full h-full object-contain drop-shadow-xs"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
                 }}
               />
             </div>
-            <div>
-              <h1 className="text-sm font-black tracking-tight text-white font-['Outfit']">
+            <div className="min-w-0">
+              <h1 className="text-sm font-black tracking-tight text-white font-['Outfit'] leading-tight truncate">
                 FORSTER KWARTENG
               </h1>
               <div className="flex items-center gap-1.5 mt-0.5">
@@ -207,9 +207,9 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ onNavigateHome }) => {
       {/* 2. MOBILE TOPBAR */}
       <header className="lg:hidden bg-[#000080] text-white p-4 flex items-center justify-between sticky top-0 z-40 shadow-md">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center p-1">
+          <div className="w-8 h-8 rounded-lg bg-white/10 border border-white/20 flex items-center justify-center p-1">
             <img
-              src="/assets/fkf-emblem-mark.png"
+              src="/assets/fkf-emblem-white-gold.png"
               alt="FKF"
               className="w-full h-full object-contain"
             />
@@ -247,9 +247,16 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ onNavigateHome }) => {
         <div className="lg:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end">
           <div className="bg-[#000080] rounded-t-3xl p-6 text-white max-h-[85vh] overflow-y-auto space-y-4 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-white/10">
-              <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
-                Admin Navigation
-              </span>
+              <div className="flex items-center gap-2">
+                <img
+                  src="/assets/fkf-emblem-white-gold.png"
+                  alt="FKF"
+                  className="w-5 h-5 object-contain"
+                />
+                <span className="text-xs font-bold text-amber-300 uppercase tracking-wider">
+                  Admin Navigation
+                </span>
+              </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-sm"

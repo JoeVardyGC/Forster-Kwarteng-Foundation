@@ -28,15 +28,6 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) =>
     }
   };
 
-  const handleQuickDemo = () => {
-    setEmail('founder@forsterkwartengfoundation.org');
-    setPassword('fkf2026');
-    const res = login('fkf2026', 'founder@forsterkwartengfoundation.org');
-    if (res.success) {
-      onNavigate('admin');
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#000080] via-[#090979] to-[#000045] flex items-center justify-center p-4 relative overflow-hidden">
       {/* Ambient background glows */}
@@ -52,29 +43,29 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) =>
         <span>Return to Website</span>
       </button>
 
-      <div className="w-full max-w-md relative z-10">
+      <div className="w-full max-w-md relative z-10 space-y-6">
+        {/* Brand Logo on Blue Background (White & Gold version) */}
+        <div className="flex flex-col items-center text-center">
+          <img
+            src="/assets/fkf-logo-white-gold.png"
+            alt="Forster Kwarteng Foundation"
+            className="h-16 sm:h-20 w-auto object-contain drop-shadow-lg"
+          />
+        </div>
+
         <div className="bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-100 space-y-6">
           {/* Header */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-blue-50 border border-blue-100 shadow-xs mb-1">
-              <img
-                src="/assets/fkf-logo-horizontal.png"
-                alt="Forster Kwarteng Foundation"
-                className="h-10 w-auto object-contain"
-              />
-            </div>
-            <div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-widest bg-amber-100 text-amber-900 border border-amber-200/80">
-                <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
-                Staff Administration
-              </span>
-              <h1 className="text-2xl font-extrabold font-['Outfit'] text-slate-900 mt-2">
-                Foundation Console
-              </h1>
-              <p className="text-xs text-slate-500 mt-1">
-                Manage hero carousel slides, projects, field calendar, and volunteer inquiries.
-              </p>
-            </div>
+          <div className="text-center space-y-2">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-widest bg-amber-100 text-amber-900 border border-amber-200/80">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
+              Staff Administration
+            </span>
+            <h1 className="text-2xl font-extrabold font-['Outfit'] text-slate-900">
+              Foundation Console
+            </h1>
+            <p className="text-xs text-slate-500">
+              Manage hero carousel slides, projects, field calendar, and volunteer inquiries.
+            </p>
           </div>
 
           {error && (
@@ -97,7 +88,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) =>
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="admin@fkf.org"
+                  placeholder="founder@forsterkwartengfoundation.org"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#000080]/20 focus:border-[#000080] transition-all"
                 />
               </div>
@@ -129,20 +120,6 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onNavigate }) =>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
-
-          {/* Quick Demo Access Button */}
-          <div className="pt-2 border-t border-slate-100 text-center space-y-2">
-            <button
-              type="button"
-              onClick={handleQuickDemo}
-              className="w-full py-2.5 px-4 rounded-xl bg-amber-50 hover:bg-amber-100 text-[#000080] border border-amber-200/80 font-bold text-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5"
-            >
-              <span>Instant Demo Login (Single Click)</span>
-            </button>
-            <p className="text-[11px] text-slate-400">
-              Authorized password: <code className="bg-slate-100 px-1 py-0.5 rounded text-slate-600 font-mono">fkf2026</code>
-            </p>
-          </div>
         </div>
       </div>
     </div>

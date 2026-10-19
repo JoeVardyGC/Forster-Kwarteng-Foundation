@@ -14,6 +14,9 @@ import {
   Smartphone,
   Shield,
   Save,
+  Image as ImageIcon,
+  Download,
+  ExternalLink,
 } from 'lucide-react';
 
 export const SettingsView: React.FC = () => {
@@ -243,7 +246,113 @@ export const SettingsView: React.FC = () => {
         </div>
       </div>
 
-      {/* 4. Danger Zone: Factory Reset */}
+      {/* 4. Official Brand Identity & Logo Guidelines */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs p-6 sm:p-8 space-y-6">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#000080]">
+            <ImageIcon className="w-4 h-4 text-[#F5BD02]" />
+            Brand Assets & Logo Specifications
+          </div>
+          <h3 className="text-lg font-black text-slate-900 mt-1 font-['Outfit']">
+            Official Foundation Logos
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            When the background is blue (#000080), use the white-and-gold version (white left wing &amp; yellow right wing). When the background is white, use the blue-and-gold version.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {/* Blue Background Variant */}
+          <div className="rounded-2xl p-5 bg-[#000080] text-white flex flex-col justify-between space-y-4 shadow-md border border-[#00006a]">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-amber-300 text-[10px] font-extrabold uppercase tracking-wider border border-white/15">
+                  For Blue / Dark Backgrounds
+                </span>
+                <span className="text-[11px] text-blue-200 font-mono">#000080</span>
+              </div>
+              <p className="text-[11px] text-blue-100/90 mt-2 leading-relaxed">
+                Left side of emblem is <strong className="text-white">White</strong>, right side is <strong className="text-amber-300">Yellow</strong>, text is <strong className="text-white">White</strong>.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center min-h-[90px]">
+              <img
+                src="/assets/fkf-logo-white-gold.png"
+                alt="FKF Logo for Blue Backgrounds"
+                className="h-12 w-auto object-contain drop-shadow"
+              />
+            </div>
+
+            <div className="pt-2 flex items-center gap-2 border-t border-white/10">
+              <a
+                href="/assets/fkf-logo-white-gold.png"
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-amber-300" />
+                <span>Full Logo (PNG)</span>
+              </a>
+              <a
+                href="/assets/fkf-emblem-white-gold.png"
+                target="_blank"
+                rel="noreferrer"
+                className="py-2 px-3 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-amber-300" />
+                <span>Emblem (PNG)</span>
+              </a>
+            </div>
+          </div>
+
+          {/* White Background Variant */}
+          <div className="rounded-2xl p-5 bg-slate-50 text-slate-800 flex flex-col justify-between space-y-4 border border-slate-200">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-[#000080] text-[10px] font-extrabold uppercase tracking-wider border border-blue-200">
+                  For White / Light Backgrounds
+                </span>
+                <span className="text-[11px] text-slate-400 font-mono">#FFFFFF</span>
+              </div>
+              <p className="text-[11px] text-slate-600 mt-2 leading-relaxed">
+                Left side of emblem is <strong className="text-[#000080]">Blue</strong>, right side is <strong className="text-amber-600">Yellow</strong>, text is <strong className="text-[#000080]">Blue</strong>.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-xl bg-white border border-slate-200 flex items-center justify-center min-h-[90px] shadow-2xs">
+              <img
+                src="/assets/fkf-logo-horizontal.png"
+                alt="FKF Logo for White Backgrounds"
+                className="h-12 w-auto object-contain"
+              />
+            </div>
+
+            <div className="pt-2 flex items-center gap-2 border-t border-slate-200">
+              <a
+                href="/assets/fkf-logo-horizontal.png"
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-[#000080]" />
+                <span>Full Logo (PNG)</span>
+              </a>
+              <a
+                href="/assets/fkf-emblem-mark.png"
+                target="_blank"
+                rel="noreferrer"
+                className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all text-center flex items-center justify-center gap-1.5"
+              >
+                <ExternalLink className="w-3.5 h-3.5 text-[#000080]" />
+                <span>Emblem (PNG)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 5. Danger Zone: Factory Reset */}
       <div className="bg-red-50/60 rounded-2xl border border-red-200/80 p-6 space-y-4">
         <div className="flex items-start gap-3">
           <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center shrink-0">

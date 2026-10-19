@@ -36,35 +36,49 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ onSelectTab }) => 
 
   return (
     <div className="space-y-8">
-      {/* 1. WELCOME BANNER */}
+      {/* 1. WELCOME BANNER (Blue background showcasing White-Gold logo) */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#000080] via-[#00006a] to-[#000052] p-8 sm:p-10 text-white shadow-lg">
-        <div className="relative z-10 max-w-2xl space-y-3">
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-amber-300 font-semibold text-xs border border-white/20">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            Control Center
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] tracking-tight">
-            Welcome to the Foundation Admin Console
-          </h2>
-          <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-            Manage your homepage scrolling images, publish field projects, attach or remove media galleries and videos, and track upcoming community outreaches.
-          </p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div className="max-w-2xl space-y-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 text-amber-300 font-semibold text-xs border border-white/20">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              Control Center
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold font-['Outfit'] tracking-tight">
+              Welcome to the Foundation Admin Console
+            </h2>
+            <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
+              Manage your homepage scrolling images, publish field projects, attach or remove media galleries and videos, and track upcoming community outreaches.
+            </p>
 
-          <div className="pt-2 flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => onSelectTab('carousel')}
-              className="px-5 py-2.5 rounded-full bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2"
-            >
-              <ImageIcon className="w-4 h-4" />
-              <span>Change Carousel Images</span>
-            </button>
-            <button
-              onClick={() => onSelectTab('projects')}
-              className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/25 transition-all cursor-pointer flex items-center gap-2"
-            >
-              <FolderKanban className="w-4 h-4" />
-              <span>Manage Projects</span>
-            </button>
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <button
+                onClick={() => onSelectTab('carousel')}
+                className="px-5 py-2.5 rounded-full bg-[#F5BD02] hover:bg-[#e0ac00] text-[#000080] font-bold text-xs shadow-md transition-all cursor-pointer flex items-center gap-2"
+              >
+                <ImageIcon className="w-4 h-4" />
+                <span>Change Carousel Images</span>
+              </button>
+              <button
+                onClick={() => onSelectTab('projects')}
+                className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/25 transition-all cursor-pointer flex items-center gap-2"
+              >
+                <FolderKanban className="w-4 h-4" />
+                <span>Manage Projects</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Official White & Gold Logo on Blue Background */}
+          <div className="hidden lg:flex flex-col items-center justify-center shrink-0 p-5 rounded-2xl bg-white/5 border border-white/15 backdrop-blur-xs max-w-xs text-center shadow-inner">
+            <img
+              src="/assets/fkf-logo-white-gold.png"
+              alt="Forster Kwarteng Foundation"
+              className="h-14 w-auto object-contain drop-shadow-md"
+            />
+            <span className="text-[10px] font-bold text-amber-300 uppercase tracking-widest mt-2.5">
+              Official Foundation Console
+            </span>
           </div>
         </div>
 
