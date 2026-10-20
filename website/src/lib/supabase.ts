@@ -1,7 +1,11 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL || '').trim();
-const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || '').trim();
+const DEFAULT_SUPABASE_URL = 'https://mkcczxjrjfnkpejencnw.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rY2N6eGpyamZua3BlamVuY253Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0OTAxNDYsImV4cCI6MjEwODA2NjE0Nn0._BbzQSrL6vhzTe2KjHDY37RqdhSOn7bXlS_8VU9uOg8';
+
+const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL).trim();
+const supabaseAnonKey = (import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY).trim();
 
 export const isSupabaseReady = (): boolean => {
   return (
@@ -11,14 +15,12 @@ export const isSupabaseReady = (): boolean => {
   );
 };
 
-export const supabase: SupabaseClient | null = isSupabaseReady()
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-      },
-    })
-  : null;
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+});
 
 export const SUPABASE_MEDIA_BUCKET = 'fkf-media';
 
@@ -26,10 +28,6 @@ export const SUPABASE_MEDIA_BUCKET = 'fkf-media';
  * Uploads an image file to the Supabase Storage bucket `fkf-media` and returns its public CDN URL.
  */
 export async function uploadImageToSupabase(file: File, folder = 'general'): Promise<string> {
-  if (!supabase) {
-    throw new Error('Supabase client is not configured');
-  }
-
   const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
   const filePath = `${folder}/${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
 
@@ -53,7 +51,6 @@ export async function uploadImageToSupabase(file: File, folder = 'general'): Pro
  * Helper to fetch all rows from a JSONB-backed Supabase table.
  */
 export async function fetchSupabaseCollection<T>(tableName: string): Promise<T[] | null> {
-  if (!supabase) return null;
   const { data, error } = await supabase.from(tableName).select('id, data');
   if (error || !data) {
     console.warn(`[Supabase] Error fetching ${tableName}:`, error?.message);
@@ -69,7 +66,6 @@ export async function fetchSupabaseCollection<T>(tableName: string): Promise<T[]
  * Helper to fetch a single row by ID from a JSONB-backed Supabase table.
  */
 export async function fetchSupabaseDoc<T>(tableName: string, id: string): Promise<T | null> {
-  if (!supabase) return null;
   const { data, error } = await supabase
     .from(tableName)
     .select('id, data')
@@ -85,7 +81,6 @@ export async function fetchSupabaseDoc<T>(tableName: string, id: string): Promis
  * Helper to upsert a document into a JSONB-backed Supabase table.
  */
 export async function upsertSupabaseDoc(tableName: string, id: string, payload: any): Promise<void> {
-  if (!supabase) return;
   const { error } = await supabase.from(tableName).upsert(
     {
       id: String(id),
@@ -103,7 +98,6 @@ export async function upsertSupabaseDoc(tableName: string, id: string, payload: 
  * Helper to delete a document from a JSONB-backed Supabase table.
  */
 export async function deleteSupabaseDoc(tableName: string, id: string): Promise<void> {
-  if (!supabase) return;
   const { error } = await supabase.from(tableName).delete().eq('id', String(id));
   if (error) {
     console.error(`[Supabase] Delete error on ${tableName}/${id}:`, error.message);

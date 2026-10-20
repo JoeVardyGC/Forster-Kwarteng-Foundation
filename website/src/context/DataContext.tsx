@@ -19,19 +19,9 @@ import {
   DEFAULT_MOMO_ACCOUNTS,
   DEFAULT_BANK_ACCOUNTS,
 } from '../data/foundationData';
-import {
-  collection,
-  doc,
-  onSnapshot,
-  setDoc,
-  deleteDoc,
-  updateDoc,
-} from 'firebase/firestore';
-import { db, isFirebaseReady, cleanFirestoreData } from '../lib/firebase';
-import { seedFirestoreIfEmpty } from '../lib/seedFirestore';
+import { cleanFirestoreData } from '../lib/firebase';
 import {
   supabase,
-  isSupabaseReady,
   fetchSupabaseCollection,
   fetchSupabaseDoc,
   upsertSupabaseDoc,
@@ -91,7 +81,7 @@ export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
-const DATA_STORAGE_KEY = 'fkf_site_data_v3';
+const DATA_STORAGE_KEY = 'fkf_supabase_cache_v1';
 
 interface DataContextType {
   // State
@@ -221,7 +211,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initial.volunteerSubmissions || []
   );
 
-  // Sync lightweight cache to localStorage
+  // Sync lightweight cache to localStorage for instant initial page render
   useEffect(() => {
     try {
       const payload = {
@@ -238,7 +228,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(payload));
     } catch {
-      // Cloud database holds the authoritative state even if browser localStorage reaches its 5MB limit
+      // Supabase PostgreSQL holds the authoritative state
     }
   }, [
     heroSlides,
@@ -253,300 +243,124 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     volunteerSubmissions,
   ]);
 
-  // --- Cloud Database Realtime Synchronization (Supabase Primary, Firestore Fallback) ---
+  // --- Supabase PostgreSQL & Realtime Synchronization ---
   useEffect(() => {
     let cancelled = false;
-    const unsubs: Array<() => void> = [];
 
-    // =========================================================================
-    // PATH A: SUPABASE REALTIME & POSTGRESQL SYNC (Primary when configured)
-    // =========================================================================
-    if (isSupabaseReady() && supabase) {
-      const refreshAllFromSupabase = async () => {
-        if (cancelled) return;
+    const refreshAllFromSupabase = async () => {
+      if (cancelled) return;
 
-        const [
-          slidesData,
-          progsData,
-          artsData,
-          eventsData,
-          storiesData,
-          generalSettings,
-          financialSettings,
-          contactsData,
-          volsData,
-        ] = await Promise.all([
-          fetchSupabaseCollection<HeroSlide>('hero_slides'),
-          fetchSupabaseCollection<FoundationProgram>('projects'),
-          fetchSupabaseCollection<ProgramArticle>('program_articles'),
-          fetchSupabaseCollection<UpcomingProjectEvent>('events'),
-          fetchSupabaseCollection<BeneficiaryStory>('stories'),
-          fetchSupabaseDoc<Partial<typeof FOUNDATION_INFO>>('settings', 'general'),
-          fetchSupabaseDoc<{ momoAccounts?: MomoAccount[]; bankAccounts?: BankAccount[] }>('settings', 'financials'),
-          fetchSupabaseCollection<ContactSubmission>('contact_messages'),
-          fetchSupabaseCollection<VolunteerSubmission>('volunteer_submissions'),
-        ]);
+      const [
+        slidesData,
+        progsData,
+        artsData,
+        eventsData,
+        storiesData,
+        generalSettings,
+        financialSettings,
+        contactsData,
+        volsData,
+      ] = await Promise.all([
+        fetchSupabaseCollection<HeroSlide>('hero_slides'),
+        fetchSupabaseCollection<FoundationProgram>('projects'),
+        fetchSupabaseCollection<ProgramArticle>('program_articles'),
+        fetchSupabaseCollection<UpcomingProjectEvent>('events'),
+        fetchSupabaseCollection<BeneficiaryStory>('stories'),
+        fetchSupabaseDoc<Partial<typeof FOUNDATION_INFO>>('settings', 'general'),
+        fetchSupabaseDoc<{ momoAccounts?: MomoAccount[]; bankAccounts?: BankAccount[] }>('settings', 'financials'),
+        fetchSupabaseCollection<ContactSubmission>('contact_messages'),
+        fetchSupabaseCollection<VolunteerSubmission>('volunteer_submissions'),
+      ]);
 
-        if (cancelled) return;
+      if (cancelled) return;
 
-        if (slidesData && slidesData.length > 0) {
-          slidesData.sort((a, b) => (Number(a.order) || 99) - (Number(b.order) || 99));
-          setHeroSlides(slidesData);
-        }
-        if (progsData) {
-          setPrograms(progsData);
-        }
-        if (artsData) {
-          const map: Record<string, ProgramArticle> = {};
-          artsData.forEach((a) => {
-            map[a.id] = a;
-          });
-          setProgramArticles(map);
-        }
-        if (eventsData) {
-          setUpcomingEvents(eventsData);
-        }
-        if (storiesData) {
-          setBeneficiaryStories(storiesData);
-        }
-        if (generalSettings) {
-          setFoundationInfo((prev) => ({ ...prev, ...generalSettings }));
-        }
-        if (financialSettings) {
-          if (Array.isArray(financialSettings.momoAccounts)) {
-            setMomoAccounts(financialSettings.momoAccounts);
-          }
-          if (Array.isArray(financialSettings.bankAccounts)) {
-            setBankAccounts(financialSettings.bankAccounts);
-          }
-        }
-        if (contactsData) {
-          const cleanMsgs = contactsData.filter(
-            (m) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-')
-          );
-          cleanMsgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          setContactMessages(cleanMsgs);
-        }
-        if (volsData) {
-          const cleanVols = volsData.filter(
-            (v) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-')
-          );
-          cleanVols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          setVolunteerSubmissions(cleanVols);
-        }
-      };
-
-      seedSupabaseIfEmpty()
-        .catch(() => {})
-        .finally(() => {
-          if (cancelled || !supabase) return;
-          refreshAllFromSupabase();
-
-          const channel = supabase
-            .channel('fkf-realtime-db-changes')
-            .on(
-              'postgres_changes',
-              { event: '*', schema: 'public' },
-              () => {
-                refreshAllFromSupabase();
-              }
-            )
-            .subscribe();
-
-          unsubs.push(() => {
-            supabase.removeChannel(channel);
-          });
+      if (slidesData && slidesData.length > 0) {
+        slidesData.sort((a, b) => (Number(a.order) || 99) - (Number(b.order) || 99));
+        setHeroSlides(slidesData);
+      }
+      if (progsData) {
+        setPrograms(progsData);
+      }
+      if (artsData) {
+        const map: Record<string, ProgramArticle> = {};
+        artsData.forEach((a) => {
+          map[a.id] = a;
         });
+        setProgramArticles(map);
+      }
+      if (eventsData) {
+        setUpcomingEvents(eventsData);
+      }
+      if (storiesData) {
+        setBeneficiaryStories(storiesData);
+      }
+      if (generalSettings) {
+        setFoundationInfo((prev) => ({ ...prev, ...generalSettings }));
+      }
+      if (financialSettings) {
+        if (Array.isArray(financialSettings.momoAccounts)) {
+          setMomoAccounts(financialSettings.momoAccounts);
+        }
+        if (Array.isArray(financialSettings.bankAccounts)) {
+          setBankAccounts(financialSettings.bankAccounts);
+        }
+      }
+      if (contactsData) {
+        const cleanMsgs = contactsData.filter(
+          (m) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-')
+        );
+        cleanMsgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setContactMessages(cleanMsgs);
+      }
+      if (volsData) {
+        const cleanVols = volsData.filter(
+          (v) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-')
+        );
+        cleanVols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setVolunteerSubmissions(cleanVols);
+      }
+    };
 
-      return () => {
-        cancelled = true;
-        unsubs.forEach((u) => u());
-      };
-    }
+    let channel: ReturnType<typeof supabase.channel> | null = null;
 
-    // =========================================================================
-    // PATH B: CLOUD FIRESTORE REALTIME SYNC
-    // =========================================================================
-    if (!isFirebaseReady()) return;
-
-    seedFirestoreIfEmpty()
+    seedSupabaseIfEmpty()
       .catch(() => {})
       .finally(() => {
         if (cancelled) return;
+        refreshAllFromSupabase();
 
-        unsubs.push(
-          onSnapshot(
-            collection(db, 'hero_slides'),
-            (snapshot) => {
-              if (!snapshot.empty) {
-                const cloudSlides = snapshot.docs.map((d) => ({
-                  ...(d.data() as HeroSlide),
-                  id: d.id,
-                }));
-                cloudSlides.sort(
-                  (a, b) => (Number(a.order) || 99) - (Number(b.order) || 99)
-                );
-                setHeroSlides(cloudSlides);
-              }
-            },
-            (err) => console.warn('[Firestore] hero_slides listener error:', err)
+        channel = supabase
+          .channel('fkf-realtime-db-changes')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public' },
+            () => {
+              refreshAllFromSupabase();
+            }
           )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            collection(db, 'projects'),
-            (snapshot) => {
-              const cloudProgs = snapshot.docs.map((d) => ({
-                ...(d.data() as FoundationProgram),
-                id: d.id,
-              }));
-              setPrograms(cloudProgs);
-            },
-            (err) => console.warn('[Firestore] projects listener error:', err)
-          )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            collection(db, 'program_articles'),
-            (snapshot) => {
-              const cloudArticles: Record<string, ProgramArticle> = {};
-              snapshot.docs.forEach((d) => {
-                cloudArticles[d.id] = {
-                  ...(d.data() as ProgramArticle),
-                  id: d.id,
-                };
-              });
-              setProgramArticles(cloudArticles);
-            },
-            (err) => console.warn('[Firestore] program_articles listener error:', err)
-          )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            collection(db, 'events'),
-            (snapshot) => {
-              const cloudEvents = snapshot.docs.map((d) => ({
-                ...(d.data() as UpcomingProjectEvent),
-                id: d.id,
-              }));
-              setUpcomingEvents(cloudEvents);
-            },
-            (err) => console.warn('[Firestore] events listener error:', err)
-          )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            collection(db, 'stories'),
-            (snapshot) => {
-              const cloudStories = snapshot.docs.map((d) => ({
-                ...(d.data() as BeneficiaryStory),
-                id: d.id,
-              }));
-              setBeneficiaryStories(cloudStories);
-            },
-            (err) => console.warn('[Firestore] stories listener error:', err)
-          )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            doc(db, 'settings', 'general'),
-            (snapshot) => {
-              if (snapshot.exists()) {
-                const cloud = snapshot.data() as Partial<typeof FOUNDATION_INFO>;
-                setFoundationInfo((prev) => ({
-                  ...prev,
-                  ...cloud,
-                }));
-              }
-            },
-            (err) => console.warn('[Firestore] settings/general listener error:', err)
-          )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            collection(db, 'contact_messages'),
-            (snapshot) => {
-              const msgs = snapshot.docs
-                .map((d) => ({ ...(d.data() as ContactSubmission), id: d.id }))
-                .filter((m) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-'));
-              msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-              setContactMessages(msgs);
-            },
-            (err) => console.warn('[Firestore] contact_messages listener error:', err)
-          )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            collection(db, 'volunteer_submissions'),
-            (snapshot) => {
-              const vols = snapshot.docs
-                .map((d) => ({ ...(d.data() as VolunteerSubmission), id: d.id }))
-                .filter((v) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-'));
-              vols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-              setVolunteerSubmissions(vols);
-            },
-            (err) => console.warn('[Firestore] volunteer_submissions listener error:', err)
-          )
-        );
-
-        unsubs.push(
-          onSnapshot(
-            doc(db, 'settings', 'financials'),
-            (snapshot) => {
-              if (snapshot.exists()) {
-                const data = snapshot.data();
-                if (data.momoAccounts && Array.isArray(data.momoAccounts)) {
-                  setMomoAccounts(data.momoAccounts);
-                }
-                if (data.bankAccounts && Array.isArray(data.bankAccounts)) {
-                  setBankAccounts(data.bankAccounts);
-                }
-              }
-            },
-            (err) => console.warn('[Firestore] settings/financials listener error:', err)
-          )
-        );
+          .subscribe();
       });
 
     return () => {
       cancelled = true;
-      unsubs.forEach((u) => u());
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
     };
   }, []);
 
-  // Unified Cloud Write Helper (writes to Supabase when configured, plus Firestore)
+  // --- Supabase Write Helpers ---
   const syncDocToCloud = (tableName: string, docId: string, payload: any) => {
     const clean = cleanFirestoreData(payload);
-    if (isSupabaseReady()) {
-      upsertSupabaseDoc(tableName, docId, clean).catch((err) =>
-        console.error(`[Supabase] Write failed on ${tableName}/${docId}:`, err)
-      );
-    }
-    if (isFirebaseReady()) {
-      setDoc(doc(db, tableName, docId), clean, { merge: true }).catch((err) =>
-        console.error(`[Firestore] Write failed on ${tableName}/${docId}:`, err)
-      );
-    }
+    upsertSupabaseDoc(tableName, docId, clean).catch((err) =>
+      console.error(`[Supabase] Write failed on ${tableName}/${docId}:`, err)
+    );
   };
 
   const removeDocFromCloud = (tableName: string, docId: string) => {
-    if (isSupabaseReady()) {
-      deleteSupabaseDoc(tableName, docId).catch((err) =>
-        console.error(`[Supabase] Delete failed on ${tableName}/${docId}:`, err)
-      );
-    }
-    if (isFirebaseReady()) {
-      deleteDoc(doc(db, tableName, docId)).catch((err) =>
-        console.error(`[Firestore] Delete failed on ${tableName}/${docId}:`, err)
-      );
-    }
+    deleteSupabaseDoc(tableName, docId).catch((err) =>
+      console.error(`[Supabase] Delete failed on ${tableName}/${docId}:`, err)
+    );
   };
 
   // --- Hero Carousel Actions ---
@@ -780,12 +594,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       prev.map((m) => {
         if (m.id === id) {
           const updated = { ...m, status };
-          if (isSupabaseReady()) {
-            upsertSupabaseDoc('contact_messages', id, updated).catch(() => {});
-          }
-          if (isFirebaseReady()) {
-            updateDoc(doc(db, 'contact_messages', id), { status }).catch(() => {});
-          }
+          syncDocToCloud('contact_messages', id, updated);
           return updated;
         }
         return m;
@@ -814,12 +623,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       prev.map((v) => {
         if (v.id === id) {
           const updated = { ...v, status };
-          if (isSupabaseReady()) {
-            upsertSupabaseDoc('volunteer_submissions', id, updated).catch(() => {});
-          }
-          if (isFirebaseReady()) {
-            updateDoc(doc(db, 'volunteer_submissions', id), { status }).catch(() => {});
-          }
+          syncDocToCloud('volunteer_submissions', id, updated);
           return updated;
         }
         return v;
