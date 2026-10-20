@@ -27,13 +27,14 @@ import {
   deleteDoc,
   updateDoc,
 } from 'firebase/firestore';
-import { db, isFirebaseReady } from '../lib/firebase';
+import { db, isFirebaseReady, cleanFirestoreData } from '../lib/firebase';
 import { seedFirestoreIfEmpty } from '../lib/seedFirestore';
 
-// Initial default hero slides
+// Initial default hero slides (IDs match Firestore document IDs)
 export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
-    id: 1,
+    id: 'slide-1',
+    order: 1,
     image: '/assets/hero_boy_right.jpg',
     pillar: 'Pillar 01 • Education Sponsorship',
     headlinePrefix: '‘Every Child Deserves',
@@ -44,7 +45,8 @@ export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
     title: 'Dignity & Hope in the Classroom',
   },
   {
-    id: 2,
+    id: 'slide-2',
+    order: 2,
     image: '/assets/hero_girls_right.jpg',
     pillar: 'Pillar 02 • Mentorship & Literacy',
     headlinePrefix: '‘Unlocking Hope Through',
@@ -55,7 +57,8 @@ export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
     title: 'Foundations of Lifelong Learning',
   },
   {
-    id: 3,
+    id: 'slide-3',
+    order: 3,
     image: '/assets/hero_outreach_right.jpg',
     pillar: 'Pillar 03 • Community Care & Relief',
     headlinePrefix: '‘Grassroots Aid Where',
@@ -66,7 +69,8 @@ export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
     title: 'Direct Aid & Emergency Safety Nets',
   },
   {
-    id: 4,
+    id: 'slide-4',
+    order: 4,
     image: '/assets/hero_group_right.jpg',
     pillar: 'Pillar 04 • Sustainable Futures',
     headlinePrefix: '‘Empowering Lives,',
@@ -78,7 +82,7 @@ export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
-const DATA_STORAGE_KEY = 'fkf_site_data_v2';
+const DATA_STORAGE_KEY = 'fkf_site_data_v3';
 
 interface DataContextType {
   // State
@@ -145,7 +149,7 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Load persisted state or defaults
+  // Load cached state for instant initial render before Firestore snapshot arrives
   const getInitial = () => {
     try {
       const stored = localStorage.getItem(DATA_STORAGE_KEY);
@@ -164,7 +168,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return parsed;
       }
     } catch (e) {
-      console.warn('Failed to parse persisted site data, loading defaults.', e);
+      console.warn('Failed to parse cached site data, loading defaults.', e);
     }
     return {
       heroSlides: DEFAULT_HERO_SLIDES,
@@ -209,7 +213,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initial.volunteerSubmissions || []
   );
 
-  // Auto-sync to localStorage
+  // Sync lightweight cache to localStorage
   useEffect(() => {
     try {
       const payload = {
@@ -225,8 +229,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         volunteerSubmissions,
       };
       localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(payload));
-    } catch (e) {
-      console.error('Error persisting site data', e);
+    } catch {
+      // If localStorage quota is exceeded due to multiple high-res photos, Cloud Firestore still holds full state
     }
   }, [
     heroSlides,
@@ -245,208 +249,255 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (!isFirebaseReady()) return;
 
-    // Trigger one-time auto-seed if cloud database is empty
-    seedFirestoreIfEmpty().catch(() => {});
+    let cancelled = false;
+    const unsubs: Array<() => void> = [];
 
-    // Clean up any legacy demo submissions from Firestore if they were previously uploaded
-    deleteDoc(doc(db, 'contact_messages', 'msg-demo-1')).catch(() => {});
-    deleteDoc(doc(db, 'volunteer_submissions', 'vol-demo-1')).catch(() => {});
+    seedFirestoreIfEmpty()
+      .catch(() => {})
+      .finally(() => {
+        if (cancelled) return;
 
-    // 1. Subscribe to hero_slides
-    const unsubSlides = onSnapshot(
-      collection(db, 'hero_slides'),
-      (snapshot) => {
-        if (!snapshot.empty) {
-          const cloudSlides = snapshot.docs.map((d) => d.data() as HeroSlide);
-          cloudSlides.sort(
-            (a, b) => (Number(a.order) || Number(a.id) || 0) - (Number(b.order) || Number(b.id) || 0)
-          );
-          setHeroSlides(cloudSlides);
-        }
-      },
-      () => {}
-    );
+        // 1. Subscribe to hero_slides
+        unsubs.push(
+          onSnapshot(
+            collection(db, 'hero_slides'),
+            (snapshot) => {
+              if (!snapshot.empty) {
+                const cloudSlides = snapshot.docs.map((d) => ({
+                  ...(d.data() as HeroSlide),
+                  id: d.id,
+                }));
+                cloudSlides.sort(
+                  (a, b) =>
+                    (Number(a.order) || 99) - (Number(b.order) || 99)
+                );
+                setHeroSlides(cloudSlides);
+              }
+            },
+            (err) => console.warn('[Firestore] hero_slides listener error:', err)
+          )
+        );
 
-    // 2. Subscribe to projects
-    const unsubProjects = onSnapshot(
-      collection(db, 'projects'),
-      (snapshot) => {
-        if (!snapshot.empty) {
-          const cloudProgs = snapshot.docs.map((d) => d.data() as FoundationProgram);
-          setPrograms(cloudProgs);
-        }
-      },
-      () => {}
-    );
+        // 2. Subscribe to projects
+        unsubs.push(
+          onSnapshot(
+            collection(db, 'projects'),
+            (snapshot) => {
+              const cloudProgs = snapshot.docs.map((d) => ({
+                ...(d.data() as FoundationProgram),
+                id: d.id,
+              }));
+              setPrograms(cloudProgs);
+            },
+            (err) => console.warn('[Firestore] projects listener error:', err)
+          )
+        );
 
-    // 3. Subscribe to program_articles
-    const unsubArticles = onSnapshot(
-      collection(db, 'program_articles'),
-      (snapshot) => {
-        if (!snapshot.empty) {
-          const cloudArticles: Record<string, ProgramArticle> = {};
-          snapshot.docs.forEach((d) => {
-            cloudArticles[d.id] = d.data() as ProgramArticle;
-          });
-          setProgramArticles(cloudArticles);
-        }
-      },
-      () => {}
-    );
+        // 3. Subscribe to program_articles
+        unsubs.push(
+          onSnapshot(
+            collection(db, 'program_articles'),
+            (snapshot) => {
+              const cloudArticles: Record<string, ProgramArticle> = {};
+              snapshot.docs.forEach((d) => {
+                cloudArticles[d.id] = {
+                  ...(d.data() as ProgramArticle),
+                  id: d.id,
+                };
+              });
+              setProgramArticles(cloudArticles);
+            },
+            (err) => console.warn('[Firestore] program_articles listener error:', err)
+          )
+        );
 
-    // 4. Subscribe to events
-    const unsubEvents = onSnapshot(
-      collection(db, 'events'),
-      (snapshot) => {
-        if (!snapshot.empty) {
-          const cloudEvents = snapshot.docs.map((d) => d.data() as UpcomingProjectEvent);
-          setUpcomingEvents(cloudEvents);
-        }
-      },
-      () => {}
-    );
+        // 4. Subscribe to events
+        unsubs.push(
+          onSnapshot(
+            collection(db, 'events'),
+            (snapshot) => {
+              const cloudEvents = snapshot.docs.map((d) => ({
+                ...(d.data() as UpcomingProjectEvent),
+                id: d.id,
+              }));
+              setUpcomingEvents(cloudEvents);
+            },
+            (err) => console.warn('[Firestore] events listener error:', err)
+          )
+        );
 
-    // 5. Subscribe to stories
-    const unsubStories = onSnapshot(
-      collection(db, 'stories'),
-      (snapshot) => {
-        if (!snapshot.empty) {
-          const cloudStories = snapshot.docs.map((d) => d.data() as BeneficiaryStory);
-          setBeneficiaryStories(cloudStories);
-        }
-      },
-      () => {}
-    );
+        // 5. Subscribe to stories
+        unsubs.push(
+          onSnapshot(
+            collection(db, 'stories'),
+            (snapshot) => {
+              const cloudStories = snapshot.docs.map((d) => ({
+                ...(d.data() as BeneficiaryStory),
+                id: d.id,
+              }));
+              setBeneficiaryStories(cloudStories);
+            },
+            (err) => console.warn('[Firestore] stories listener error:', err)
+          )
+        );
 
-    // 6. Subscribe to settings
-    const unsubSettings = onSnapshot(
-      doc(db, 'settings', 'general'),
-      (snapshot) => {
-        if (snapshot.exists()) {
-          const cloud = snapshot.data() as Partial<typeof FOUNDATION_INFO>;
-          setFoundationInfo((prev) => ({
-            ...prev,
-            ...cloud,
-            registrationNo:
-              cloud.registrationNo && cloud.registrationNo !== FOUNDATION_INFO.registrationNo
-                ? cloud.registrationNo
-                : prev.registrationNo || cloud.registrationNo || FOUNDATION_INFO.registrationNo,
-          }));
-        }
-      },
-      () => {}
-    );
+        // 6. Subscribe to settings/general
+        unsubs.push(
+          onSnapshot(
+            doc(db, 'settings', 'general'),
+            (snapshot) => {
+              if (snapshot.exists()) {
+                const cloud = snapshot.data() as Partial<typeof FOUNDATION_INFO>;
+                setFoundationInfo((prev) => ({
+                  ...prev,
+                  ...cloud,
+                }));
+              }
+            },
+            (err) => console.warn('[Firestore] settings/general listener error:', err)
+          )
+        );
 
-    // 7. Subscribe to contact_messages
-    const unsubContact = onSnapshot(
-      collection(db, 'contact_messages'),
-      (snapshot) => {
-        const msgs = snapshot.docs
-          .map((d) => d.data() as ContactSubmission)
-          .filter((m) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-'));
-        msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        setContactMessages(msgs);
-      },
-      () => {}
-    );
+        // 7. Subscribe to contact_messages
+        unsubs.push(
+          onSnapshot(
+            collection(db, 'contact_messages'),
+            (snapshot) => {
+              const msgs = snapshot.docs
+                .map((d) => ({ ...(d.data() as ContactSubmission), id: d.id }))
+                .filter((m) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-'));
+              msgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+              setContactMessages(msgs);
+            },
+            (err) => console.warn('[Firestore] contact_messages listener error:', err)
+          )
+        );
 
-    // 8. Subscribe to volunteer_submissions
-    const unsubVolunteers = onSnapshot(
-      collection(db, 'volunteer_submissions'),
-      (snapshot) => {
-        const vols = snapshot.docs
-          .map((d) => d.data() as VolunteerSubmission)
-          .filter((v) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-'));
-        vols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-        setVolunteerSubmissions(vols);
-      },
-      () => {}
-    );
+        // 8. Subscribe to volunteer_submissions
+        unsubs.push(
+          onSnapshot(
+            collection(db, 'volunteer_submissions'),
+            (snapshot) => {
+              const vols = snapshot.docs
+                .map((d) => ({ ...(d.data() as VolunteerSubmission), id: d.id }))
+                .filter((v) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-'));
+              vols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+              setVolunteerSubmissions(vols);
+            },
+            (err) => console.warn('[Firestore] volunteer_submissions listener error:', err)
+          )
+        );
 
-    // 9. Subscribe to settings/financials (Mobile Money & Bank Accounts)
-    const unsubFinancials = onSnapshot(
-      doc(db, 'settings', 'financials'),
-      (snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.data();
-          if (data.momoAccounts && Array.isArray(data.momoAccounts)) {
-            setMomoAccounts(data.momoAccounts);
-          }
-          if (data.bankAccounts && Array.isArray(data.bankAccounts)) {
-            setBankAccounts(data.bankAccounts);
-          }
-        }
-      },
-      () => {}
-    );
+        // 9. Subscribe to settings/financials (Mobile Money & Bank Accounts)
+        unsubs.push(
+          onSnapshot(
+            doc(db, 'settings', 'financials'),
+            (snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.data();
+                if (data.momoAccounts && Array.isArray(data.momoAccounts)) {
+                  setMomoAccounts(data.momoAccounts);
+                }
+                if (data.bankAccounts && Array.isArray(data.bankAccounts)) {
+                  setBankAccounts(data.bankAccounts);
+                }
+              }
+            },
+            (err) => console.warn('[Firestore] settings/financials listener error:', err)
+          )
+        );
+      });
 
     return () => {
-      unsubSlides();
-      unsubProjects();
-      unsubArticles();
-      unsubEvents();
-      unsubStories();
-      unsubSettings();
-      unsubContact();
-      unsubVolunteers();
-      unsubFinancials();
+      cancelled = true;
+      unsubs.forEach((u) => u());
     };
   }, []);
 
   // --- Hero Carousel Actions ---
   const addHeroSlide = (slide: Omit<HeroSlide, 'id'>) => {
-    const newSlide: HeroSlide = {
+    const newId = `slide-${Date.now()}`;
+    const newSlide: HeroSlide = cleanFirestoreData({
       ...slide,
-      id: `slide-${Date.now()}`,
-    };
+      id: newId,
+      order: heroSlides.length + 1,
+    });
     setHeroSlides((prev) => [...prev, newSlide]);
-    setDoc(doc(db, 'hero_slides', String(newSlide.id)), newSlide).catch(() => {});
+    setDoc(doc(db, 'hero_slides', newId), newSlide).catch((err) =>
+      console.error('[Firestore] Failed to add hero slide:', err)
+    );
   };
 
   const updateHeroSlide = (id: string | number, updated: Partial<HeroSlide>) => {
-    setHeroSlides((prev) =>
-      prev.map((s) => (String(s.id) === String(id) ? { ...s, ...updated } : s))
-    );
-    setDoc(doc(db, 'hero_slides', String(id)), updated, { merge: true }).catch(() => {});
+    const docId = String(id);
+    setHeroSlides((prev) => {
+      const next = prev.map((s) => {
+        if (String(s.id) === docId) {
+          const merged = cleanFirestoreData({ ...s, ...updated, id: docId });
+          setDoc(doc(db, 'hero_slides', docId), merged, { merge: true }).catch((err) =>
+            console.error('[Firestore] Failed to update hero slide:', err)
+          );
+          return merged;
+        }
+        return s;
+      });
+      return next;
+    });
   };
 
   const deleteHeroSlide = (id: string | number) => {
-    setHeroSlides((prev) => prev.filter((s) => String(s.id) !== String(id)));
-    deleteDoc(doc(db, 'hero_slides', String(id))).catch(() => {});
+    const docId = String(id);
+    setHeroSlides((prev) => prev.filter((s) => String(s.id) !== docId));
+    deleteDoc(doc(db, 'hero_slides', docId)).catch((err) =>
+      console.error('[Firestore] Failed to delete hero slide:', err)
+    );
   };
 
   const reorderHeroSlides = (newSlides: HeroSlide[]) => {
-    setHeroSlides(newSlides);
-    newSlides.forEach((slide, idx) => {
-      setDoc(
-        doc(db, 'hero_slides', String(slide.id)),
-        { ...slide, order: idx + 1 },
-        { merge: true }
-      ).catch(() => {});
+    const ordered = newSlides.map((slide, idx) =>
+      cleanFirestoreData({ ...slide, id: String(slide.id), order: idx + 1 })
+    );
+    setHeroSlides(ordered);
+    ordered.forEach((slide) => {
+      setDoc(doc(db, 'hero_slides', String(slide.id)), slide, { merge: true }).catch((err) =>
+        console.error('[Firestore] Failed to reorder slide:', err)
+      );
     });
   };
 
   // --- Project Actions ---
   const addProject = (program: FoundationProgram, article: ProgramArticle) => {
-    setPrograms((prev) => [program, ...prev]);
+    const cleanProg = cleanFirestoreData(program);
+    const cleanArt = cleanFirestoreData(article);
+    setPrograms((prev) => [cleanProg, ...prev]);
     setProgramArticles((prev) => ({
       ...prev,
-      [program.id]: article,
+      [cleanProg.id]: cleanArt,
     }));
-    setDoc(doc(db, 'projects', program.id), program).catch(() => {});
-    setDoc(doc(db, 'program_articles', program.id), article).catch(() => {});
+    setDoc(doc(db, 'projects', cleanProg.id), cleanProg).catch((err) =>
+      console.error('[Firestore] Failed to add project:', err)
+    );
+    setDoc(doc(db, 'program_articles', cleanProg.id), cleanArt).catch((err) =>
+      console.error('[Firestore] Failed to add program article:', err)
+    );
   };
 
   const updateProject = (program: FoundationProgram, article: ProgramArticle) => {
+    const cleanProg = cleanFirestoreData(program);
+    const cleanArt = cleanFirestoreData(article);
     setPrograms((prev) =>
-      prev.map((p) => (p.id === program.id ? program : p))
+      prev.map((p) => (p.id === cleanProg.id ? cleanProg : p))
     );
     setProgramArticles((prev) => ({
       ...prev,
-      [program.id]: article,
+      [cleanProg.id]: cleanArt,
     }));
-    setDoc(doc(db, 'projects', program.id), program, { merge: true }).catch(() => {});
-    setDoc(doc(db, 'program_articles', program.id), article, { merge: true }).catch(() => {});
+    setDoc(doc(db, 'projects', cleanProg.id), cleanProg).catch((err) =>
+      console.error('[Firestore] Failed to update project:', err)
+    );
+    setDoc(doc(db, 'program_articles', cleanProg.id), cleanArt).catch((err) =>
+      console.error('[Firestore] Failed to update program article:', err)
+    );
   };
 
   const deleteProject = (id: string) => {
@@ -456,38 +507,52 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       delete copy[id];
       return copy;
     });
-    deleteDoc(doc(db, 'projects', id)).catch(() => {});
-    deleteDoc(doc(db, 'program_articles', id)).catch(() => {});
+    deleteDoc(doc(db, 'projects', id)).catch((err) =>
+      console.error('[Firestore] Failed to delete project:', err)
+    );
+    deleteDoc(doc(db, 'program_articles', id)).catch((err) =>
+      console.error('[Firestore] Failed to delete program article:', err)
+    );
   };
 
   // --- Upcoming Events Actions ---
   const addEvent = (event: UpcomingProjectEvent) => {
-    setUpcomingEvents((prev) => [event, ...prev]);
-    setDoc(doc(db, 'events', event.id), event).catch(() => {});
+    const cleanEv = cleanFirestoreData(event);
+    setUpcomingEvents((prev) => [cleanEv, ...prev]);
+    setDoc(doc(db, 'events', cleanEv.id), cleanEv).catch((err) =>
+      console.error('[Firestore] Failed to add event:', err)
+    );
   };
 
   const updateEvent = (event: UpcomingProjectEvent) => {
+    const cleanEv = cleanFirestoreData(event);
     setUpcomingEvents((prev) =>
-      prev.map((e) => (e.id === event.id ? event : e))
+      prev.map((e) => (e.id === cleanEv.id ? cleanEv : e))
     );
-    setDoc(doc(db, 'events', event.id), event, { merge: true }).catch(() => {});
+    setDoc(doc(db, 'events', cleanEv.id), cleanEv).catch((err) =>
+      console.error('[Firestore] Failed to update event:', err)
+    );
   };
 
   const deleteEvent = (id: string) => {
     setUpcomingEvents((prev) => prev.filter((e) => e.id !== id));
-    deleteDoc(doc(db, 'events', id)).catch(() => {});
+    deleteDoc(doc(db, 'events', id)).catch((err) =>
+      console.error('[Firestore] Failed to delete event:', err)
+    );
   };
 
   const setFeaturedEvent = (id: string) => {
     setUpcomingEvents((prev) =>
       prev.map((e) => {
         const isTarget = e.id === id;
-        const updated = {
+        const updated = cleanFirestoreData({
           ...e,
           status: isTarget ? ('Featured' as const) : e.status === 'Featured' ? ('Upcoming' as const) : e.status,
           isLiveCountdown: isTarget,
-        };
-        setDoc(doc(db, 'events', e.id), updated, { merge: true }).catch(() => {});
+        });
+        setDoc(doc(db, 'events', e.id), updated).catch((err) =>
+          console.error('[Firestore] Failed to set featured event:', err)
+        );
         return updated;
       })
     );
@@ -495,28 +560,36 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // --- Story Actions ---
   const addStory = (story: BeneficiaryStory) => {
-    setBeneficiaryStories((prev) => [story, ...prev]);
-    setDoc(doc(db, 'stories', story.id), story).catch(() => {});
+    const cleanSt = cleanFirestoreData(story);
+    setBeneficiaryStories((prev) => [cleanSt, ...prev]);
+    setDoc(doc(db, 'stories', cleanSt.id), cleanSt).catch((err) =>
+      console.error('[Firestore] Failed to add story:', err)
+    );
   };
 
   const updateStory = (story: BeneficiaryStory) => {
+    const cleanSt = cleanFirestoreData(story);
     setBeneficiaryStories((prev) =>
-      prev.map((s) => (s.id === story.id ? story : s))
+      prev.map((s) => (s.id === cleanSt.id ? cleanSt : s))
     );
-    setDoc(doc(db, 'stories', story.id), story, { merge: true }).catch(() => {});
+    setDoc(doc(db, 'stories', cleanSt.id), cleanSt).catch((err) =>
+      console.error('[Firestore] Failed to update story:', err)
+    );
   };
 
   const deleteStory = (id: string) => {
     setBeneficiaryStories((prev) => prev.filter((s) => s.id !== id));
-    deleteDoc(doc(db, 'stories', id)).catch(() => {});
+    deleteDoc(doc(db, 'stories', id)).catch((err) =>
+      console.error('[Firestore] Failed to delete story:', err)
+    );
   };
 
   // --- Settings Actions ---
   const updateFoundationInfo = (info: Partial<typeof FOUNDATION_INFO>) => {
-    const updated = { ...foundationInfo, ...info };
+    const updated = cleanFirestoreData({ ...foundationInfo, ...info });
     setFoundationInfo(updated);
     setDoc(doc(db, 'settings', 'general'), updated, { merge: true }).catch((err) => {
-      console.warn('[Firestore] settings/general update deferred:', err);
+      console.error('[Firestore] settings/general update failed:', err);
     });
   };
 
@@ -524,13 +597,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const saveFinancialsToFirestore = (updatedMomo: MomoAccount[], updatedBank: BankAccount[]) => {
     setDoc(
       doc(db, 'settings', 'financials'),
-      {
+      cleanFirestoreData({
         momoAccounts: updatedMomo,
         bankAccounts: updatedBank,
         updatedAt: new Date().toISOString(),
-      },
+      }),
       { merge: true }
-    ).catch(() => {});
+    ).catch((err) => console.error('[Firestore] settings/financials update failed:', err));
   };
 
   const updateMomoAccounts = (accounts: MomoAccount[]) => {
@@ -593,49 +666,61 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // --- Inbox Submissions ---
   const submitContactForm = (data: Omit<ContactSubmission, 'id' | 'date' | 'status'>) => {
-    const newMsg: ContactSubmission = {
+    const newMsg: ContactSubmission = cleanFirestoreData({
       ...data,
       id: `msg-${Date.now()}`,
       date: new Date().toISOString(),
       status: 'new',
-    };
+    });
     setContactMessages((prev) => [newMsg, ...prev]);
-    setDoc(doc(db, 'contact_messages', newMsg.id), newMsg).catch(() => {});
+    setDoc(doc(db, 'contact_messages', newMsg.id), newMsg).catch((err) =>
+      console.error('[Firestore] Failed to submit contact form:', err)
+    );
   };
 
   const deleteContactMessage = (id: string) => {
     setContactMessages((prev) => prev.filter((m) => m.id !== id));
-    deleteDoc(doc(db, 'contact_messages', id)).catch(() => {});
+    deleteDoc(doc(db, 'contact_messages', id)).catch((err) =>
+      console.error('[Firestore] Failed to delete contact message:', err)
+    );
   };
 
   const updateContactStatus = (id: string, status: 'new' | 'read' | 'replied') => {
     setContactMessages((prev) =>
       prev.map((m) => (m.id === id ? { ...m, status } : m))
     );
-    updateDoc(doc(db, 'contact_messages', id), { status }).catch(() => {});
+    updateDoc(doc(db, 'contact_messages', id), { status }).catch((err) =>
+      console.error('[Firestore] Failed to update contact status:', err)
+    );
   };
 
   const submitVolunteerForm = (data: Omit<VolunteerSubmission, 'id' | 'date' | 'status'>) => {
-    const newVol: VolunteerSubmission = {
+    const newVol: VolunteerSubmission = cleanFirestoreData({
       ...data,
       id: `vol-${Date.now()}`,
       date: new Date().toISOString(),
       status: 'new',
-    };
+    });
     setVolunteerSubmissions((prev) => [newVol, ...prev]);
-    setDoc(doc(db, 'volunteer_submissions', newVol.id), newVol).catch(() => {});
+    setDoc(doc(db, 'volunteer_submissions', newVol.id), newVol).catch((err) =>
+      console.error('[Firestore] Failed to submit volunteer form:', err)
+    );
   };
 
   const deleteVolunteerSubmission = (id: string) => {
     setVolunteerSubmissions((prev) => prev.filter((v) => v.id !== id));
-    deleteDoc(doc(db, 'volunteer_submissions', id)).catch(() => {});
+    deleteDoc(doc(db, 'volunteer_submissions', id)).catch((err) =>
+      console.error('[Firestore] Failed to delete volunteer submission:', err)
+    );
   };
 
   const updateVolunteerStatus = (id: string, status: 'new' | 'reviewed' | 'contacted') => {
     setVolunteerSubmissions((prev) =>
       prev.map((v) => (v.id === id ? { ...v, status } : v))
     );
-    updateDoc(doc(db, 'volunteer_submissions', id), { status }).catch(() => {});
+    updateDoc(doc(db, 'volunteer_submissions', id), { status }).catch((err) =>
+      console.error('[Firestore] Failed to update volunteer status:', err)
+    );
   };
 
   // --- Factory Reset ---

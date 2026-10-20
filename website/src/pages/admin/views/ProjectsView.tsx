@@ -186,8 +186,12 @@ export const ProjectsView: React.FC = () => {
       title: editingProgram.title,
       coverImage: editingProgram.image,
       summary: editingProgram.description,
-      video: hasVideo && editingArticle.video?.title ? editingArticle.video : undefined,
     };
+    if (hasVideo && editingArticle.video?.title) {
+      finalArticle.video = editingArticle.video;
+    } else {
+      delete finalArticle.video;
+    }
 
     if (isNewProject) {
       addProject(editingProgram, finalArticle);
@@ -205,23 +209,15 @@ export const ProjectsView: React.FC = () => {
 
     uploadImageToStorage(file, 'projects')
       .then((url) => {
-        if (editingProgram) {
-          setEditingProgram({ ...editingProgram, image: url });
-        }
-        if (editingArticle) {
-          setEditingArticle({ ...editingArticle, coverImage: url });
-        }
+        setEditingProgram((prev) => (prev ? { ...prev, image: url } : prev));
+        setEditingArticle((prev) => (prev ? { ...prev, coverImage: url } : prev));
       })
       .catch(() => {
         const reader = new FileReader();
         reader.onload = () => {
           const dataUrl = reader.result as string;
-          if (editingProgram) {
-            setEditingProgram({ ...editingProgram, image: dataUrl });
-          }
-          if (editingArticle) {
-            setEditingArticle({ ...editingArticle, coverImage: dataUrl });
-          }
+          setEditingProgram((prev) => (prev ? { ...prev, image: dataUrl } : prev));
+          setEditingArticle((prev) => (prev ? { ...prev, coverImage: dataUrl } : prev));
         };
         reader.readAsDataURL(file);
       });

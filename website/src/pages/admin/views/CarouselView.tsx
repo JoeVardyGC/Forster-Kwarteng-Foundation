@@ -43,7 +43,7 @@ export const CarouselView: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalFileInputRef = useRef<HTMLInputElement>(null);
 
-  const currentSlide = heroSlides.find((s) => s.id === selectedSlideId) || heroSlides[0];
+  const currentSlide = heroSlides.find((s) => String(s.id) === String(selectedSlideId)) || heroSlides[0];
 
   // State for Add New Slide modal
   const [newSlide, setNewSlide] = useState<Omit<HeroSlide, 'id'>>({

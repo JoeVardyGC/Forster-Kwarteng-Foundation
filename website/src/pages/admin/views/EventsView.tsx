@@ -104,16 +104,12 @@ export const EventsView: React.FC = () => {
 
     uploadImageToStorage(file, 'events')
       .then((url) => {
-        if (editingEvent) {
-          setEditingEvent({ ...editingEvent, image: url });
-        }
+        setEditingEvent((prev) => (prev ? { ...prev, image: url } : prev));
       })
       .catch(() => {
         const reader = new FileReader();
         reader.onload = () => {
-          if (editingEvent) {
-            setEditingEvent({ ...editingEvent, image: reader.result as string });
-          }
+          setEditingEvent((prev) => (prev ? { ...prev, image: reader.result as string } : prev));
         };
         reader.readAsDataURL(file);
       });

@@ -77,16 +77,12 @@ export const StoriesView: React.FC = () => {
 
     uploadImageToStorage(file, 'stories')
       .then((url) => {
-        if (editingStory) {
-          setEditingStory({ ...editingStory, image: url });
-        }
+        setEditingStory((prev) => (prev ? { ...prev, image: url } : prev));
       })
       .catch(() => {
         const reader = new FileReader();
         reader.onload = () => {
-          if (editingStory) {
-            setEditingStory({ ...editingStory, image: reader.result as string });
-          }
+          setEditingStory((prev) => (prev ? { ...prev, image: reader.result as string } : prev));
         };
         reader.readAsDataURL(file);
       });

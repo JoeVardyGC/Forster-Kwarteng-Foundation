@@ -92,19 +92,18 @@ export const StoriesPage: React.FC<StoriesPageProps> = ({
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Show local preview immediately
-    const reader = new FileReader();
-    reader.onload = () => {
-      setImagePreview(reader.result as string);
-    };
-    reader.readAsDataURL(file);
-
     try {
       const url = await uploadImageToStorage(file, 'beneficiary_submissions');
+      setImagePreview(url);
       setImage(url);
     } catch {
-      // Fallback to data URL
-      setImage(imagePreview || '/assets/about_story_photo.png');
+      const reader = new FileReader();
+      reader.onload = () => {
+        const res = reader.result as string;
+        setImagePreview(res);
+        setImage(res);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
