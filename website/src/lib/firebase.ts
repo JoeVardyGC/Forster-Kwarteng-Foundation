@@ -2,6 +2,7 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore, initializeFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
+import { isSupabaseReady, uploadImageToSupabase } from './supabase';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'AIzaSyCMF61DigBl9ZhagJkBrTkjR-MPKsCRp9A',
@@ -35,7 +36,7 @@ export const isFirebaseReady = (): boolean => {
 };
 
 /**
- * Recursively strips undefined values from an object/array so Firestore writes never throw.
+ * Recursively strips undefined values from an object/array so database writes never throw.
  */
 export function cleanFirestoreData<T>(obj: T): T {
   if (obj === null || obj === undefined || typeof obj !== 'object') {
@@ -54,11 +55,22 @@ export function cleanFirestoreData<T>(obj: T): T {
 }
 
 /**
- * Compresses and optimizes an image file on the client into a compact, high-clarity
- * Data URL (< 250KB) that stores directly in Cloud Firestore and syncs across all devices
- * without requiring a paid Firebase Storage bucket.
+ * Uploads an image file to the Supabase `fkf-media` Storage Bucket (when configured)
+ * and returns its public CDN URL. Falls back to high-clarity client-side canvas
+ * compression (< 250KB) so image uploads never fail under any circumstance.
  */
-export async function uploadImageToStorage(file: File, _folder = 'general'): Promise<string> {
+export async function uploadImageToStorage(file: File, folder = 'general'): Promise<string> {
+  // 1. Primary: Upload directly to Supabase Storage Bucket ('fkf-media') if configured
+  if (isSupabaseReady()) {
+    try {
+      const publicUrl = await uploadImageToSupabase(file, folder);
+      return publicUrl;
+    } catch (err) {
+      console.warn('[Supabase Storage] Falling back to compressed Data URL:', err);
+    }
+  }
+
+  // 2. Fallback: Compress via HTML5 Canvas so it persists reliably in JSONB / Firestore
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = () => reject(new Error('Failed to read image file'));
@@ -66,7 +78,6 @@ export async function uploadImageToStorage(file: File, _folder = 'general'): Pro
       const rawDataUrl = reader.result as string;
       const img = new Image();
       img.onerror = () => {
-        // Fallback to raw data URL if image element cannot decode
         resolve(rawDataUrl);
       };
       img.onload = () => {
@@ -91,12 +102,10 @@ export async function uploadImageToStorage(file: File, _folder = 'general'): Pro
             return;
           }
 
-          // Fill white background for transparent PNGs converted to JPEG
           ctx.fillStyle = '#FFFFFF';
           ctx.fillRect(0, 0, width, height);
           ctx.drawImage(img, 0, 0, width, height);
 
-          // Start at 0.78 quality and step down if still > 280,000 chars (~210KB)
           let quality = 0.78;
           let compressedUrl = canvas.toDataURL('image/jpeg', quality);
           while (compressedUrl.length > 280000 && quality > 0.4) {

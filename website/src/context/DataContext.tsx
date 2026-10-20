@@ -29,8 +29,17 @@ import {
 } from 'firebase/firestore';
 import { db, isFirebaseReady, cleanFirestoreData } from '../lib/firebase';
 import { seedFirestoreIfEmpty } from '../lib/seedFirestore';
+import {
+  supabase,
+  isSupabaseReady,
+  fetchSupabaseCollection,
+  fetchSupabaseDoc,
+  upsertSupabaseDoc,
+  deleteSupabaseDoc,
+} from '../lib/supabase';
+import { seedSupabaseIfEmpty } from '../lib/seedSupabase';
 
-// Initial default hero slides (IDs match Firestore document IDs)
+// Initial default hero slides
 export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
     id: 'slide-1',
@@ -149,7 +158,6 @@ interface DataContextType {
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Load cached state for instant initial render before Firestore snapshot arrives
   const getInitial = () => {
     try {
       const stored = localStorage.getItem(DATA_STORAGE_KEY);
@@ -230,7 +238,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(payload));
     } catch {
-      // If localStorage quota is exceeded due to multiple high-res photos, Cloud Firestore still holds full state
+      // Cloud database holds the authoritative state even if browser localStorage reaches its 5MB limit
     }
   }, [
     heroSlides,
@@ -245,19 +253,127 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     volunteerSubmissions,
   ]);
 
-  // --- Cloud Firestore Realtime Synchronization ---
+  // --- Cloud Database Realtime Synchronization (Supabase Primary, Firestore Fallback) ---
   useEffect(() => {
-    if (!isFirebaseReady()) return;
-
     let cancelled = false;
     const unsubs: Array<() => void> = [];
+
+    // =========================================================================
+    // PATH A: SUPABASE REALTIME & POSTGRESQL SYNC (Primary when configured)
+    // =========================================================================
+    if (isSupabaseReady() && supabase) {
+      const refreshAllFromSupabase = async () => {
+        if (cancelled) return;
+
+        const [
+          slidesData,
+          progsData,
+          artsData,
+          eventsData,
+          storiesData,
+          generalSettings,
+          financialSettings,
+          contactsData,
+          volsData,
+        ] = await Promise.all([
+          fetchSupabaseCollection<HeroSlide>('hero_slides'),
+          fetchSupabaseCollection<FoundationProgram>('projects'),
+          fetchSupabaseCollection<ProgramArticle>('program_articles'),
+          fetchSupabaseCollection<UpcomingProjectEvent>('events'),
+          fetchSupabaseCollection<BeneficiaryStory>('stories'),
+          fetchSupabaseDoc<Partial<typeof FOUNDATION_INFO>>('settings', 'general'),
+          fetchSupabaseDoc<{ momoAccounts?: MomoAccount[]; bankAccounts?: BankAccount[] }>('settings', 'financials'),
+          fetchSupabaseCollection<ContactSubmission>('contact_messages'),
+          fetchSupabaseCollection<VolunteerSubmission>('volunteer_submissions'),
+        ]);
+
+        if (cancelled) return;
+
+        if (slidesData && slidesData.length > 0) {
+          slidesData.sort((a, b) => (Number(a.order) || 99) - (Number(b.order) || 99));
+          setHeroSlides(slidesData);
+        }
+        if (progsData) {
+          setPrograms(progsData);
+        }
+        if (artsData) {
+          const map: Record<string, ProgramArticle> = {};
+          artsData.forEach((a) => {
+            map[a.id] = a;
+          });
+          setProgramArticles(map);
+        }
+        if (eventsData) {
+          setUpcomingEvents(eventsData);
+        }
+        if (storiesData) {
+          setBeneficiaryStories(storiesData);
+        }
+        if (generalSettings) {
+          setFoundationInfo((prev) => ({ ...prev, ...generalSettings }));
+        }
+        if (financialSettings) {
+          if (Array.isArray(financialSettings.momoAccounts)) {
+            setMomoAccounts(financialSettings.momoAccounts);
+          }
+          if (Array.isArray(financialSettings.bankAccounts)) {
+            setBankAccounts(financialSettings.bankAccounts);
+          }
+        }
+        if (contactsData) {
+          const cleanMsgs = contactsData.filter(
+            (m) => m && m.id !== 'msg-demo-1' && !String(m.id).startsWith('demo-')
+          );
+          cleanMsgs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          setContactMessages(cleanMsgs);
+        }
+        if (volsData) {
+          const cleanVols = volsData.filter(
+            (v) => v && v.id !== 'vol-demo-1' && !String(v.id).startsWith('demo-')
+          );
+          cleanVols.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          setVolunteerSubmissions(cleanVols);
+        }
+      };
+
+      seedSupabaseIfEmpty()
+        .catch(() => {})
+        .finally(() => {
+          if (cancelled || !supabase) return;
+          refreshAllFromSupabase();
+
+          const channel = supabase
+            .channel('fkf-realtime-db-changes')
+            .on(
+              'postgres_changes',
+              { event: '*', schema: 'public' },
+              () => {
+                refreshAllFromSupabase();
+              }
+            )
+            .subscribe();
+
+          unsubs.push(() => {
+            supabase.removeChannel(channel);
+          });
+        });
+
+      return () => {
+        cancelled = true;
+        unsubs.forEach((u) => u());
+      };
+    }
+
+    // =========================================================================
+    // PATH B: CLOUD FIRESTORE REALTIME SYNC
+    // =========================================================================
+    if (!isFirebaseReady()) return;
 
     seedFirestoreIfEmpty()
       .catch(() => {})
       .finally(() => {
         if (cancelled) return;
 
-        // 1. Subscribe to hero_slides
         unsubs.push(
           onSnapshot(
             collection(db, 'hero_slides'),
@@ -268,8 +384,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
                   id: d.id,
                 }));
                 cloudSlides.sort(
-                  (a, b) =>
-                    (Number(a.order) || 99) - (Number(b.order) || 99)
+                  (a, b) => (Number(a.order) || 99) - (Number(b.order) || 99)
                 );
                 setHeroSlides(cloudSlides);
               }
@@ -278,7 +393,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 2. Subscribe to projects
         unsubs.push(
           onSnapshot(
             collection(db, 'projects'),
@@ -293,7 +407,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 3. Subscribe to program_articles
         unsubs.push(
           onSnapshot(
             collection(db, 'program_articles'),
@@ -311,7 +424,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 4. Subscribe to events
         unsubs.push(
           onSnapshot(
             collection(db, 'events'),
@@ -326,7 +438,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 5. Subscribe to stories
         unsubs.push(
           onSnapshot(
             collection(db, 'stories'),
@@ -341,7 +452,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 6. Subscribe to settings/general
         unsubs.push(
           onSnapshot(
             doc(db, 'settings', 'general'),
@@ -358,7 +468,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 7. Subscribe to contact_messages
         unsubs.push(
           onSnapshot(
             collection(db, 'contact_messages'),
@@ -373,7 +482,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 8. Subscribe to volunteer_submissions
         unsubs.push(
           onSnapshot(
             collection(db, 'volunteer_submissions'),
@@ -388,7 +496,6 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           )
         );
 
-        // 9. Subscribe to settings/financials (Mobile Money & Bank Accounts)
         unsubs.push(
           onSnapshot(
             doc(db, 'settings', 'financials'),
@@ -414,6 +521,34 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  // Unified Cloud Write Helper (writes to Supabase when configured, plus Firestore)
+  const syncDocToCloud = (tableName: string, docId: string, payload: any) => {
+    const clean = cleanFirestoreData(payload);
+    if (isSupabaseReady()) {
+      upsertSupabaseDoc(tableName, docId, clean).catch((err) =>
+        console.error(`[Supabase] Write failed on ${tableName}/${docId}:`, err)
+      );
+    }
+    if (isFirebaseReady()) {
+      setDoc(doc(db, tableName, docId), clean, { merge: true }).catch((err) =>
+        console.error(`[Firestore] Write failed on ${tableName}/${docId}:`, err)
+      );
+    }
+  };
+
+  const removeDocFromCloud = (tableName: string, docId: string) => {
+    if (isSupabaseReady()) {
+      deleteSupabaseDoc(tableName, docId).catch((err) =>
+        console.error(`[Supabase] Delete failed on ${tableName}/${docId}:`, err)
+      );
+    }
+    if (isFirebaseReady()) {
+      deleteDoc(doc(db, tableName, docId)).catch((err) =>
+        console.error(`[Firestore] Delete failed on ${tableName}/${docId}:`, err)
+      );
+    }
+  };
+
   // --- Hero Carousel Actions ---
   const addHeroSlide = (slide: Omit<HeroSlide, 'id'>) => {
     const newId = `slide-${Date.now()}`;
@@ -423,34 +558,27 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       order: heroSlides.length + 1,
     });
     setHeroSlides((prev) => [...prev, newSlide]);
-    setDoc(doc(db, 'hero_slides', newId), newSlide).catch((err) =>
-      console.error('[Firestore] Failed to add hero slide:', err)
-    );
+    syncDocToCloud('hero_slides', newId, newSlide);
   };
 
   const updateHeroSlide = (id: string | number, updated: Partial<HeroSlide>) => {
     const docId = String(id);
-    setHeroSlides((prev) => {
-      const next = prev.map((s) => {
+    setHeroSlides((prev) =>
+      prev.map((s) => {
         if (String(s.id) === docId) {
           const merged = cleanFirestoreData({ ...s, ...updated, id: docId });
-          setDoc(doc(db, 'hero_slides', docId), merged, { merge: true }).catch((err) =>
-            console.error('[Firestore] Failed to update hero slide:', err)
-          );
+          syncDocToCloud('hero_slides', docId, merged);
           return merged;
         }
         return s;
-      });
-      return next;
-    });
+      })
+    );
   };
 
   const deleteHeroSlide = (id: string | number) => {
     const docId = String(id);
     setHeroSlides((prev) => prev.filter((s) => String(s.id) !== docId));
-    deleteDoc(doc(db, 'hero_slides', docId)).catch((err) =>
-      console.error('[Firestore] Failed to delete hero slide:', err)
-    );
+    removeDocFromCloud('hero_slides', docId);
   };
 
   const reorderHeroSlides = (newSlides: HeroSlide[]) => {
@@ -459,9 +587,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
     setHeroSlides(ordered);
     ordered.forEach((slide) => {
-      setDoc(doc(db, 'hero_slides', String(slide.id)), slide, { merge: true }).catch((err) =>
-        console.error('[Firestore] Failed to reorder slide:', err)
-      );
+      syncDocToCloud('hero_slides', String(slide.id), slide);
     });
   };
 
@@ -474,12 +600,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...prev,
       [cleanProg.id]: cleanArt,
     }));
-    setDoc(doc(db, 'projects', cleanProg.id), cleanProg).catch((err) =>
-      console.error('[Firestore] Failed to add project:', err)
-    );
-    setDoc(doc(db, 'program_articles', cleanProg.id), cleanArt).catch((err) =>
-      console.error('[Firestore] Failed to add program article:', err)
-    );
+    syncDocToCloud('projects', cleanProg.id, cleanProg);
+    syncDocToCloud('program_articles', cleanProg.id, cleanArt);
   };
 
   const updateProject = (program: FoundationProgram, article: ProgramArticle) => {
@@ -492,12 +614,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       ...prev,
       [cleanProg.id]: cleanArt,
     }));
-    setDoc(doc(db, 'projects', cleanProg.id), cleanProg).catch((err) =>
-      console.error('[Firestore] Failed to update project:', err)
-    );
-    setDoc(doc(db, 'program_articles', cleanProg.id), cleanArt).catch((err) =>
-      console.error('[Firestore] Failed to update program article:', err)
-    );
+    syncDocToCloud('projects', cleanProg.id, cleanProg);
+    syncDocToCloud('program_articles', cleanProg.id, cleanArt);
   };
 
   const deleteProject = (id: string) => {
@@ -507,21 +625,15 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       delete copy[id];
       return copy;
     });
-    deleteDoc(doc(db, 'projects', id)).catch((err) =>
-      console.error('[Firestore] Failed to delete project:', err)
-    );
-    deleteDoc(doc(db, 'program_articles', id)).catch((err) =>
-      console.error('[Firestore] Failed to delete program article:', err)
-    );
+    removeDocFromCloud('projects', id);
+    removeDocFromCloud('program_articles', id);
   };
 
   // --- Upcoming Events Actions ---
   const addEvent = (event: UpcomingProjectEvent) => {
     const cleanEv = cleanFirestoreData(event);
     setUpcomingEvents((prev) => [cleanEv, ...prev]);
-    setDoc(doc(db, 'events', cleanEv.id), cleanEv).catch((err) =>
-      console.error('[Firestore] Failed to add event:', err)
-    );
+    syncDocToCloud('events', cleanEv.id, cleanEv);
   };
 
   const updateEvent = (event: UpcomingProjectEvent) => {
@@ -529,16 +641,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUpcomingEvents((prev) =>
       prev.map((e) => (e.id === cleanEv.id ? cleanEv : e))
     );
-    setDoc(doc(db, 'events', cleanEv.id), cleanEv).catch((err) =>
-      console.error('[Firestore] Failed to update event:', err)
-    );
+    syncDocToCloud('events', cleanEv.id, cleanEv);
   };
 
   const deleteEvent = (id: string) => {
     setUpcomingEvents((prev) => prev.filter((e) => e.id !== id));
-    deleteDoc(doc(db, 'events', id)).catch((err) =>
-      console.error('[Firestore] Failed to delete event:', err)
-    );
+    removeDocFromCloud('events', id);
   };
 
   const setFeaturedEvent = (id: string) => {
@@ -550,9 +658,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           status: isTarget ? ('Featured' as const) : e.status === 'Featured' ? ('Upcoming' as const) : e.status,
           isLiveCountdown: isTarget,
         });
-        setDoc(doc(db, 'events', e.id), updated).catch((err) =>
-          console.error('[Firestore] Failed to set featured event:', err)
-        );
+        syncDocToCloud('events', e.id, updated);
         return updated;
       })
     );
@@ -562,9 +668,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addStory = (story: BeneficiaryStory) => {
     const cleanSt = cleanFirestoreData(story);
     setBeneficiaryStories((prev) => [cleanSt, ...prev]);
-    setDoc(doc(db, 'stories', cleanSt.id), cleanSt).catch((err) =>
-      console.error('[Firestore] Failed to add story:', err)
-    );
+    syncDocToCloud('stories', cleanSt.id, cleanSt);
   };
 
   const updateStory = (story: BeneficiaryStory) => {
@@ -572,43 +676,33 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setBeneficiaryStories((prev) =>
       prev.map((s) => (s.id === cleanSt.id ? cleanSt : s))
     );
-    setDoc(doc(db, 'stories', cleanSt.id), cleanSt).catch((err) =>
-      console.error('[Firestore] Failed to update story:', err)
-    );
+    syncDocToCloud('stories', cleanSt.id, cleanSt);
   };
 
   const deleteStory = (id: string) => {
     setBeneficiaryStories((prev) => prev.filter((s) => s.id !== id));
-    deleteDoc(doc(db, 'stories', id)).catch((err) =>
-      console.error('[Firestore] Failed to delete story:', err)
-    );
+    removeDocFromCloud('stories', id);
   };
 
   // --- Settings Actions ---
   const updateFoundationInfo = (info: Partial<typeof FOUNDATION_INFO>) => {
     const updated = cleanFirestoreData({ ...foundationInfo, ...info });
     setFoundationInfo(updated);
-    setDoc(doc(db, 'settings', 'general'), updated, { merge: true }).catch((err) => {
-      console.error('[Firestore] settings/general update failed:', err);
-    });
+    syncDocToCloud('settings', 'general', updated);
   };
 
   // --- Donation Channel Actions ---
-  const saveFinancialsToFirestore = (updatedMomo: MomoAccount[], updatedBank: BankAccount[]) => {
-    setDoc(
-      doc(db, 'settings', 'financials'),
-      cleanFirestoreData({
-        momoAccounts: updatedMomo,
-        bankAccounts: updatedBank,
-        updatedAt: new Date().toISOString(),
-      }),
-      { merge: true }
-    ).catch((err) => console.error('[Firestore] settings/financials update failed:', err));
+  const saveFinancialsToCloud = (updatedMomo: MomoAccount[], updatedBank: BankAccount[]) => {
+    syncDocToCloud('settings', 'financials', {
+      momoAccounts: updatedMomo,
+      bankAccounts: updatedBank,
+      updatedAt: new Date().toISOString(),
+    });
   };
 
   const updateMomoAccounts = (accounts: MomoAccount[]) => {
     setMomoAccounts(accounts);
-    saveFinancialsToFirestore(accounts, bankAccounts);
+    saveFinancialsToCloud(accounts, bankAccounts);
   };
 
   const addMomoAccount = (account: Omit<MomoAccount, 'id'>) => {
@@ -618,7 +712,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     const updated = [...momoAccounts, newAcc];
     setMomoAccounts(updated);
-    saveFinancialsToFirestore(updated, bankAccounts);
+    saveFinancialsToCloud(updated, bankAccounts);
   };
 
   const updateMomoAccount = (id: string, updated: Partial<MomoAccount>) => {
@@ -626,18 +720,18 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       acc.id === id ? { ...acc, ...updated } : acc
     );
     setMomoAccounts(newAccounts);
-    saveFinancialsToFirestore(newAccounts, bankAccounts);
+    saveFinancialsToCloud(newAccounts, bankAccounts);
   };
 
   const deleteMomoAccount = (id: string) => {
     const newAccounts = momoAccounts.filter((acc) => acc.id !== id);
     setMomoAccounts(newAccounts);
-    saveFinancialsToFirestore(newAccounts, bankAccounts);
+    saveFinancialsToCloud(newAccounts, bankAccounts);
   };
 
   const updateBankAccounts = (accounts: BankAccount[]) => {
     setBankAccounts(accounts);
-    saveFinancialsToFirestore(momoAccounts, accounts);
+    saveFinancialsToCloud(momoAccounts, accounts);
   };
 
   const addBankAccount = (account: Omit<BankAccount, 'id'>) => {
@@ -647,7 +741,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
     const updated = [...bankAccounts, newAcc];
     setBankAccounts(updated);
-    saveFinancialsToFirestore(momoAccounts, updated);
+    saveFinancialsToCloud(momoAccounts, updated);
   };
 
   const updateBankAccount = (id: string, updated: Partial<BankAccount>) => {
@@ -655,13 +749,13 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       acc.id === id ? { ...acc, ...updated } : acc
     );
     setBankAccounts(newAccounts);
-    saveFinancialsToFirestore(momoAccounts, newAccounts);
+    saveFinancialsToCloud(momoAccounts, newAccounts);
   };
 
   const deleteBankAccount = (id: string) => {
     const newAccounts = bankAccounts.filter((acc) => acc.id !== id);
     setBankAccounts(newAccounts);
-    saveFinancialsToFirestore(momoAccounts, newAccounts);
+    saveFinancialsToCloud(momoAccounts, newAccounts);
   };
 
   // --- Inbox Submissions ---
@@ -673,24 +767,29 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       status: 'new',
     });
     setContactMessages((prev) => [newMsg, ...prev]);
-    setDoc(doc(db, 'contact_messages', newMsg.id), newMsg).catch((err) =>
-      console.error('[Firestore] Failed to submit contact form:', err)
-    );
+    syncDocToCloud('contact_messages', newMsg.id, newMsg);
   };
 
   const deleteContactMessage = (id: string) => {
     setContactMessages((prev) => prev.filter((m) => m.id !== id));
-    deleteDoc(doc(db, 'contact_messages', id)).catch((err) =>
-      console.error('[Firestore] Failed to delete contact message:', err)
-    );
+    removeDocFromCloud('contact_messages', id);
   };
 
   const updateContactStatus = (id: string, status: 'new' | 'read' | 'replied') => {
     setContactMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, status } : m))
-    );
-    updateDoc(doc(db, 'contact_messages', id), { status }).catch((err) =>
-      console.error('[Firestore] Failed to update contact status:', err)
+      prev.map((m) => {
+        if (m.id === id) {
+          const updated = { ...m, status };
+          if (isSupabaseReady()) {
+            upsertSupabaseDoc('contact_messages', id, updated).catch(() => {});
+          }
+          if (isFirebaseReady()) {
+            updateDoc(doc(db, 'contact_messages', id), { status }).catch(() => {});
+          }
+          return updated;
+        }
+        return m;
+      })
     );
   };
 
@@ -702,24 +801,29 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
       status: 'new',
     });
     setVolunteerSubmissions((prev) => [newVol, ...prev]);
-    setDoc(doc(db, 'volunteer_submissions', newVol.id), newVol).catch((err) =>
-      console.error('[Firestore] Failed to submit volunteer form:', err)
-    );
+    syncDocToCloud('volunteer_submissions', newVol.id, newVol);
   };
 
   const deleteVolunteerSubmission = (id: string) => {
     setVolunteerSubmissions((prev) => prev.filter((v) => v.id !== id));
-    deleteDoc(doc(db, 'volunteer_submissions', id)).catch((err) =>
-      console.error('[Firestore] Failed to delete volunteer submission:', err)
-    );
+    removeDocFromCloud('volunteer_submissions', id);
   };
 
   const updateVolunteerStatus = (id: string, status: 'new' | 'reviewed' | 'contacted') => {
     setVolunteerSubmissions((prev) =>
-      prev.map((v) => (v.id === id ? { ...v, status } : v))
-    );
-    updateDoc(doc(db, 'volunteer_submissions', id), { status }).catch((err) =>
-      console.error('[Firestore] Failed to update volunteer status:', err)
+      prev.map((v) => {
+        if (v.id === id) {
+          const updated = { ...v, status };
+          if (isSupabaseReady()) {
+            upsertSupabaseDoc('volunteer_submissions', id, updated).catch(() => {});
+          }
+          if (isFirebaseReady()) {
+            updateDoc(doc(db, 'volunteer_submissions', id), { status }).catch(() => {});
+          }
+          return updated;
+        }
+        return v;
+      })
     );
   };
 
