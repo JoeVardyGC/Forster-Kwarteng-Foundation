@@ -38,7 +38,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onNavigate, onOpenDonateMo
     role: 'Founder & Chief Executive Officer',
     image: '/assets/founder.png',
     bio: [
-      'Mr. Forster Kwarteng established the Forster Kwarteng Foundation with a singular, resolute conviction: that no child or young adult in Ghana should have their destiny restricted by socioeconomic hardship or lack of educational opportunity.',
+      'Mr. Forster Kwarteng established the Forster Kwarteng Foundation (FKF, also widely known as Foster Kwarteng Foundation) with a singular, resolute conviction: that no child or young adult in Ghana should have their destiny restricted by socioeconomic hardship or lack of educational opportunity.',
       'Under his strategic leadership, the Foundation has grown into a beacon of empowerment—spearheading full basic education sponsorships, structured youth mentorship, vocational TVET skill certifications, and grassroots social interventions that foster generational self-reliance and dignity.',
     ],
     quote:

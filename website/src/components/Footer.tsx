@@ -197,10 +197,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onOpenDonateModal })
           </p>
 
           <div className="flex items-center gap-4 sm:gap-6">
-            <span className="text-amber-300/80 font-mono text-[11px] font-semibold hidden md:inline-block bg-white/10 px-2 py-0.5 rounded border border-white/10">
-              Reg No: {foundationInfo.registrationNo || FOUNDATION_INFO.registrationNo}
-            </span>
-            <span className="hidden md:inline-block">•</span>
             <span className="text-blue-200/80 font-medium hidden sm:inline-block">
               {foundationInfo.hqLocation}
             </span>
